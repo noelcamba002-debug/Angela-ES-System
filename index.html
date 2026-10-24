@@ -1085,7 +1085,7 @@
             if(data) { type === 'GST' ? calcGST(indRowCount) : calcIndividualized(indRowCount); }
         }
 
-        function calcGST(row) {
+               function calcGST(row) {
             const lit = parseInt(document.getElementById(`gst-lit-${row}`).value) || 0;
             const inf = parseInt(document.getElementById(`gst-inf-${row}`).value) || 0;
             const crit = parseInt(document.getElementById(`gst-crit-${row}`).value) || 0;
@@ -1097,64 +1097,58 @@
             const aralCell = document.getElementById(`ind-aral-${row}`);
             const intCell = document.getElementById(`ind-intervention-${row}`);
             
-            pc.className = "auto-calc"; aralCell.className = "auto-calc";
-            aralCell.innerText = "";
+            const targetGrade = parseInt(document.getElementById('teacher-grade').value) || 0;
+            if (!targetGrade || targetGrade < 1 || targetGrade > 6) {
+                pc.innerText = "Set Grade";
+                pc.className = "auto-calc status-light";
+                return;
+            }
+
+            // --- BASIS: Phil-IRI GST Guidelines ---
+            // Logic: Determine Reading Level based on GST Score, then determine Profile based on Reading Level
+            let readingLevel = targetGrade;
+            let offset = 0;
             
-            let finalLvl = "";
+            if (total <= 7) offset = 3;
+            else if (total <= 13) offset = 2;
+            else if (total <= 17) offset = 1;
+            else offset = 0;
+
+            readingLevel = targetGrade - offset;
+            if (readingLevel < 1) readingLevel = 1; // Minimum Grade 1
+
+            // Bracket per Reading Level
+            let profile = "";
             let suggestion = "";
 
-            if (total >= 0 && total <= 7) { 
-                finalLvl = "Frustration"; 
+            // Base sa Reading Level, dito natin i-base ang Frustration/Instructional/Independent
+            if (readingLevel === 1) {
+                if (total >= 0 && total <= 3) { profile = "Frustration"; }
+                else if (total >= 4 && total <= 6) { profile = "Instructional"; }
+                else { profile = "Independent"; }
+            } else if (readingLevel === 2) {
+                if (total >= 0 && total <= 4) { profile = "Frustration"; }
+                else if (total >= 5 && total <= 8) { profile = "Instructional"; }
+                else { profile = "Independent"; }
+            } else if (readingLevel >= 3) {
+                // Para sa Grade 3 pataas (Standardized bracket)
+                if (total >= 0 && total <= 7) { profile = "Frustration"; }
+                else if (total >= 8 && total <= 13) { profile = "Instructional"; }
+                else { profile = "Independent"; }
+            }
+
+            // Set Reading Level Displayed
+            pc.innerText = `${profile} (Gr. ${readingLevel})`;
+
+            pc.className = "auto-calc"; aralCell.className = "auto-calc"; aralCell.innerText = "";
+
+            if (profile === "Frustration") { 
                 pc.classList.add("status-full"); 
                 aralCell.innerText = "ARAL Reading Candidate";
                 aralCell.classList.add("status-aral");
                 suggestion = "Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
             }
-            else if (total >= 8 && total <= 13) { 
-                finalLvl = "Instructional"; 
-                pc.classList.add("status-light"); 
-                suggestion = "Guided Reading, Vocabulary Enhancement, Peer Buddy System";
-            }
-            else if (total >= 14) { 
-                finalLvl = "Independent"; 
-                pc.classList.add("status-ready"); 
-                suggestion = "Enrichment Activities, Independent Reading Projects";
-            }
-            
-            pc.innerText = finalLvl;
-
-            if (intCell.value === "" || intCell.dataset.auto === "true") {
-                intCell.value = suggestion;
-                intCell.dataset.auto = "true"; 
-            }
-        }
-
-        function calcIndividualized(row) {
-            const oral = document.getElementById(`ind-oral-${row}`).value;
-            const comp = document.getElementById(`ind-comp-${row}`).value;
-            
-            const pc = document.getElementById(`ind-profile-${row}`);
-            const aralCell = document.getElementById(`ind-aral-${row}`);
-            const intCell = document.getElementById(`ind-intervention-${row}`);
-            
-            pc.className = "auto-calc"; aralCell.className = "auto-calc";
-            aralCell.innerText = "";
-
-            const levels = { "Independent": 3, "Instructional": 2, "Frustration": 1 };
-            const lowestLevel = Math.min(levels[oral], levels[comp]);
-            
-            let finalLvl = "Independent";
-            let suggestion = "";
-
-            if (lowestLevel === 1) { 
-                finalLvl = "Frustration"; 
-                pc.classList.add("status-full"); 
-                aralCell.innerText = "ARAL Reading Candidate";
-                aralCell.classList.add("status-aral");
-                suggestion = "Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
-            }
-            else if (lowestLevel === 2) { 
-                finalLvl = "Instructional"; 
+            else if (profile === "Instructional") { 
                 pc.classList.add("status-light"); 
                 suggestion = "Guided Reading, Vocabulary Enhancement, Peer Buddy System";
             }
@@ -1162,16 +1156,12 @@
                 pc.classList.add("status-ready"); 
                 suggestion = "Enrichment Activities, Independent Reading Projects";
             }
-            
-            pc.innerText = finalLvl;
 
             if (intCell.value === "" || intCell.dataset.auto === "true") {
                 intCell.value = suggestion;
                 intCell.dataset.auto = "true"; 
             }
-        }
-
-        // ==========================================
+        }        // ==========================================
         // CRLA LOGIC
         // ==========================================
         function updateCRLALogic() {
