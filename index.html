@@ -450,7 +450,7 @@
             return line.split(/\s{2,}|\s+/).map(s => s.trim());
         }
 
-        // --- GST LOGIC ---
+        // --- GST LOGIC (FINAL) ---
         function updateIndividualizedLogic() {
             const type = document.getElementById('ind-assessment-type').value;
             const thead = document.getElementById('ind-table-head');
@@ -547,7 +547,7 @@
             let displayStr = "";
             let isAral = false;
 
-            // --- LOGIC 1: GRADE READY (14-20) ---
+            // --- LOGIC 1: GRADE READY (14-20) -> ENRICHMENT ---
             if (total >= 14 && total <= 20) {
                 if (total >= 18) { profile = "Independent"; }
                 else if (total >= 16) { profile = "Instructional"; }
@@ -555,13 +555,18 @@
                 
                 displayStr = `Grade Ready (${profile})`;
                 
-                if (profile === "Independent") suggestion = "Provide advanced reading materials, book reports, or peer tutoring roles.";
-                else if (profile === "Instructional") suggestion = "Encourage independent reading with minimal guidance, vocabulary expansion.";
-                else suggestion = "Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
+                // ENRICHMENT INTERVENTIONS
+                if (profile === "Independent") {
+                    suggestion = "ENRICHMENT: Provide advanced reading materials, book reports, or peer tutoring roles.";
+                } else if (profile === "Instructional") {
+                    suggestion = "ENRICHMENT: Encourage independent reading with minimal guidance, vocabulary expansion.";
+                } else {
+                    suggestion = "ENRICHMENT: Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
+                }
                 
                 isAral = false; // HINDI ARAL
 
-            // --- LOGIC 2: DOWNGRADE (0-13) ---
+            // --- LOGIC 2: DOWNGRADE (0-13) -> REMEDIATION ---
             } else {
                 isAral = true; // LAHAT NG 0-13 AY ARAL
 
@@ -569,17 +574,17 @@
                 if (total >= 0 && total <= 4) { 
                     profile = "Frustration"; 
                     offset = 3; 
-                    suggestion = "Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
+                    suggestion = "REMEDIATION: Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
                 }
                 else if (total >= 5 && total <= 10) { 
                     profile = "Instructional"; 
                     offset = 2; 
-                    suggestion = "Guided Reading, Vocabulary Enhancement, Peer Buddy System";
+                    suggestion = "REMEDIATION: Guided Reading, Vocabulary Enhancement, Peer Buddy System";
                 }
                 else if (total >= 11 && total <= 13) { 
                     profile = "Independent"; 
                     offset = 1; 
-                    suggestion = "Enrichment Activities, Independent Reading Projects";
+                    suggestion = "REMEDIATION: Enrichment Activities within the Lower Grade Level, Independent Reading Projects";
                 }
 
                 let readingLevel = targetGrade - offset;
@@ -588,14 +593,17 @@
                 displayStr = `${profile} (Gr. ${readingLevel})`;
             }
 
+            // Set Profile text
             pc.innerText = displayStr;
             pc.className = "auto-calc"; 
-            aralCell.className = "auto-calc";
-            
+
+            // Set Color Coding
             if (profile === "Frustration") pc.classList.add("status-full");
             else if (profile === "Instructional") pc.classList.add("status-light");
             else pc.classList.add("status-ready");
 
+            // Set ARAL Tag (Lahat ng 0-13, kahit Independent, ay may ARAL Tag)
+            aralCell.className = "auto-calc";
             if (isAral) {
                 aralCell.innerText = "ARAL Reading Candidate";
                 aralCell.classList.add("status-aral");
@@ -603,6 +611,7 @@
                 aralCell.innerText = "";
             }
 
+            // Set Intervention
             if (intCell.value === "" || intCell.dataset.auto === "true") { 
                 intCell.value = suggestion; 
                 intCell.dataset.auto = "true"; 
