@@ -7,13 +7,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
-
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
         h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
-
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
         .login-box h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
@@ -23,7 +20,6 @@
         .login-box input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
         .login-box .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; }
-
         .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; display: flex; flex-direction: column; overflow-y: auto; display: none; }
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .sidebar-header h2 { font-size: 18px; margin-bottom: 5px; }
@@ -34,7 +30,6 @@
         .nav-group { padding: 15px 20px 5px 20px; font-size: 11px; color: #88b4e7; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
         .nav-item { display: block; padding: 12px 20px; color: white; text-decoration: none; font-size: 14px; cursor: pointer; transition: 0.2s; border-left: 4px solid transparent; }
         .nav-item:hover, .nav-item.active { background: var(--secondary); border-left: 4px solid white; }
-        
         .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; display: none; background: var(--bg); }
         .top-bar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; }
         .top-bar h1 { font-size: 18px; color: var(--primary); }
@@ -42,7 +37,6 @@
         .panel { display: none; animation: fadeIn 0.4s ease; }
         .panel.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .card h3 { margin-bottom: 20px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 18px; }
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
@@ -56,19 +50,16 @@
         .btn-warning { background: var(--warning); color: #333; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
-
         .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; text-align: center; margin-top: 20px; margin-bottom: 30px; }
         .form1b-table th, .form1b-table td, .data-table th, .data-table td { border: 1px solid #000; padding: 8px; }
         .form1b-table th, .data-table th { background: #e0e0e0; font-weight: bold; }
         .form1b-table input[type="number"], .form1b-table input[type="text"] { width: 100%; padding: 6px; text-align: center; border: 1px solid #ccc; }
         .form1b-table select { width: 100%; padding: 6px; border: 1px solid #ccc; font-size: 13px; }
         .form1b-table .auto-calc { background: #f9f9f9; font-weight: bold; }
-        
         .status-ready { background-color: #d4edda !important; color: #155724; font-weight: bold; }
         .status-light { background-color: #fff3cd !important; color: #856404; font-weight: bold; }
         .status-full { background-color: #f8d7da !important; color: #721c24; font-weight: bold; }
         .status-aral { background-color: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
-
         .info-box { background: #e2e8f0; border-left: 4px solid var(--secondary); padding: 15px; margin-bottom: 20px; font-size: 14px; border-radius: 4px;}
         .hidden { display: none !important; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -77,17 +68,9 @@
         .bg-review { background-color: var(--info); }
         .bg-approved { background-color: var(--success); }
         .bg-returned { background-color: var(--danger); }
-
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10005; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal-box { background: white; padding: 30px; border-radius: 8px; width: 500px; max-width: 100%; max-height: 90vh; overflow-y: auto; }
-
-        @media print {
-            body { display: block !important; overflow: visible !important; height: auto !important; background: white !important; }
-            .hidden-print { display: none !important; }
-            @page { margin: 15mm; }
-            .form1b-table { font-size: 11px; }
-            .form1b-table th, .form1b-table td { padding: 5px; }
-        }
+        @media print { body { display: block !important; overflow: visible !important; height: auto !important; background: white !important; } .hidden-print { display: none !important; } @page { margin: 15mm; } .form1b-table { font-size: 11px; } .form1b-table th, .form1b-table td { padding: 5px; } }
     </style>
 </head>
 <body>
@@ -273,7 +256,6 @@
                 </div>
             </div>
 
-            <!-- MY REPORTS -->
             <div id="my-submissions" class="panel">
                 <div class="card"><h3>📤 My Submissions</h3><div id="my-submissions-list"></div></div>
             </div>
@@ -282,7 +264,6 @@
                 <div class="card"><h3>📁 My Approved Reports</h3><div id="my-approved-list"></div></div>
             </div>
 
-            <!-- COORDINATOR -->
             <div id="coordinator-review" class="panel">
                 <div class="card"><h3>Teacher Submissions</h3><div id="coordinator-list"></div></div>
                 <div id="coordinator-view" class="card hidden">
@@ -292,7 +273,6 @@
                 </div>
             </div>
 
-            <!-- SCHOOL HEAD -->
             <div id="head-approval" class="panel">
                 <div class="card"><h3>Forwarded Reports</h3><div id="head-list"></div></div>
                 <div id="head-view" class="card hidden">
@@ -301,7 +281,6 @@
                 </div>
             </div>
 
-            <!-- ADMIN -->
             <div id="manage-users" class="panel">
                 <div class="card">
                     <div class="flex-between"><h3>👥 Manage Users</h3><button class="btn btn-success" onclick="openAddUserModal()">➕ Add User</button></div>
@@ -329,7 +308,6 @@
         </div>
     </main>
 
-    <!-- MODALS -->
     <div id="official-report-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
         <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
             <button class="btn btn-danger hidden-print" onclick="document.getElementById('official-report-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
@@ -434,7 +412,8 @@
             document.getElementById('page-title').innerText = btnElement ? btnElement.innerText : panelId;
             
             const submitBtn = document.getElementById('btn-submit');
-            if (panelId === 'module-narrative') { submitBtn.style.display = 'none'; } else if (currentUser && activeRole === 'teacher') { submitBtn.style.display = 'inline-flex'; }
+            if (panelId === 'module-narrative') { submitBtn.style.display = 'none'; } 
+            else if (currentUser && activeRole === 'teacher') { submitBtn.style.display = 'inline-flex'; }
             
             if (panelId === 'report-consolidated') refreshFinalReport();
             if (panelId === 'my-submissions') refreshMySubmissions();
@@ -450,7 +429,7 @@
             return line.split(/\s{2,}|\s+/).map(s => s.trim());
         }
 
-        // --- GST LOGIC (Simplified) ---
+        // --- GST LOGIC ---
         function updateIndividualizedLogic() {
             const type = document.getElementById('ind-assessment-type').value;
             const thead = document.getElementById('ind-table-head');
@@ -535,46 +514,42 @@
             const aralCell = document.getElementById(`ind-aral-${row}`);
             const intCell = document.getElementById(`ind-intervention-${row}`);
             const targetGrade = parseInt(document.getElementById('teacher-grade').value) || 0;
-            
             if (!targetGrade || targetGrade < 1 || targetGrade > 6) { pc.innerText = "Set Grade"; pc.className = "auto-calc status-light"; return; }
             
-            let profile = ""; let suggestion = ""; let displayStr = "";
+            let profile = "", suggestion = "", displayStr = "";
 
+            // LOGIC 1: Grade Ready (14-20)
             if (total >= 14 && total <= 20) {
-                if (total >= 18) profile = "Independent";
-                else if (total >= 16) profile = "Instructional";
-                else profile = "Frustration";
+                if (total >= 18) { profile = "Independent"; suggestion = "Provide advanced reading materials, book reports, or peer tutoring roles."; }
+                else if (total >= 16) { profile = "Instructional"; suggestion = "Encourage independent reading with minimal guidance, vocabulary expansion."; }
+                else { profile = "Frustration"; suggestion = "Provide easy-to-read enrichment books, guided reading sessions to build confidence."; }
                 displayStr = `Grade Ready (${profile})`;
-                suggestion = profile === "Frustration" ? "Intensive Remedial Reading" : (profile === "Instructional" ? "Guided Reading" : "Enrichment Activities");
+                aralCell.innerText = ""; aralCell.className = "auto-calc"; // Walang ARAL Tag kapag Grade Ready
+
+            // LOGIC 2: Downgrade (0-13)
             } else {
                 let offset = 0;
-                if (total <= 7) offset = 3;
-                else if (total <= 13) offset = 2;
+                if (total <= 5) offset = 3; 
+                else if (total <= 10) offset = 2; 
+                else offset = 1; 
+
                 let readingLevel = targetGrade - offset;
                 if (readingLevel < 1) readingLevel = 1; 
 
-                if (readingLevel === 1) {
-                    if (total >= 0 && total <= 3) profile = "Frustration";
-                    else if (total >= 4 && total <= 6) profile = "Instructional";
-                    else profile = "Independent";
-                } else if (readingLevel === 2) {
-                    if (total >= 0 && total <= 4) profile = "Frustration";
-                    else if (total >= 5 && total <= 8) profile = "Instructional";
-                    else profile = "Independent";
-                } else if (readingLevel >= 3) {
-                    if (total >= 0 && total <= 7) profile = "Frustration";
-                    else if (total >= 8 && total <= 13) profile = "Instructional";
-                    else profile = "Independent";
-                }
+                if (total >= 0 && total <= 5) { profile = "Frustration"; suggestion = "Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference"; }
+                else if (total >= 6 && total <= 10) { profile = "Instructional"; suggestion = "Guided Reading, Vocabulary Enhancement, Peer Buddy System"; }
+                else { profile = "Independent"; suggestion = "Enrichment Activities, Independent Reading Projects"; }
+
                 displayStr = `${profile} (Gr. ${readingLevel})`;
-                suggestion = profile === "Frustration" ? "Intensive Remedial Reading" : (profile === "Instructional" ? "Guided Reading" : "Enrichment Activities");
+                if (profile === "Frustration") { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); } else { aralCell.innerText = ""; }
             }
 
             pc.innerText = displayStr;
-            pc.className = "auto-calc"; aralCell.className = "auto-calc"; aralCell.innerText = "";
-            if (profile === "Frustration") { pc.classList.add("status-full"); aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); }
+            pc.className = "auto-calc"; 
+            if (profile === "Frustration") pc.classList.add("status-full");
             else if (profile === "Instructional") pc.classList.add("status-light");
             else pc.classList.add("status-ready");
+
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
@@ -595,7 +570,7 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        // --- CRLA LOGIC ---
+        // CRLA
         function updateCRLALogic() { document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0; addCRLARow(); }
         function parseCRLAData() {
             const text = document.getElementById('crla-paste-data').value;
@@ -636,7 +611,7 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        // --- RMA LOGIC ---
+        // RMA
         function updateRMALogic() { document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0; addRMARow(); }
         function parseRMAData() {
             const text = document.getElementById('rma-paste-data').value;
@@ -685,7 +660,7 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        // SUBMIT & REPORTS
+        // SUBMISSIONS
         async function submitAllToCoordinator() {
             const active = document.querySelector('.panel.active');
             if (active && active.id === 'module-philiri') await submitIndividualized();
@@ -748,6 +723,7 @@
             if (result.result === "success") { alert("Report submitted!"); showDashboard(); } else alert("Error submitting.");
         }
 
+        // MY REPORTS & VIEW
         async function refreshMySubmissions() {
             const container = document.getElementById('my-submissions-list'); container.innerHTML = '<p>Loading...</p>';
             const reports = await fetchReports();
