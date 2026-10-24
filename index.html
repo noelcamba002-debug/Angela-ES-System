@@ -995,8 +995,7 @@
                 pasteFormat.innerHTML = 'Format: <code>Name, Score Literal, Score Inferential, Score Critical</code>';
                 textarea.placeholder = "Juan Dela Cruz, 2, 4, 3";
                 thead.innerHTML = `
-                    <tr><th>No.</th><th>Name</th><th>Literal</th><th>Inferential</th><th>Critical</th>
-                    <th>Total</th><th>Reading Profile</th><th>ARAL Tag</th><th>Intervention</th></tr>`;
+                                        <tr><th>No.</th><th>Name</th><th>Literal</th><th>Inferential</th><th>Critical</th><th>Total</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr>
             } else {
                 pasteTitle.innerText = `📋 Paste ${type} Data`;
                 pasteFormat.innerHTML = 'Format: <code>Name, Level Passed, Oral Level, Comp Level</code>';
@@ -1085,7 +1084,7 @@
             if(data) { type === 'GST' ? calcGST(indRowCount) : calcIndividualized(indRowCount); }
         }
 
-               function calcGST(row) {
+               function         function calcGST(row) {
             const lit = parseInt(document.getElementById(`gst-lit-${row}`).value) || 0;
             const inf = parseInt(document.getElementById(`gst-inf-${row}`).value) || 0;
             const crit = parseInt(document.getElementById(`gst-crit-${row}`).value) || 0;
@@ -1105,23 +1104,21 @@
             }
 
             // --- BASIS: Phil-IRI GST Guidelines ---
-            // Logic: Determine Reading Level based on GST Score, then determine Profile based on Reading Level
-            let readingLevel = targetGrade;
+            // Kukunin natin kung anong Reading Level (Grade Level) ang babagsakan base sa Score
             let offset = 0;
-            
             if (total <= 7) offset = 3;
             else if (total <= 13) offset = 2;
             else if (total <= 17) offset = 1;
             else offset = 0;
 
-            readingLevel = targetGrade - offset;
+            let readingLevel = targetGrade - offset;
             if (readingLevel < 1) readingLevel = 1; // Minimum Grade 1
 
-            // Bracket per Reading Level
+            // Ngayong alam na natin ang Reading Level, dito natin ibabase ang Profile
             let profile = "";
             let suggestion = "";
 
-            // Base sa Reading Level, dito natin i-base ang Frustration/Instructional/Independent
+            // Logic: Grade 1 & 2 may specific brackets, Grade 3 pataas standard na
             if (readingLevel === 1) {
                 if (total >= 0 && total <= 3) { profile = "Frustration"; }
                 else if (total >= 4 && total <= 6) { profile = "Instructional"; }
@@ -1131,7 +1128,6 @@
                 else if (total >= 5 && total <= 8) { profile = "Instructional"; }
                 else { profile = "Independent"; }
             } else if (readingLevel >= 3) {
-                // Para sa Grade 3 pataas (Standardized bracket)
                 if (total >= 0 && total <= 7) { profile = "Frustration"; }
                 else if (total >= 8 && total <= 13) { profile = "Instructional"; }
                 else { profile = "Independent"; }
@@ -1161,8 +1157,7 @@
                 intCell.value = suggestion;
                 intCell.dataset.auto = "true"; 
             }
-        }        // ==========================================
-        // CRLA LOGIC
+        }        // CRLA LOGIC
         // ==========================================
         function updateCRLALogic() {
             document.getElementById('crla-table-body').innerHTML = '';
