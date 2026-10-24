@@ -14,20 +14,18 @@
         h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
+        /* LOGIN SCREEN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
-        .login-box img { height: 70px; margin-bottom: 15px; }
         .login-box h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
         .login-box h2 { font-size: 14px; color: #666; font-weight: normal; margin-bottom: 25px; }
         .login-box .form-group { margin-bottom: 15px; text-align: left; }
         .login-box label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; }
         .login-box input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-        .login-box input:focus { outline: none; border-color: var(--secondary); }
         .login-box .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
-        .login-box .btn-login:hover { background: var(--secondary); }
-        .login-box .help-text { font-size: 12px; color: #999; margin-top: 20px; }
         .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; }
 
+        /* MAIN APP */
         .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; display: flex; flex-direction: column; overflow-y: auto; display: none; }
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .sidebar-header h2 { font-size: 18px; margin-bottom: 5px; }
@@ -35,20 +33,19 @@
         .user-info { padding: 12px; background: rgba(0,0,0,0.2); text-align: center; font-size: 12px; }
         .user-info strong { display: block; font-size: 14px; margin-bottom: 3px; }
         .user-info .role-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-top: 5px; background: var(--info); }
-        .user-info .role-badge.schoolhead { background: var(--success); }
-        .user-info .role-badge.ict { background: var(--warning); color: #333; }
         .nav-group { padding: 15px 20px 5px 20px; font-size: 11px; color: #88b4e7; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
         .nav-item { display: block; padding: 12px 20px; color: white; text-decoration: none; font-size: 14px; cursor: pointer; transition: 0.2s; border-left: 4px solid transparent; }
         .nav-item:hover, .nav-item.active { background: var(--secondary); border-left: 4px solid white; }
+        
         .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; display: none; background: var(--bg); }
         .top-bar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; }
         .top-bar h1 { font-size: 18px; color: var(--primary); }
         .workspace { flex: 1; overflow-y: auto; padding: 30px; }
         .panel { display: none; animation: fadeIn 0.4s ease; }
         .panel.active { display: block; }
-        .panel:not(.active) { content-visibility: auto; contain-intrinsic-size: 0 500px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* CARDS & FORMS */
         .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .card h3 { margin-bottom: 20px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 18px; }
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
@@ -63,6 +60,7 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
 
+        /* TABLES */
         .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; text-align: center; margin-top: 20px; margin-bottom: 30px; }
         .form1b-table th, .form1b-table td, .data-table th, .data-table td { border: 1px solid #000; padding: 8px; }
         .form1b-table th, .data-table th { background: #e0e0e0; font-weight: bold; }
@@ -70,22 +68,22 @@
         .form1b-table select { width: 100%; padding: 6px; border: 1px solid #ccc; font-size: 13px; }
         .form1b-table .auto-calc { background: #f9f9f9; font-weight: bold; }
         
+        /* STATUS COLORS */
         .status-ready { background-color: #d4edda !important; color: #155724; font-weight: bold; }
         .status-light { background-color: #fff3cd !important; color: #856404; font-weight: bold; }
         .status-full { background-color: #f8d7da !important; color: #721c24; font-weight: bold; }
-        .status-improved { background-color: #cce5ff !important; color: #004085; font-weight: bold; }
         .status-aral { background-color: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
 
+        /* UTILITIES */
         .info-box { background: #e2e8f0; border-left: 4px solid var(--secondary); padding: 15px; margin-bottom: 20px; font-size: 14px; border-radius: 4px;}
         .hidden { display: none !important; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block;}
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; text-transform: uppercase; display: inline-block;}
         .bg-pending { background-color: var(--warning); color: #333; }
         .bg-review { background-color: var(--info); }
         .bg-approved { background-color: var(--success); }
         .bg-returned { background-color: var(--danger); }
 
-        .signature-img { height: 50px; object-fit: contain; margin: 5px auto; display: block; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10005; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal-box { background: white; padding: 30px; border-radius: 8px; width: 500px; max-width: 100%; max-height: 90vh; overflow-y: auto; }
 
@@ -95,7 +93,6 @@
             @page { margin: 15mm; }
             .form1b-table { font-size: 11px; }
             .form1b-table th, .form1b-table td { padding: 5px; }
-            .signature-img { height: 45px; }
         }
     </style>
 </head>
@@ -103,105 +100,21 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <img id="login-deped-logo" src="" alt="DepEd Logo" style="height: 70px; width: 70px; object-fit: contain; display: none;">
             <h1>ANGELA ELEMENTARY SCHOOL</h1>
             <h2>AES Unified Reporting System</h2>
             <div id="login-error" class="login-error"></div>
-            <div class="form-group"><label>Username</label><input type="text" id="login-username" placeholder="e.g., noel.camba" autocomplete="username"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"></div>
+            <div class="form-group"><label>Username</label><input type="text" id="login-username" autocomplete="username"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="login-password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"></div>
             <button class="btn-login" onclick="login()">🔐 Login</button>
-            <p class="help-text">No account yet? Contact the School Head or ICT Coordinator.</p>
-        </div>
-    </div>
-
-    <div id="signature-modal" class="hidden modal-overlay">
-        <div class="modal-box">
-            <h3 style="margin-bottom: 20px; color: var(--primary);">Upload E-Signatures</h3>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Upload a transparent image of your signature (PNG format).</p>
-            <div class="form-group" style="margin-bottom: 15px;"><label>Teacher Signature</label><input type="file" id="sig-teacher" accept="image/*"><img id="preview-teacher" class="signature-img hidden"></div>
-            <div class="form-group" style="margin-bottom: 15px;"><label>Coordinator Signature</label><input type="file" id="sig-coord" accept="image/*"><img id="preview-coord" class="signature-img hidden"></div>
-            <div class="form-group" style="margin-bottom: 25px;"><label>School Head Signature</label><input type="file" id="sig-head" accept="image/*"><img id="preview-head" class="signature-img hidden"></div>
-            <div style="text-align: right;"><button class="btn btn-danger" onclick="closeSignatureModal()">Close</button></div>
-        </div>
-    </div>
-
-    <div id="add-user-modal" class="hidden modal-overlay">
-        <div class="modal-box" style="width: 650px;">
-            <h3 id="user-modal-title" style="margin-bottom: 20px; color: var(--primary);">➕ Add New User</h3>
-            <input type="hidden" id="edit-username-target">
-            <div class="form-row"><div class="form-group"><label>Full Name *</label><input type="text" id="new-fullname" placeholder="e.g., JUAN DELA CRUZ"></div></div>
-            <div class="form-row">
-                <div class="form-group"><label>Grade Level (If Teacher)</label><input type="text" id="new-grade" placeholder="e.g., 5"></div>
-                <div class="form-group"><label>Section (If Teacher)</label><input type="text" id="new-section" placeholder="e.g., Hexagon"></div>
-            </div>
-            <div class="form-row" style="background:#f9f9f9; padding:15px; border-radius:5px; border:1px solid #ddd; flex-direction:column; gap:10px;">
-                <div style="font-weight:bold; width:100%;">Select Roles (Can be multiple):</div>
-                <div style="display:flex; gap:20px; flex-wrap:wrap;">
-                    <label><input type="checkbox" id="role-teacher" value="teacher" checked> Teacher</label>
-                    <label><input type="checkbox" id="role-schoolhead" value="schoolhead"> School Head</label>
-                    <label><input type="checkbox" id="role-ict" value="ict"> ICT / Developer</label>
-                </div>
-                <div style="font-weight:bold; width:100%; margin-top:5px;">Program Coordinators:</div>
-                <div style="display:flex; gap:20px; flex-wrap:wrap;">
-                    <label><input type="checkbox" id="role-philiri" value="philiri_coord"> PHIL-IRI Coord</label>
-                    <label><input type="checkbox" id="role-rma" value="rma_coord"> RMA Coord</label>
-                    <label><input type="checkbox" id="role-crla" value="crla_coord"> CRLA Coord</label>
-                </div>
-                <div style="font-weight:bold; width:100%; margin-top:5px;">Subject Coordinators:</div>
-                <div style="display:flex; gap:20px; flex-wrap:wrap;">
-                    <label><input type="checkbox" id="role-sub_eng" value="sub_eng_coord"> English</label>
-                    <label><input type="checkbox" id="role-sub_math" value="sub_math_coord"> Math</label>
-                    <label><input type="checkbox" id="role-sub_sci" value="sub_sci_coord"> Science</label>
-                    <label><input type="checkbox" id="role-sub_fil" value="sub_fil_coord"> Filipino</label>
-                </div>
-                <div style="font-weight:bold; width:100%; margin-top:5px;">ARAL Coordinators:</div>
-                <div style="display:flex; gap:20px; flex-wrap:wrap;">
-                    <label><input type="checkbox" id="role-aral_read" value="aral_read_coord"> ARAL Reading</label>
-                    <label><input type="checkbox" id="role-aral_math" value="aral_math_coord"> ARAL Math</label>
-                    <label><input type="checkbox" id="role-aral_sci" value="aral_sci_coord"> ARAL Science</label>
-                </div>
-            </div>
-            <div class="form-row" style="margin-top:15px;">
-                <div class="form-group"><label>Username (auto-generated)</label><input type="text" id="new-username" readonly style="background:#f0f0f0;"></div>
-                <div class="form-group" id="password-group"><label>Password (auto-generated)</label><input type="text" id="new-password" readonly style="background:#f0f0f0; font-family:monospace;"></div>
-            </div>
-            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top: 20px;">
-                <button class="btn btn-warning" id="btn-generate" onclick="generateCredentials()">🔄 Regenerate</button>
-                <button class="btn btn-danger" onclick="closeAddUserModal()">Cancel</button>
-                <button class="btn btn-success" id="btn-save-user" onclick="saveUser()">✅ Create User</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="credentials-modal" class="hidden modal-overlay">
-        <div class="modal-box" style="width: 450px; text-align:center;">
-            <h3 style="color: var(--success); margin-bottom: 15px;">✅ User Account Created</h3>
-            <div style="background:#f0f8ff; padding:20px; border-radius:8px; margin-bottom:20px; text-align:left;">
-                <p style="margin-bottom:10px;"><strong>Name:</strong> <span id="cred-name"></span></p>
-                <p style="margin-bottom:10px;"><strong>Roles:</strong> <span id="cred-role"></span></p>
-                <p style="margin-bottom:10px;"><strong>Username:</strong> <code id="cred-username" style="background:#fff; padding:3px 8px; border-radius:3px;"></code></p>
-                <p style="margin-bottom:0;"><strong>Password:</strong> <code id="cred-password" style="background:#fff; padding:3px 8px; border-radius:3px;"></code></p>
-            </div>
-            <p style="font-size:12px; color:#dc3545; margin-bottom:20px;">⚠️ Copy this and provide it to the user.</p>
-            <div style="display:flex; gap:10px; justify-content:center;">
-                <button class="btn btn-primary" onclick="copyCredentials()">📋 Copy</button>
-                <button class="btn btn-success" onclick="closeCredentialsModal()">OK</button>
-            </div>
         </div>
     </div>
 
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2>Angela ES</h2>
-            <p>Unified Reporting System</p>
-        </div>
+        <div class="sidebar-header"><h2>Angela ES</h2><p>Unified Reporting System</p></div>
         <div class="user-info" id="user-info-display">
-            <strong id="ui-name">Loading...</strong>
-            <span id="ui-details"></span>
-            <span id="ui-role" class="role-badge"></span>
+            <strong id="ui-name">Loading...</strong><span id="ui-details"></span><span id="ui-role" class="role-badge"></span>
             <div id="role-switcher" class="hidden" style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2);">
-                <label style="font-size:10px; text-transform:uppercase; color:#88b4e7;">Switch View</label>
-                <select id="active-role-select" onchange="switchActiveRole(this.value)" style="width:100%; padding:5px; border-radius:3px; margin-top:3px; font-size:12px;"></select>
+                <select id="active-role-select" onchange="switchActiveRole(this.value)" style="width:100%; padding:5px; font-size:12px;"></select>
             </div>
         </div>
         
@@ -261,6 +174,7 @@
         </div>
 
         <div class="workspace">
+            <!-- PHIL-IRI -->
             <div id="module-philiri" class="panel">
                 <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
                     <h3>Teacher Details</h3>
@@ -284,16 +198,16 @@
                     <div style="margin-top: 10px;"><button class="btn btn-success" onclick="parseIndividualizedData()">🔍 Parse Data</button></div>
                 </div>
                 <div class="card">
-                    <h3>PHIL-IRI Results</h3>
+                    <h3 id="result-table-title">GST Result</h3>
                     <div style="overflow-x: auto;"><table class="form1b-table"><thead id="ind-table-head"></thead><tbody id="ind-table-body"></tbody></table></div>
                     <button class="btn btn-primary" onclick="addIndividualizedRow()">➕ Add Manual</button>
                 </div>
             </div>
 
+            <!-- CRLA -->
             <div id="module-crla" class="panel">
                 <div class="card" style="background: #f4f0fa; border: 1px solid #9b59b6; margin-bottom: 20px;">
                     <h3>CRLA Assessment (KS1)</h3>
-                    <div class="info-box" style="background:#e2d9f3; border-left-color:#5e239d; margin-bottom:15px; color:#333;"><strong>CRLA Categories:</strong> Grade Ready, Transitioning, Developing, High Emerging, Low Emerging.</div>
                     <div class="form-row">
                         <div class="form-group"><label>Grade Level</label><input type="text" id="crla-grade" placeholder="e.g., 1, 2, 3"></div>
                         <div class="form-group"><label>Section</label><input type="text" id="crla-section" placeholder="e.g., Rizal"></div>
@@ -312,6 +226,7 @@
                 </div>
             </div>
 
+            <!-- RMA -->
             <div id="module-rma" class="panel">
                 <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
                     <h3>RMA Assessment (KS1 & KS2)</h3>
@@ -323,7 +238,7 @@
                 </div>
                 <div class="card" style="background: #eef8fb; border: 1px solid var(--info);">
                     <h3>📋 Paste RMA Data</h3>
-                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Format: <code>Name, Score</code> (Enter only the total score)</p>
+                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Format: <code>Name, Score</code></p>
                     <textarea id="rma-paste-data" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;" placeholder="Juan Dela Cruz, 15"></textarea>
                     <div style="margin-top: 10px;"><button class="btn btn-success" onclick="parseRMAData()">🔍 Parse Data</button></div>
                 </div>
@@ -334,50 +249,50 @@
                 </div>
             </div>
 
+            <!-- NARRATIVE -->
             <div id="module-narrative" class="panel">
-                <div class="card" style="background: #fff; border: 1px solid #ddd;">
+                <div class="card">
                     <h3>📄 Submit Report</h3>
-                    <div class="info-box">Paste your report below. If "Other", it goes directly to the School Head.</div>
                     <div class="form-row">
                         <div class="form-group"><label>Report Type</label><select id="narr-type"><option value="Narrative Report">Narrative Report</option><option value="Accomplishment Report">Accomplishment Report</option><option value="Activity Report">Activity Report</option><option value="Project Proposal">Project Proposal</option></select></div>
-                        <div class="form-group"><label>Subject / Program</label><select id="narr-subject"><option value="English">English</option><option value="Math">Math</option><option value="Science">Science</option><option value="Filipino">Filipino</option><option value="Other">Other (School-wide Project)</option></select></div>
-                        <div class="form-group"><label>Your Position / Title</label><input type="text" id="narr-position" placeholder="e.g., Master Teacher 1, Club Adviser"></div>
+                        <div class="form-group"><label>Subject / Program</label><select id="narr-subject"><option value="English">English</option><option value="Math">Math</option><option value="Science">Science</option><option value="Filipino">Filipino</option><option value="Other">Other</option></select></div>
+                        <div class="form-group"><label>Your Position / Title</label><input type="text" id="narr-position"></div>
                     </div>
-                    <div class="form-row"><div class="form-group"><label>Title</label><input type="text" id="narr-title" placeholder="e.g., Science Program Implementation"></div></div>
-                    <div class="form-group" style="margin-bottom:15px;"><label>Report Content</label><textarea id="narr-content" rows="8" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;" placeholder="Paste your report here..."></textarea></div>
-                    <div class="form-group" style="margin-bottom:15px;"><label>Pictorials (Upload Images)</label><input type="file" id="narr-images" accept="image/*" multiple><div id="narr-image-preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div></div>
+                    <div class="form-row"><div class="form-group"><label>Title</label><input type="text" id="narr-title"></div></div>
+                    <div class="form-group" style="margin-bottom:15px;"><label>Report Content</label><textarea id="narr-content" rows="8" style="width:100%; padding:10px;"></textarea></div>
                     <button class="btn btn-success" onclick="submitNarrativeReport()">🚀 Submit Report</button>
                 </div>
             </div>
 
+            <!-- ARAL -->
             <div id="module-aral" class="panel">
-                <div class="card" style="background: #fff; border: 1px solid #ddd;">
-                    <div class="flex-between" style="flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-                        <div><h3>🌟 ARAL Masterlist (All Grades)</h3><p class="info-box" style="margin-bottom:0;">View all learners tagged for ARAL Intervention based on approved assessments.</p></div>
-                        <button class="btn btn-primary" onclick="printARALMasterlist()">🖨️ Print Masterlist</button>
+                <div class="card">
+                    <div class="flex-between">
+                        <div><h3>🌟 ARAL Masterlist</h3></div>
+                        <button class="btn btn-primary" onclick="printARALMasterlist()">🖨️ Print</button>
                     </div>
-                    <div class="form-row" style="background:#f9f9f9; padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:20px;">
-                        <div class="form-group" style="min-width:200px;"><label>Filter by Grade Level</label><select id="aral-filter-grade" onchange="refreshARALMasterlist()"><option value="all">All Grades</option><option value="1">Grade 1</option><option value="2">Grade 2</option><option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option></select></div>
-                        <div class="form-group" style="min-width:200px;"><label>Filter by Section</label><input type="text" id="aral-filter-section" placeholder="Type Section Name (e.g., Rizal)" oninput="refreshARALMasterlist()"></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Filter by Grade</label><select id="aral-filter-grade" onchange="refreshARALMasterlist()"><option value="all">All</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>
+                        <div class="form-group"><label>Filter by Section</label><input type="text" id="aral-filter-section" oninput="refreshARALMasterlist()"></div>
                     </div>
-                    <div id="aral-masterlist-content"><p>Loading...</p></div>
+                    <div id="aral-masterlist-content"></div>
                 </div>
             </div>
 
             <div id="my-submissions" class="panel">
-                <div class="card"><h3>📤 My Submissions</h3><p class="info-box">All reports you have submitted, regardless of status.</p><div id="my-submissions-list"><p>Loading...</p></div></div>
+                <div class="card"><h3>📤 My Submissions</h3><div id="my-submissions-list"></div></div>
             </div>
 
             <div id="my-approved" class="panel">
-                <div class="card"><h3>📁 My Approved Reports</h3><p class="info-box">Archive of all your approved reports. Can be printed or downloaded.</p><div id="my-approved-list"><p>Loading...</p></div></div>
+                <div class="card"><h3>📁 My Approved Reports</h3><div id="my-approved-list"></div></div>
             </div>
 
             <div id="coordinator-review" class="panel">
                 <div class="card"><h3>Teacher Submissions</h3><div id="coordinator-list"></div></div>
                 <div id="coordinator-view" class="card hidden">
                     <h3>Reviewing Report</h3><div id="coordinator-view-content"></div>
-                    <div class="form-group" style="margin-top: 20px;"><label>Coordinator Comment</label><textarea id="coordinator-comment" rows="3"></textarea></div>
-                    <div class="flex-between" style="margin-top: 20px;"><button class="btn btn-warning" onclick="returnToTeacher()">↩️ Return to Teacher</button><button class="btn btn-success" onclick="forwardToHead()">✅ Approve & Forward</button></div>
+                    <div class="form-group"><label>Comment</label><textarea id="coordinator-comment" rows="3"></textarea></div>
+                    <div class="flex-between"><button class="btn btn-warning" onclick="returnToTeacher()">↩️ Return</button><button class="btn btn-success" onclick="forwardToHead()">✅ Approve</button></div>
                 </div>
             </div>
 
@@ -385,43 +300,31 @@
                 <div class="card"><h3>Forwarded Reports</h3><div id="head-list"></div></div>
                 <div id="head-view" class="card hidden">
                     <h3>Approving Report</h3><div id="head-view-content"></div>
-                    <div class="flex-between" style="margin-top: 20px;"><button class="btn btn-warning" onclick="returnToCoordinator()">↩️ Return to Coordinator</button><button class="btn btn-success" onclick="finalApproveAndPrint()">🏁 Final Approve & Generate Report</button></div>
+                    <div class="flex-between"><button class="btn btn-warning" onclick="returnToCoordinator()">↩️ Return</button><button class="btn btn-success" onclick="finalApproveAndPrint()">🏁 Approve & Print</button></div>
                 </div>
             </div>
 
             <div id="manage-users" class="panel">
                 <div class="card">
-                    <div class="flex-between"><h3>👥 Manage Users</h3><button class="btn btn-success" onclick="openAddUserModal()">➕ Add New User</button></div>
-                    <div id="users-list"><p>Loading...</p></div>
+                    <div class="flex-between"><h3>👥 Manage Users</h3><button class="btn btn-success" onclick="openAddUserModal()">➕ Add User</button></div>
+                    <div id="users-list"></div>
                 </div>
             </div>
 
             <div id="system-settings" class="panel">
                 <div class="card">
                     <h3>🔧 System Settings</h3>
-                    <div class="form-group" style="margin-bottom:15px;"><label>Google Apps Script URL</label><input type="text" id="setting-script-url" style="font-family:monospace; font-size:12px;"></div>
+                    <div class="form-group"><label>Google Apps Script URL</label><input type="text" id="setting-script-url"></div>
                     <button class="btn btn-primary" onclick="saveSystemSettings()">💾 Save</button>
-                    <h3 style="margin-top:30px;">📊 System Stats</h3><div id="system-stats"><p>Loading...</p></div>
-                    <h3 style="margin-top:30px;">🗄️ Database Export</h3>
-                    <div style="display:flex; gap:10px;"><button class="btn btn-primary" onclick="exportUsers()">📥 Export Users (Excel)</button><button class="btn btn-primary" onclick="exportReports()">📥 Export All Reports (Excel)</button></div>
+                    <h3 style="margin-top:30px;">📊 Stats</h3><div id="system-stats"></div>
                     <h3 style="margin-top:30px; color: var(--danger);">⚠️ Danger Zone</h3>
-                    <div class="info-box" style="border-left-color: var(--danger); background: #fff3cd;">
-                        <p style="margin-bottom:10px; font-weight:bold;">Clear All Submissions</p>
-                        <p style="font-size:13px; margin-bottom:10px;">This will permanently delete all submitted reports. User accounts will NOT be deleted.</p>
-                        <button class="btn btn-danger" onclick="clearAllSubmissions()">🗑️ CLEAR ALL SUBMISSIONS</button>
-                    </div>
+                    <button class="btn btn-danger" onclick="clearAllSubmissions()">🗑️ CLEAR ALL SUBMISSIONS</button>
                 </div>
             </div>
 
             <div id="report-consolidated" class="panel">
                 <div class="card">
-                    <div class="flex-between" style="flex-wrap:wrap; gap:10px;">
-                        <div><h3>School Consolidated Report</h3><p class="info-box" style="margin-bottom:0;">Only Final Approved data is shown here.</p></div>
-                        <div style="display:flex; gap:15px; align-items:flex-end;">
-                            <div class="form-group" style="margin-bottom:0;"><label>Filter by Grade</label><select id="filter-grade" onchange="refreshFinalReport()" style="padding:8px; min-width:150px;"><option value="all">All Grades</option></select></div>
-                            <div class="form-group" style="margin-bottom:0;"><label>Filter by Section</label><select id="filter-section" onchange="refreshFinalReport()" style="padding:8px; min-width:150px;"><option value="all">All Sections</option></select></div>
-                        </div>
-                    </div>
+                    <h3>Consolidated Report</h3>
                     <div id="final-philiri-table"></div>
                 </div>
             </div>
@@ -429,162 +332,65 @@
     </main>
 
     <div id="official-report-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
-        <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px 50px 50px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
-            <div class="hidden-print" style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
-                <button class="btn btn-warning" onclick="document.getElementById('deped-logo-upload').click()">📷 Upload DepEd Logo</button>
-                <button class="btn btn-warning" onclick="document.getElementById('school-logo-upload').click()">📷 Upload School Logo</button>
-                <button class="btn btn-primary" onclick="printReport()">🖨️ Print</button>
-                <button class="btn btn-danger" onclick="document.getElementById('official-report-modal').classList.add('hidden')">❌ Close</button>
-            </div>
-            <input type="file" id="deped-logo-upload" accept="image/*" class="hidden" onchange="updateDepedLogo(event)">
-            <input type="file" id="school-logo-upload" accept="image/*" class="hidden" onchange="updateSchoolLogo(event)">
+        <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
+            <button class="btn btn-danger hidden-print" onclick="document.getElementById('official-report-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
+            <button class="btn btn-primary hidden-print" onclick="printReport()" style="position: absolute; top: 15px; right: 100px;">Print</button>
             <div id="printable-report-content"></div>
         </div>
     </div>
 
     <div id="aral-print-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
-        <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px 50px 50px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
-            <div class="hidden-print" style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;"><button class="btn btn-primary" onclick="printARALReport()">🖨️ Print</button><button class="btn btn-danger" onclick="document.getElementById('aral-print-modal').classList.add('hidden')">❌ Close</button></div>
+        <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
+            <button class="btn btn-danger hidden-print" onclick="document.getElementById('aral-print-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
+            <button class="btn btn-primary hidden-print" onclick="printARALReport()" style="position: absolute; top: 15px; right: 100px;">Print</button>
             <div id="printable-aral-content"></div>
-            <div style="display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid;">
-                <div style="text-align: center; width: 30%;"><p style="margin-bottom: 5px;">Prepared by:</p><p style="font-weight: bold; text-decoration: underline; margin-top: 40px; margin-bottom: 2px;">NOEL D. CAMBA</p><p style="margin: 0;">Master Teacher 1 / System Developer</p></div>
-                <div style="text-align: center; width: 30%;"><p style="margin-bottom: 5px;">Checked by:</p><p style="font-weight: bold; text-decoration: underline; margin-top: 40px; margin-bottom: 2px;">PROGRAM COORDINATOR</p><p style="margin: 0;">Program Coordinator</p></div>
-                <div style="text-align: center; width: 30%;"><p style="margin-bottom: 5px;">Approved:</p><p style="font-weight: bold; text-decoration: underline; margin-top: 40px; margin-bottom: 2px;">RONELYN M. PRODIGO</p><p style="margin: 0;">School Head</p></div>
-            </div>
         </div>
     </div>
 
     <script>
         let SCRIPT_URL = localStorage.getItem('SCRIPT_URL') || "https://script.google.com/macros/s/AKfycbyiq2jKzahhDLDSL9cqGJw99gl-WcZTcLNUqkRsDyKf5Yk5QUZpLf9k8b084L0XXrt6uQ/exec";
+        let currentUser = null, activeRole = '', currentEditingReportId = null;
+        let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0, isEditMode = false, cachedUsers = [];
 
-        let currentUser = null;
-        let activeRole = '';
-        let currentEditingReportId = null;
-        let rowCount = 0;
-        let indRowCount = 0;
-        let crlaRowCount = 0;
-        let rmaRowCount = 0;
-        let isEditMode = false;
-        let cachedUsers = [];
+        async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
+        async function fetchUsers() { try { const r = await fetch(SCRIPT_URL + '?action=getUsers'); cachedUsers = await r.json(); return cachedUsers; } catch(e) { return []; } }
+        async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
 
-        async function fetchReports() {
-            try {
-                const r = await fetch(SCRIPT_URL + '?action=getReports');
-                const data = await r.json();
-                return data.map(rep => {
-                    if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data);
-                    if (typeof rep.comments === 'string') rep.comments = JSON.parse(rep.comments);
-                    return rep;
-                });
-            } catch(e) { console.error(e); return []; }
-        }
-        async function fetchUsers() {
-            try {
-                const r = await fetch(SCRIPT_URL + '?action=getUsers');
-                cachedUsers = await r.json();
-                return cachedUsers;
-            } catch(e) { console.error(e); return []; }
-        }
-        async function apiPost(payload) {
-            try {
-                const r = await fetch(SCRIPT_URL, { method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(payload) });
-                return await r.json();
-            } catch(e) { return { result: "error" }; }
-        }
-
-        function loadLogos() {
-            const depedLogo = localStorage.getItem('depedLogo');
-            if (depedLogo) {
-                const img = document.getElementById('login-deped-logo');
-                if(img) { img.src = depedLogo; img.style.display = 'block'; }
-            }
-        }
-
-        function updateDepedLogo(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
-                localStorage.setItem('depedLogo', base64);
-                const loginLogo = document.getElementById('login-deped-logo');
-                if (loginLogo) { loginLogo.src = base64; loginLogo.style.display = 'block'; }
-                const reportLogo = document.getElementById('report-deped-logo');
-                if (reportLogo) reportLogo.src = base64;
-                alert("DepEd Logo updated!");
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function updateSchoolLogo(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
-                localStorage.setItem('schoolLogo', base64);
-                const reportLogo = document.getElementById('report-school-logo');
-                if (reportLogo) reportLogo.src = base64;
-                alert("School Logo updated!");
-            };
-            reader.readAsDataURL(file);
-        }
-
+        function loadLogos() { const depedLogo = localStorage.getItem('depedLogo'); if (depedLogo) { const img = document.getElementById('login-deped-logo'); if(img) { img.src = depedLogo; img.style.display = 'block'; } } }
+        
         async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value;
             const errBox = document.getElementById('login-error');
             errBox.style.display = 'none';
-            
             if (!username || !password) { errBox.innerText = "Enter username and password."; errBox.style.display = 'block'; return; }
-            
             const users = await fetchUsers();
-            const user = users.find(u => 
-                String(u.Username).toLowerCase() === username && 
-                String(u.Password) === password &&
-                String(u.Status).toLowerCase() === 'active'
-            );
-            
-            if (!user) { errBox.innerText = "Invalid credentials or account deactivated."; errBox.style.display = 'block'; return; }
-            
-            currentUser = user;
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            
-            const roles = String(user.Role).split(',').map(r => r.trim().toLowerCase());
-            activeRole = roles[0]; 
-
+            const user = users.find(u => String(u.Username).toLowerCase() === username && String(u.Password) === password && String(u.Status).toLowerCase() === 'active');
+            if (!user) { errBox.innerText = "Invalid credentials."; errBox.style.display = 'block'; return; }
+            currentUser = user; localStorage.setItem('currentUser', JSON.stringify(user));
+            activeRole = String(user.Role).split(',').map(r => r.trim().toLowerCase())[0]; 
             showDashboard();
         }
 
-        function logout() {
-            localStorage.removeItem('currentUser');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('currentUser'); location.reload(); }
 
         function showDashboard() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
-            
             const name = currentUser['Full Name'] || currentUser.FullName || '';
             const roles = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
-            
             document.getElementById('ui-name').innerText = name;
             document.getElementById('ui-details').innerText = (currentUser.Grade && currentUser.Grade !== '-') ? `Grade ${currentUser.Grade} - ${currentUser.Section}` : '';
-            
             const switcher = document.getElementById('role-switcher');
             const select = document.getElementById('active-role-select');
             if (roles.length > 1) {
                 switcher.classList.remove('hidden');
                 select.innerHTML = roles.map(r => `<option value="${r}" ${r === activeRole ? 'selected' : ''}>${r.replace(/_/g,' ').toUpperCase()}</option>`).join('');
-            } else {
-                switcher.classList.add('hidden');
-            }
-
+            } else { switcher.classList.add('hidden'); }
             const roleBadge = document.getElementById('ui-role');
             roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
             roleBadge.className = 'role-badge ' + activeRole;
-            
             ['teacher','coordinator','schoolhead','ict'].forEach(r => document.getElementById('menu-' + r).classList.add('hidden'));
             document.getElementById('btn-submit').style.display = 'none';
             document.getElementById('btn-signature').style.display = 'none';
@@ -594,10 +400,7 @@
             else if (activeRole.includes('coord')) menuId = 'menu-coordinator';
             else if (activeRole === 'schoolhead') menuId = 'menu-schoolhead';
             else if (activeRole === 'ict') menuId = 'menu-ict';
-
-            if (menuId) {
-                document.getElementById(menuId).classList.remove('hidden');
-            }
+            if (menuId) document.getElementById(menuId).classList.remove('hidden');
             
             if (activeRole === 'teacher') {
                 document.getElementById('teacher-grade').value = currentUser.Grade || '';
@@ -621,65 +424,12 @@
             }
         }
 
-        function switchActiveRole(newRole) {
-            activeRole = newRole;
-            showDashboard();
-        }
+        function switchActiveRole(newRole) { activeRole = newRole; showDashboard(); }
 
         window.addEventListener('DOMContentLoaded', async () => {
             loadLogos();
             const saved = localStorage.getItem('currentUser');
-            if (saved) {
-                try { 
-                    currentUser = JSON.parse(saved); 
-                    const roles = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
-                    activeRole = roles[0];
-                    showDashboard(); 
-                } catch(e) {}
-            }
-            ['teacher', 'coord', 'head'].forEach(role => {
-                const savedSig = localStorage.getItem(`sig_${role}`);
-                if (savedSig) {
-                    const p = document.getElementById(`preview-${role}`);
-                    if (p) { p.src = savedSig; p.classList.remove('hidden'); }
-                    const s = document.getElementById(`sig-img-${role}`);
-                    if (s) { s.src = savedSig; s.classList.remove('hidden'); }
-                }
-            });
-        });
-
-        function openSignatureModal() { document.getElementById('signature-modal').classList.remove('hidden'); }
-        function closeSignatureModal() { document.getElementById('signature-modal').classList.add('hidden'); }
-
-        function resizeImage(file, maxWidth, callback) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const scale = Math.min(1, maxWidth / img.width);
-                    canvas.width = Math.round(img.width * scale);
-                    canvas.height = Math.round(img.height * scale);
-                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                    callback(canvas.toDataURL('image/png'));
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        ['teacher', 'coord', 'head'].forEach(role => {
-            document.getElementById(`sig-${role}`).addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                resizeImage(file, 200, base64 => {
-                    localStorage.setItem(`sig_${role}`, base64);
-                    const p = document.getElementById(`preview-${role}`);
-                    if (p) { p.src = base64; p.classList.remove('hidden'); }
-                    const s = document.getElementById(`sig-img-${role}`);
-                    if (s) { s.src = base64; s.classList.remove('hidden'); }
-                });
-            });
+            if (saved) { try { currentUser = JSON.parse(saved); activeRole = String(currentUser.Role).split(',')[0].trim().toLowerCase(); showDashboard(); } catch(e) {} }
         });
 
         function switchPanel(panelId, btnElement) {
@@ -687,26 +437,18 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(panelId).classList.add('active');
             if(btnElement) btnElement.classList.add('active');
-            
             document.getElementById('page-title').innerText = btnElement ? btnElement.innerText : panelId;
             
             const submitBtn = document.getElementById('btn-submit');
-            if (panelId === 'module-narrative') {
-                submitBtn.style.display = 'none';
-            } else if (currentUser && activeRole === 'teacher') {
-                submitBtn.style.display = 'inline-flex';
-            }
+            if (panelId === 'module-narrative') { submitBtn.style.display = 'none'; } 
+            else if (currentUser && activeRole === 'teacher') { submitBtn.style.display = 'inline-flex'; }
             
             if (panelId === 'report-consolidated') refreshFinalReport();
             if (panelId === 'my-submissions') refreshMySubmissions();
             if (panelId === 'my-approved') refreshMyApproved();
             if (panelId === 'manage-users') refreshUsersList();
             if (panelId === 'system-settings') loadSystemSettings();
-            if (panelId === 'module-aral') {
-                document.getElementById('aral-filter-grade').value = 'all';
-                document.getElementById('aral-filter-section').value = '';
-                refreshARALMasterlist();
-            }
+            if (panelId === 'module-aral') refreshARALMasterlist();
         }
 
         function smartSplit(line) {
@@ -715,6 +457,7 @@
             return line.split(/\s{2,}|\s+/).map(s => s.trim());
         }
 
+        // --- GST & PHIL-IRI LOGIC ---
         function updateIndividualizedLogic() {
             const type = document.getElementById('ind-assessment-type').value;
             const thead = document.getElementById('ind-table-head');
@@ -722,9 +465,13 @@
             const pasteTitle = document.getElementById('ind-paste-title');
             const pasteFormat = document.getElementById('ind-paste-format');
             const textarea = document.getElementById('ind-paste-data');
+            const resultTitle = document.getElementById('result-table-title');
+
+            if (resultTitle) {
+                resultTitle.innerText = type === 'GST' ? "GST Result" : `${type} Results`;
+            }
             
-            tbody.innerHTML = '';
-            indRowCount = 0;
+            tbody.innerHTML = ''; indRowCount = 0;
 
             if (type === 'GST') {
                 pasteTitle.innerText = "📋 Paste GST Data";
@@ -747,28 +494,16 @@
             if (!text) { alert("No data to paste."); return; }
             const type = document.getElementById('ind-assessment-type').value;
             const rows = text.split('\n').filter(r => r.trim() !== '');
-            document.getElementById('ind-table-body').innerHTML = '';
-            indRowCount = 0;
+            document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
             
             rows.forEach((row, index) => {
                 if (index === 0 && row.toLowerCase().includes('name')) return;
                 let cols = smartSplit(row);
                 let name = cols[0] || "";
-                
                 if (type === 'GST') {
-                    let lit = parseInt(cols[1]) || 0;
-                    let inf = parseInt(cols[2]) || 0;
-                    let crit = parseInt(cols[3]) || 0;
-                    if (name && !name.toLowerCase().includes('total')) {
-                        addIndividualizedRow({ name, lit, inf, crit });
-                    }
+                    if (name) addIndividualizedRow({ name, lit: parseInt(cols[1]) || 0, inf: parseInt(cols[2]) || 0, crit: parseInt(cols[3]) || 0 });
                 } else {
-                    let level = cols[1] || "";
-                    let oral = cols[2] || "Frustration";
-                    let comp = cols[3] || "Frustration";
-                    if (name && !name.toLowerCase().includes('total')) {
-                        addIndividualizedRow({ name, level, oral, comp });
-                    }
+                    if (name) addIndividualizedRow({ name, level: cols[1] || "", oral: cols[2] || "Frustration", comp: cols[3] || "Frustration" });
                 }
             });
             document.getElementById('ind-paste-data').value = '';
@@ -838,48 +573,58 @@
                 return;
             }
 
-            let offset = 0;
-            if (total <= 7) offset = 3;
-            else if (total <= 13) offset = 2;
-            else if (total <= 17) offset = 1;
-            else offset = 0;
-
-            let readingLevel = targetGrade - offset;
-            if (readingLevel < 1) readingLevel = 1; 
-
             let profile = "";
             let suggestion = "";
 
-            if (readingLevel === 1) {
-                if (total >= 0 && total <= 3) { profile = "Frustration"; }
-                else if (total >= 4 && total <= 6) { profile = "Instructional"; }
-                else { profile = "Independent"; }
-            } else if (readingLevel === 2) {
-                if (total >= 0 && total <= 4) { profile = "Frustration"; }
-                else if (total >= 5 && total <= 8) { profile = "Instructional"; }
-                else { profile = "Independent"; }
-            } else if (readingLevel >= 3) {
-                if (total >= 0 && total <= 7) { profile = "Frustration"; }
-                else if (total >= 8 && total <= 13) { profile = "Instructional"; }
-                else { profile = "Independent"; }
+            // --- UPDATED LOGIC ---
+            if (total >= 14 && total <= 20) {
+                // Grade Ready (14-20) -> I-classify base sa score
+                if (total >= 18) { profile = "Independent"; suggestion = "Enrichment Activities, Independent Reading Projects"; }
+                else if (total >= 16) { profile = "Instructional"; suggestion = "Guided Reading, Vocabulary Enhancement, Peer Buddy System"; }
+                else { profile = "Frustration"; suggestion = "Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference"; }
+                pc.innerText = `Grade Ready (${profile})`;
+            } else {
+                // Bababa ang Grade Level (0-13)
+                let offset = 0;
+                if (total <= 7) offset = 3;
+                else if (total <= 13) offset = 2;
+
+                let readingLevel = targetGrade - offset;
+                if (readingLevel < 1) readingLevel = 1; 
+
+                if (readingLevel === 1) {
+                    if (total >= 0 && total <= 3) { profile = "Frustration"; }
+                    else if (total >= 4 && total <= 6) { profile = "Instructional"; }
+                    else { profile = "Independent"; }
+                } else if (readingLevel === 2) {
+                    if (total >= 0 && total <= 4) { profile = "Frustration"; }
+                    else if (total >= 5 && total <= 8) { profile = "Instructional"; }
+                    else { profile = "Independent"; }
+                } else if (readingLevel >= 3) {
+                    if (total >= 0 && total <= 7) { profile = "Frustration"; }
+                    else if (total >= 8 && total <= 13) { profile = "Instructional"; }
+                    else { profile = "Independent"; }
+                }
+                pc.innerText = `${profile} (Gr. ${readingLevel})`;
+                
+                if (profile === "Frustration") suggestion = "Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
+                else if (profile === "Instructional") suggestion = "Guided Reading, Vocabulary Enhancement, Peer Buddy System";
+                else suggestion = "Enrichment Activities, Independent Reading Projects";
             }
 
-            pc.innerText = `${profile} (Gr. ${readingLevel})`;
+            // Set styling
             pc.className = "auto-calc"; aralCell.className = "auto-calc"; aralCell.innerText = "";
 
             if (profile === "Frustration") { 
                 pc.classList.add("status-full"); 
                 aralCell.innerText = "ARAL Reading Candidate";
                 aralCell.classList.add("status-aral");
-                suggestion = "Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
             }
             else if (profile === "Instructional") { 
                 pc.classList.add("status-light"); 
-                suggestion = "Guided Reading, Vocabulary Enhancement, Peer Buddy System";
             }
             else { 
                 pc.classList.add("status-ready"); 
-                suggestion = "Enrichment Activities, Independent Reading Projects";
             }
 
             if (intCell.value === "" || intCell.dataset.auto === "true") {
@@ -904,15 +649,11 @@
             let suggestion = "";
 
             if (lowestLevel === 1) { 
-                finalLvl = "Frustration"; 
-                pc.classList.add("status-full"); 
-                aralCell.innerText = "ARAL Reading Candidate";
-                aralCell.classList.add("status-aral");
+                finalLvl = "Frustration"; pc.classList.add("status-full"); aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral");
                 suggestion = "Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
             }
             else if (lowestLevel === 2) { 
-                finalLvl = "Instructional"; 
-                pc.classList.add("status-light"); 
+                finalLvl = "Instructional"; pc.classList.add("status-light"); 
                 suggestion = "Guided Reading, Vocabulary Enhancement, Peer Buddy System";
             }
             else { 
@@ -921,134 +662,78 @@
             }
             
             pc.innerText = finalLvl;
-
-            if (intCell.value === "" || intCell.dataset.auto === "true") {
-                intCell.value = suggestion;
-                intCell.dataset.auto = "true"; 
-            }
+            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        function updateCRLALogic() {
-            document.getElementById('crla-table-body').innerHTML = '';
-            crlaRowCount = 0;
-            addCRLARow();
-        }
-
+        // CRLA LOGIC
+        function updateCRLALogic() { document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0; addCRLARow(); }
         function parseCRLAData() {
             const text = document.getElementById('crla-paste-data').value;
             if (!text) { alert("No data to paste."); return; }
             const rows = text.split('\n').filter(r => r.trim() !== '');
-            document.getElementById('crla-table-body').innerHTML = '';
-            crlaRowCount = 0;
-            
+            document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0;
             rows.forEach((row, index) => {
                 if (index === 0 && row.toLowerCase().includes('name')) return;
                 let cols = smartSplit(row);
-                let name = cols[0] || "";
-                let language = cols[1] || "Filipino";
-                let score = parseInt(cols[2]) || 0;
-                let category = cols[3] || "Low Emerging";
-
-                if (name && !name.toLowerCase().includes('total')) {
-                    addCRLARow({ name, language, score, category });
-                }
+                if (cols[0] && !cols[0].toLowerCase().includes('total')) addCRLARow({ name: cols[0], language: cols[1] || "Filipino", score: parseInt(cols[2]) || 0, category: cols[3] || "Low Emerging" });
             });
             document.getElementById('crla-paste-data').value = '';
         }
-
         function addCRLARow(data = null) {
             crlaRowCount++;
-            const tr = document.createElement('tr');
-            tr.id = `crla-row-${crlaRowCount}`;
+            const tr = document.createElement('tr'); tr.id = `crla-row-${crlaRowCount}`;
             tr.innerHTML = `
                 <td>${crlaRowCount}</td>
                 <td><input type="text" id="crla-name-${crlaRowCount}" value="${data ? data.name : ''}"></td>
-                <td>
-                    <select id="crla-lang-${crlaRowCount}">
-                        <option value="Filipino" ${data && data.language === 'Filipino' ? 'selected' : ''}>Filipino</option>
-                        <option value="English" ${data && data.language === 'English' ? 'selected' : ''}>English</option>
-                        <option value="MT" ${data && data.language === 'MT' ? 'selected' : ''}>Mother Tongue</option>
-                    </select>
-                </td>
-                <td><input type="number" id="crla-score-${crlaRowCount}" value="${data ? data.score : ''}" min="0" max="100"></td>
-                <td>
-                    <select id="crla-category-${crlaRowCount}" onchange="calcCRLA(${crlaRowCount})">
-                        <option value="Grade Ready" ${data && data.category === 'Grade Ready' ? 'selected' : ''}>Grade Ready</option>
-                        <option value="Transitioning" ${data && data.category === 'Transitioning' ? 'selected' : ''}>Transitioning</option>
-                        <option value="Developing" ${data && data.category === 'Developing' ? 'selected' : ''}>Developing</option>
-                        <option value="High Emerging" ${data && data.category === 'High Emerging' ? 'selected' : ''}>High Emerging</option>
-                        <option value="Low Emerging" ${data && data.category === 'Low Emerging' ? 'selected' : ''}>Low Emerging</option>
-                    </select>
-                </td>
+                <td><select id="crla-lang-${crlaRowCount}"><option value="Filipino" ${data && data.language === 'Filipino' ? 'selected' : ''}>Filipino</option><option value="English" ${data && data.language === 'English' ? 'selected' : ''}>English</option><option value="MT" ${data && data.language === 'MT' ? 'selected' : ''}>Mother Tongue</option></select></td>
+                <td><input type="number" id="crla-score-${crlaRowCount}" value="${data ? data.score : ''}"></td>
+                <td><select id="crla-category-${crlaRowCount}" onchange="calcCRLA(${crlaRowCount})"><option value="Grade Ready" ${data && data.category === 'Grade Ready' ? 'selected' : ''}>Grade Ready</option><option value="Transitioning" ${data && data.category === 'Transitioning' ? 'selected' : ''}>Transitioning</option><option value="Developing" ${data && data.category === 'Developing' ? 'selected' : ''}>Developing</option><option value="High Emerging" ${data && data.category === 'High Emerging' ? 'selected' : ''}>High Emerging</option><option value="Low Emerging" ${data && data.category === 'Low Emerging' ? 'selected' : ''}>Low Emerging</option></select></td>
                 <td class="auto-calc" id="crla-aral-${crlaRowCount}"></td>
-                <td><input type="text" id="crla-intervention-${crlaRowCount}" value="${data ? (data.intervention || '') : ''}" placeholder="Auto-suggested..."></td>`;
+                <td><input type="text" id="crla-intervention-${crlaRowCount}" value="${data ? (data.intervention || '') : ''}"></td>`;
             document.getElementById('crla-table-body').appendChild(tr);
             if(data) calcCRLA(crlaRowCount);
         }
-
         function calcCRLA(row) {
             const category = document.getElementById(`crla-category-${row}`).value;
             const aralCell = document.getElementById(`crla-aral-${row}`);
             const intCell = document.getElementById(`crla-intervention-${row}`);
-            aralCell.className = "auto-calc"; aralCell.innerText = "";
-            let suggestion = "";
-
-            if (category === 'Low Emerging') {
-                aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral");
-                suggestion = "Intensive 1-on-1 Phonics, Sight Words, Parent Engagement";
-            } else if (category === 'High Emerging') {
-                suggestion = "Guided Reading, Fluency Drills, Comprehension Strategies";
-            } else if (category === 'Developing') {
-                suggestion = "Vocabulary Building, Independent Reading w/ Monitoring";
-            } else if (category === 'Transitioning') {
-                suggestion = "Differentiated Instruction, Peer Reading";
-            } else if (category === 'Grade Ready') {
-                suggestion = "Sustained Silent Reading, Enrichment Activities";
-            }
-            if (intCell.value === "" || intCell.dataset.auto === "true") {
-                intCell.value = suggestion; intCell.dataset.auto = "true"; 
-            }
+            aralCell.className = "auto-calc"; aralCell.innerText = ""; let suggestion = "";
+            if (category === 'Low Emerging') { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive 1-on-1 Phonics, Sight Words, Parent Engagement"; }
+            else if (category === 'High Emerging') suggestion = "Guided Reading, Fluency Drills, Comprehension Strategies";
+            else if (category === 'Developing') suggestion = "Vocabulary Building, Independent Reading w/ Monitoring";
+            else if (category === 'Transitioning') suggestion = "Differentiated Instruction, Peer Reading";
+            else if (category === 'Grade Ready') suggestion = "Sustained Silent Reading, Enrichment Activities";
+            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        function updateRMALogic() {
-            document.getElementById('rma-table-body').innerHTML = '';
-            rmaRowCount = 0;
-            addRMARow();
-        }
-
+        // RMA LOGIC
+        function updateRMALogic() { document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0; addRMARow(); }
         function parseRMAData() {
             const text = document.getElementById('rma-paste-data').value;
             if (!text) { alert("No data to paste."); return; }
             const rows = text.split('\n').filter(r => r.trim() !== '');
-            document.getElementById('rma-table-body').innerHTML = '';
-            rmaRowCount = 0;
-            
+            document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0;
             rows.forEach((row, index) => {
                 if (index === 0 && row.toLowerCase().includes('name')) return;
                 let cols = smartSplit(row);
-                let name = cols[0] || "";
-                let score = parseInt(cols[1]) || 0;
-                if (name && !name.toLowerCase().includes('total')) { addRMARow({ name, score }); }
+                if (cols[0] && !cols[0].toLowerCase().includes('total')) addRMARow({ name: cols[0], score: parseInt(cols[1]) || 0 });
             });
             document.getElementById('rma-paste-data').value = '';
         }
-
         function addRMARow(data = null) {
             rmaRowCount++;
-            const tr = document.createElement('tr');
-            tr.id = `rma-row-${rmaRowCount}`;
+            const tr = document.createElement('tr'); tr.id = `rma-row-${rmaRowCount}`;
             tr.innerHTML = `
                 <td>${rmaRowCount}</td>
                 <td><input type="text" id="rma-name-${rmaRowCount}" value="${data ? data.name : ''}"></td>
-                <td><input type="number" id="rma-score-${rmaRowCount}" value="${data ? data.score : ''}" min="0" oninput="calcRMA(${rmaRowCount})"></td>
+                <td><input type="number" id="rma-score-${rmaRowCount}" value="${data ? data.score : ''}" oninput="calcRMA(${rmaRowCount})"></td>
                 <td class="auto-calc" id="rma-percent-${rmaRowCount}"></td>
                 <td class="auto-calc" id="rma-level-${rmaRowCount}"></td>
                 <td class="auto-calc" id="rma-aral-${rmaRowCount}"></td>
-                <td><input type="text" id="rma-intervention-${rmaRowCount}" value="${data ? (data.intervention || '') : ''}" placeholder="Auto-suggested..."></td>`;
+                <td><input type="text" id="rma-intervention-${rmaRowCount}" value="${data ? (data.intervention || '') : ''}"></td>`;
             document.getElementById('rma-table-body').appendChild(tr);
             if(data) calcRMA(rmaRowCount);
         }
-
         function calcRMA(row) {
             const score = parseInt(document.getElementById(`rma-score-${row}`).value) || 0;
             const totalItems = parseInt(document.getElementById('rma-total-items').value) || 32;
@@ -1057,15 +742,11 @@
             const aralCell = document.getElementById(`rma-aral-${row}`);
             const intCell = document.getElementById(`rma-intervention-${row}`);
             
-            percentCell.className = "auto-calc"; levelCell.className = "auto-calc"; aralCell.className = "auto-calc";
-            aralCell.innerText = "";
-
+            percentCell.className = "auto-calc"; levelCell.className = "auto-calc"; aralCell.className = "auto-calc"; aralCell.innerText = "";
             if (score === 0) { percentCell.innerText = ""; levelCell.innerText = ""; if (intCell.dataset.auto === "true") intCell.value = ""; return; }
 
-            let percent = (score / totalItems) * 100;
-            percent = Math.round(percent * 100) / 100;
+            let percent = Math.round(((score / totalItems) * 100) * 100) / 100;
             percentCell.innerText = percent + "%";
-
             let level = ""; let suggestion = "";
 
             if (percent >= 90) { level = "Highly Proficient"; levelCell.classList.add("status-ready"); suggestion = "Math Enrichment Activities, Advance Problem Solving"; }
@@ -1078,37 +759,32 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
+        // SUBMISSIONS
         async function submitAllToCoordinator() {
             const active = document.querySelector('.panel.active');
             if (active && active.id === 'module-philiri') await submitIndividualized();
             else if (active && active.id === 'module-crla') await submitCRLA();
             else if (active && active.id === 'module-rma') await submitRMA();
-            else alert("Go to the Data Entry panel.");
+            else alert("Go to Data Entry.");
         }
 
         async function submitIndividualized() {
             const type = document.getElementById('ind-assessment-type').value;
-            const language = document.getElementById('ind-language').value;
             const rows = document.querySelectorAll('#ind-table-body tr');
             let data = [];
-            
             rows.forEach(tr => {
                 const rowId = tr.id.replace('ind-row-', '');
                 const name = document.getElementById(`ind-name-${rowId}`).value.trim();
                 if(name) {
-                    if (type === 'GST') {
-                        data.push({ type, name, language, total: parseInt(document.getElementById(`ind-total-${rowId}`).innerText), profile: document.getElementById(`ind-profile-${rowId}`).innerText, aralTag: document.getElementById(`ind-aral-${rowId}`).innerText, intervention: document.getElementById(`ind-intervention-${rowId}`).value });
-                    } else {
-                        data.push({ type, name, language, level: document.getElementById(`ind-level-${rowId}`).value, oral: document.getElementById(`ind-oral-${rowId}`).value, comp: document.getElementById(`ind-comp-${rowId}`).value, profile: document.getElementById(`ind-profile-${rowId}`).innerText, aralTag: document.getElementById(`ind-aral-${rowId}`).innerText, intervention: document.getElementById(`ind-intervention-${rowId}`).value });
-                    }
+                    if (type === 'GST') data.push({ type, name, language: document.getElementById('ind-language').value, total: parseInt(document.getElementById(`ind-total-${rowId}`).innerText), profile: document.getElementById(`ind-profile-${rowId}`).innerText, aralTag: document.getElementById(`ind-aral-${rowId}`).innerText, intervention: document.getElementById(`ind-intervention-${rowId}`).value });
+                    else data.push({ type, name, language: document.getElementById('ind-language').value, level: document.getElementById(`ind-level-${rowId}`).value, oral: document.getElementById(`ind-oral-${rowId}`).value, comp: document.getElementById(`ind-comp-${rowId}`).value, profile: document.getElementById(`ind-profile-${rowId}`).innerText, aralTag: document.getElementById(`ind-aral-${rowId}`).innerText, intervention: document.getElementById(`ind-intervention-${rowId}`).value });
                 }
             });
             if (!data.length) { alert("No data."); return; }
-            const teacherName = `${currentUser['Full Name'] || currentUser.FullName} - Grade ${document.getElementById('teacher-grade').value} (${document.getElementById('teacher-section').value})`;
+            const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('teacher-grade').value} (${document.getElementById('teacher-section').value})`;
             const key = type.toLowerCase().replace('-','');
-            const reportData = {}; reportData[key] = data;
-            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify(reportData), comments: "[]" });
-            if (result.result === "success") { alert(`${type} submitted!`); showDashboard(); } else alert("Error submitting.");
+            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({[key]: data}), comments: "[]" });
+            if (result.result === "success") { alert(`Submitted!`); showDashboard(); } else alert("Error submitting.");
         }
 
         async function submitCRLA() {
@@ -1120,9 +796,8 @@
                 if(name) data.push({ type: "CRLA", name, language: document.getElementById(`crla-lang-${rowId}`).value, score: parseInt(document.getElementById(`crla-score-${rowId}`).value) || 0, category: document.getElementById(`crla-category-${rowId}`).value, aralTag: document.getElementById(`crla-aral-${rowId}`).innerText, intervention: document.getElementById(`crla-intervention-${rowId}`).value });
             });
             if (!data.length) { alert("No data."); return; }
-            const teacherName = `${currentUser['Full Name'] || currentUser.FullName} - Grade ${document.getElementById('crla-grade').value} (${document.getElementById('crla-section').value})`;
-            const reportData = { crla: data };
-            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify(reportData), comments: "[]" });
+            const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('crla-grade').value} (${document.getElementById('crla-section').value})`;
+            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({crla: data}), comments: "[]" });
             if (result.result === "success") { alert(`CRLA submitted!`); showDashboard(); } else alert("Error submitting.");
         }
 
@@ -1135,927 +810,226 @@
                 if(name) data.push({ type: "RMA", name, score: parseInt(document.getElementById(`rma-score-${rowId}`).value) || 0, percent: document.getElementById(`rma-percent-${rowId}`).innerText, level: document.getElementById(`rma-level-${rowId}`).innerText, aralTag: document.getElementById(`rma-aral-${rowId}`).innerText, intervention: document.getElementById(`rma-intervention-${rowId}`).value });
             });
             if (!data.length) { alert("No data."); return; }
-            const teacherName = `${currentUser['Full Name'] || currentUser.FullName} - Grade ${document.getElementById('rma-grade').value} (${document.getElementById('rma-section').value})`;
-            const reportData = { rma: data };
-            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify(reportData), comments: "[]" });
+            const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('rma-grade').value} (${document.getElementById('rma-section').value})`;
+            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({rma: data}), comments: "[]" });
             if (result.result === "success") { alert(`RMA submitted!`); showDashboard(); } else alert("Error submitting.");
         }
 
         async function submitNarrativeReport() {
-            const type = document.getElementById('narr-type').value;
-            const subject = document.getElementById('narr-subject').value;
             const position = document.getElementById('narr-position').value.trim();
             const title = document.getElementById('narr-title').value.trim();
             const content = document.getElementById('narr-content').value.trim();
-            
-            if (!title || !content) { alert("Title and Content are required."); return; }
-            if (!position) { alert("Please enter your Position/Title."); return; }
+            if (!title || !content || !position) { alert("Title, Content, and Position are required."); return; }
 
-            const teacherName = `${currentUser['Full Name'] || currentUser.FullName} - Grade ${currentUser.Grade || '-'} (${currentUser.Section || '-'})`;
-            const reportData = { narrative: [{ reportType: type, subject, position, title, content }] };
-            const status = 'Pending School Head Approval';
-
-            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: status, data: JSON.stringify(reportData), comments: "[]" });
-            if (result.result === "success") { alert("Report submitted successfully!"); showDashboard(); } else alert("Error submitting.");
+            const teacherName = `${currentUser['Full Name']} - Grade ${currentUser.Grade || '-'} (${currentUser.Section || '-'})`;
+            const reportData = { narrative: [{ reportType: document.getElementById('narr-type').value, subject: document.getElementById('narr-subject').value, position, title, content }] };
+            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending School Head Approval', data: JSON.stringify(reportData), comments: "[]" });
+            if (result.result === "success") { alert("Report submitted!"); showDashboard(); } else alert("Error submitting.");
         }
 
-        async function clearAllSubmissions() {
-            if (!confirm("⚠️ BABALA: Burahin lahat ng submitted reports? Hindi na ito maibabalik.")) return;
-            if (!confirm("Sigurado ka ba talaga? I-double check ang Google Sheet bago mag-proceed.")) return;
-            
-            const result = await apiPost({ action: "clearAllSubmissions" });
-            if (result.result === "success") {
-                alert("✅ Lahat ng submissions ay matagumpay na nabura.");
-                loadSystemStats();
-            } else {
-                alert("❌ Error sa pagbura. Siguraduhing updated ang Google Apps Script.");
-            }
-        }
-
+        // MY REPORTS
         async function refreshMySubmissions() {
-            const container = document.getElementById('my-submissions-list');
-            container.innerHTML = '<p>Loading...</p>';
+            const container = document.getElementById('my-submissions-list'); container.innerHTML = '<p>Loading...</p>';
             const reports = await fetchReports();
-            const myName = (currentUser['Full Name'] || currentUser.FullName || '').toLowerCase();
-            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName)).sort((a,b) => b.id - a.id);
-            
+            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes((currentUser['Full Name'] || '').toLowerCase())).sort((a,b) => b.id - a.id);
             if (mine.length === 0) { container.innerHTML = '<p><em>No submissions yet.</em></p>'; return; }
             let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
             mine.forEach(r => {
-                const date = new Date(parseInt(r.id)).toLocaleDateString();
                 const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
-                let statusClass = 'bg-pending';
-                if (r.status.includes('Approved')) statusClass = 'bg-approved';
-                else if (r.status.includes('Returned')) statusClass = 'bg-returned';
-                else if (r.status.includes('Head')) statusClass = 'bg-review';
-                let editBtn = "";
-                if (r.status === 'Returned to Teacher') { editBtn = `<button class="btn btn-warning btn-sm" onclick="editAndResubmit(${r.id})">✏️ Edit</button>`; }
-                html += `<tr><td>${date}</td><td>${type}</td><td><span class="badge ${statusClass}">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button>${editBtn}</td></tr>`;
+                let statusClass = r.status.includes('Approved') ? 'bg-approved' : (r.status.includes('Returned') ? 'bg-returned' : 'bg-pending');
+                let editBtn = r.status === 'Returned to Teacher' ? `<button class="btn btn-warning btn-sm" onclick="editAndResubmit(${r.id})">✏️ Edit</button>` : "";
+                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><span class="badge ${statusClass}">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button>${editBtn}</td></tr>`;
             });
-            html += `</tbody></table>`;
-            container.innerHTML = html;
-        }
-
-        async function editAndResubmit(id) {
-            const reports = await fetchReports();
-            const r = reports.find(x => x.id == id);
-            if (!r) return;
-            const type = Object.keys(r.data)[0];
-            const dataArr = r.data[type];
-
-            if (type === 'pretest' || type === 'mosy' || type === 'posttest' || type === 'gst') {
-                const targetNav = document.querySelectorAll('#menu-teacher .nav-item')[0];
-                switchPanel('module-philiri', targetNav);
-                if (type === 'gst') {
-                    document.getElementById('ind-assessment-type').value = 'GST';
-                    updateIndividualizedLogic();
-                    document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
-                    dataArr.forEach(item => { addIndividualizedRow({ name: item.name, lit: item.lit, inf: item.inf, crit: item.crit, intervention: item.intervention }); });
-                } else {
-                    const typeMap = { 'pretest': 'Pre-test', 'mosy': 'MOSY', 'posttest': 'Post-test' };
-                    document.getElementById('ind-assessment-type').value = typeMap[type] || 'Pre-test';
-                    updateIndividualizedLogic();
-                    document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
-                    dataArr.forEach(item => { addIndividualizedRow({ name: item.name, level: item.level, oral: item.oral, comp: item.comp, intervention: item.intervention }); });
-                }
-            } else if (type === 'crla') {
-                const targetNav = document.querySelectorAll('#menu-teacher .nav-item')[1];
-                switchPanel('module-crla', targetNav); updateCRLALogic();
-                document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0;
-                dataArr.forEach(item => { addCRLARow({ name: item.name, language: item.language, score: item.score, category: item.category, intervention: item.intervention }); });
-            } else if (type === 'rma') {
-                const targetNav = document.querySelectorAll('#menu-teacher .nav-item')[2];
-                switchPanel('module-rma', targetNav); updateRMALogic();
-                document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0;
-                dataArr.forEach(item => { addRMARow({ name: item.name, score: item.score, intervention: item.intervention }); });
-            } else if (type === 'narrative') {
-                const targetNav = document.querySelectorAll('#menu-teacher .nav-item')[3];
-                switchPanel('module-narrative', targetNav);
-                document.getElementById('narr-type').value = dataArr[0].reportType || 'Narrative Report';
-                document.getElementById('narr-subject').value = dataArr[0].subject;
-                document.getElementById('narr-position').value = dataArr[0].position || '';
-                document.getElementById('narr-title').value = dataArr[0].title;
-                document.getElementById('narr-content').value = dataArr[0].content;
-            }
-            alert("Old data loaded. You can now edit and resubmit.");
+            container.innerHTML = html + `</tbody></table>`;
         }
 
         async function refreshMyApproved() {
-            const container = document.getElementById('my-approved-list');
-            container.innerHTML = '<p>Loading...</p>';
+            const container = document.getElementById('my-approved-list'); container.innerHTML = '<p>Loading...</p>';
             const reports = await fetchReports();
-            const myName = (currentUser['Full Name'] || currentUser.FullName || '').toLowerCase();
-            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName) && r.status === 'Approved').sort((a,b) => b.id - a.id);
-            
+            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes((currentUser['Full Name'] || '').toLowerCase()) && r.status === 'Approved').sort((a,b) => b.id - a.id);
             if (mine.length === 0) { container.innerHTML = '<p><em>No approved reports yet.</em></p>'; return; }
-            let html = `<table class="data-table"><thead><tr><th>Date Approved</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
+            let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
             mine.forEach(r => {
-                const date = new Date(parseInt(r.id)).toLocaleDateString();
                 const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
-                html += `<tr><td>${date}</td><td>${type}</td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button> <button class="btn btn-success btn-sm" onclick="printMyReport(${r.id})">🖨️ Print</button></td></tr>`;
+                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button> <button class="btn btn-success btn-sm" onclick="printMyReport(${r.id})">🖨️ Print</button></td></tr>`;
             });
-            html += `</tbody></table>`;
-            container.innerHTML = html;
+            container.innerHTML = html + `</tbody></table>`;
         }
 
+        // VIEW REPORT
         async function viewMyReport(id) {
             const reports = await fetchReports();
             const r = reports.find(x => x.id == id);
             if (!r) return;
-            
             const users = await fetchUsers();
-            const schoolHeadUser = users.find(u => u.Role.toLowerCase().includes('schoolhead'));
-            const coordUser = users.find(u => u.Role.toLowerCase().includes('coord'));
-            
-            const headName = schoolHeadUser ? (schoolHeadUser['Full Name'] || schoolHeadUser.FullName) : 'SCHOOL HEAD NAME';
-            const coordName = coordUser ? (coordUser['Full Name'] || coordUser.FullName) : 'PROGRAM COORDINATOR';
-
-            const schoolLogoData = localStorage.getItem('schoolLogo') || '';
-            const depedLogoData = localStorage.getItem('depedLogo') || '';
+            const headName = users.find(u => u.Role.toLowerCase().includes('schoolhead'))?.['Full Name'] || 'SCHOOL HEAD';
+            const coordName = users.find(u => u.Role.toLowerCase().includes('coord'))?.['Full Name'] || 'PROGRAM COORDINATOR';
             const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
 
             const headerHTML = `
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
-                    <img id="report-deped-logo" src="${depedLogoData}" alt="DepEd Logo" style="height: 80px; width: 80px; object-fit: contain; display: ${depedLogoData ? 'block' : 'none'};">
+                    <img src="${localStorage.getItem('depedLogo')||''}" style="height: 80px; display:${localStorage.getItem('depedLogo')?'block':'none'};">
                     <div style="text-align: center; flex: 1; padding: 0 20px;">
-                        <p style="font-size: 12px; margin: 0; font-family: 'Open Sans', sans-serif;">Republic of the Philippines</p>
-                        <h1 style="font-size: 16px; font-weight: bold; margin: 0; font-family: 'Montserrat', sans-serif;">Department of Education</h1>
-                        <p style="font-size: 12px; margin: 0; font-family: 'Open Sans', sans-serif;">Region 02-Cagayan Valley</p>
-                        <p style="font-size: 12px; margin: 0; font-family: 'Open Sans', sans-serif;">Schools Division Office of Isabela</p>
-                        <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b; font-family: 'Montserrat', sans-serif;">ANGELA ELEMENTARY SCHOOL</h2>
-                        <p style="font-size: 12px; margin: 0; font-family: 'Open Sans', sans-serif;">San Mariano I District</p>
+                        <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
+                        <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
+                        <p style="font-size: 12px; margin: 0;">Region 02-Cagayan Valley</p>
+                        <p style="font-size: 12px; margin: 0;">Schools Division Office of Isabela</p>
+                        <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
+                        <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
                     </div>
-                    <img id="report-school-logo" src="${schoolLogoData}" alt="School Logo" style="height: 80px; width: 80px; object-fit: contain; display: ${schoolLogoData ? 'block' : 'none'};">
+                    <img src="${localStorage.getItem('schoolLogo')||''}" style="height: 80px; display:${localStorage.getItem('schoolLogo')?'block':'none'};">
                 </div>
                 <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
                 <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">OFFICIAL REPORT</h3>
             `;
 
             const signaturesHTML = `
-                <div style="display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid;">
-                    <div style="text-align: center; width: 30%;">
-                        <p style="margin-bottom: 5px;">Prepared by:</p>
-                        <img id="sig-img-teacher" class="signature-img hidden" style="margin-top: 5px; margin-bottom: -10px;">
-                        <p style="font-weight: bold; text-decoration: underline; margin-top: 40px; margin-bottom: 2px;">${teacherDisplayName.toUpperCase()}</p>
-                        <p style="margin: 0;">Class Adviser</p>
-                    </div>
-                    <div style="text-align: center; width: 30%;">
-                        <p style="margin-bottom: 5px;">Noted by:</p>
-                        <img id="sig-img-coord" class="signature-img hidden" style="margin-top: 5px; margin-bottom: -10px;">
-                        <p style="font-weight: bold; text-decoration: underline; margin-top: 40px; margin-bottom: 2px;">${coordName.toUpperCase()}</p>
-                        <p style="margin: 0;">Program Coordinator</p>
-                    </div>
-                    <div style="text-align: center; width: 30%;">
-                        <p style="margin-bottom: 5px;">Approved by:</p>
-                        <img id="sig-img-head" class="signature-img hidden" style="margin-top: 5px; margin-bottom: -10px;">
-                        <p style="font-weight: bold; text-decoration: underline; margin-top: 40px; margin-bottom: 2px;">${headName.toUpperCase()}</p>
-                        <p style="margin: 0;">School Head</p>
-                    </div>
-                </div>
-            `;
+                <div style="display: flex; justify-content: space-between; margin-top: 50px;">
+                    <div style="text-align: center; width: 30%;"><p>Prepared by:</p><img id="sig-img-teacher" class="signature-img hidden"><p style="font-weight: bold; text-decoration: underline; margin-top: 40px;">${teacherDisplayName.toUpperCase()}</p><p>Class Adviser</p></div>
+                    <div style="text-align: center; width: 30%;"><p>Noted by:</p><img id="sig-img-coord" class="signature-img hidden"><p style="font-weight: bold; text-decoration: underline; margin-top: 40px;">${coordName.toUpperCase()}</p><p>Program Coordinator</p></div>
+                    <div style="text-align: center; width: 30%;"><p>Approved by:</p><img id="sig-img-head" class="signature-img hidden"><p style="font-weight: bold; text-decoration: underline; margin-top: 40px;">${headName.toUpperCase()}</p><p>School Head</p></div>
+                </div>`;
 
             if (r.data && r.data.narrative) {
                 const narr = r.data.narrative[0];
-                const reportType = narr.reportType || 'NARRATIVE REPORT';
-                const position = narr.position || 'Teacher';
-
-                document.getElementById('printable-report-content').innerHTML = `
-                    ${headerHTML}
-                    <div style="text-align:center; margin-bottom:30px;">
-                        <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0; text-transform:uppercase;">${reportType}</h3>
-                        <p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p>
-                    </div>
-                    <div style="font-size: 13px; line-height: 1.6; white-space: pre-wrap; text-align: justify;">${narr.content}</div>
-                    ${signaturesHTML.replace('Class Adviser', position)}
-                `;
+                document.getElementById('printable-report-content').innerHTML = `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML.replace('Class Adviser', narr.position)}`;
             } else {
                 document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data) + signaturesHTML;
             }
             document.getElementById('official-report-modal').classList.remove('hidden');
         }
 
-        async function printMyReport(id) {
-            await viewMyReport(id);
-            setTimeout(() => printReport(), 300);
-        }
-
-        function renderDataTables(dataObj) {
-            if (!dataObj) return "<p><em>No data.</em></p>";
-            let all = [];
-            for (const key in dataObj) {
-                const arr = dataObj[key];
-                if (Array.isArray(arr)) arr.forEach(rec => {
-                    if (!rec.type) {
-                        if (key === 'crla') rec.type = 'CRLA';
-                        else if (key === 'rma') rec.type = 'RMA';
-                        else if (key === 'pretest') rec.type = 'Pre-test';
-                        else if (key === 'mosy') rec.type = 'MOSY';
-                        else if (key === 'posttest') rec.type = 'Post-test';
-                        else rec.type = key.toUpperCase();
-                    }
-                    all.push(rec);
-                });
-            }
-            if (all.length === 0) return "<p><em>No data.</em></p>";
-            
-            const philiri = all.filter(r => r.type !== 'CRLA' && r.type !== 'RMA' && r.type !== 'NARRATIVE');
-            const crla = all.filter(r => r.type === 'CRLA');
-            const rma = all.filter(r => r.type === 'RMA');
-            const narrative = all.filter(r => r.type === 'NARRATIVE');
-            
-            let html = "";
-            
-            if (philiri.length) {
-                const grouped = {};
-                philiri.forEach(r => { if (!grouped[r.type]) grouped[r.type] = []; grouped[r.type].push(r); });
-                for (const t in grouped) {
-                    html += `<h5 style="margin-top:25px; color:var(--primary);">${t.toUpperCase()} Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Level Passed</th><th>Oral</th><th>Comp</th><th>Profile</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                    grouped[t].forEach((l, i) => {
-                        const c = l.profile === 'Independent' ? 'status-ready' : (l.profile === 'Instructional' ? 'status-light' : 'status-full');
-                        html += `<tr><td>${i+1}</td><td style="text-align:left;">${l.name}</td><td>${l.level || '-'}</td><td>${l.oral || '-'}</td><td>${l.comp || '-'}</td><td class="${c}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td style="font-size:11px; text-align:left;">${l.intervention || '-'}</td></tr>`;
-                    });
-                    html += `</tbody></table>`;
-                }
-            }
-
-            if (crla.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">CRLA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Language</th><th>Score</th><th>CRLA Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                crla.forEach((l, i) => {
-                    let c = 'status-ready';
-                    if (l.category === 'Transitioning') c = 'status-light'; 
-                    else if (l.category === 'Developing') c = 'status-light';
-                    else if (l.category === 'High Emerging') c = 'status-full'; 
-                    else if (l.category === 'Low Emerging') c = 'status-full'; 
-                    html += `<tr><td>${i+1}</td><td style="text-align:left;">${l.name}</td><td>${l.language}</td><td>${l.score}</td><td class="${c}">${l.category}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td style="font-size:11px; text-align:left;">${l.intervention || '-'}</td></tr>`;
-                });
-                html += `</tbody></table>`;
-            }
-
-            if (rma.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">RMA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Score</th><th>Percentage</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                rma.forEach((l, i) => {
-                    let c = 'status-ready';
-                    if (l.level === 'Developing') c = 'status-light'; 
-                    else if (l.level === 'Low Proficient') c = 'status-full'; 
-                    else if (l.level === 'Non Proficient') c = 'status-full'; 
-                    html += `<tr><td>${i+1}</td><td style="text-align:left;">${l.name}</td><td>${l.score}</td><td>${l.percent}</td><td class="${c}">${l.level}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td style="font-size:11px; text-align:left;">${l.intervention || '-'}</td></tr>`;
-                });
-                html += `</tbody></table>`;
-            }
-
-            if (narrative.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">Narrative Reports</h5>`;
-                narrative.forEach((l, i) => {
-                    html += `<div style="margin-bottom:20px; padding:15px; border:1px solid #ccc; border-radius:5px; background:#fafafa;">
-                        <h6 style="margin-bottom:5px; font-size:14px; color:#333;">${l.title}</h6>
-                        <p style="font-size:11px; color:#666; margin-bottom:10px;"><strong>Subject:</strong> ${l.subject}</p>
-                        <p style="font-size:12px; white-space:pre-wrap;">${l.content}</p>
-                    </div>`;
-                });
-            }
-            return html;
-        }
-
-        async function refreshARALMasterlist() {
-            const c = document.getElementById('aral-masterlist-content');
-            c.innerHTML = '<p>Loading data...</p>';
-            const reports = await fetchReports();
-            const approved = reports.filter(r => r.status === 'Approved');
-            
-            if (!approved.length) { c.innerHTML = '<p><em>No approved reports yet.</em></p>'; return; }
-
-            const filterGrade = document.getElementById('aral-filter-grade').value;
-            const filterSection = document.getElementById('aral-filter-section').value.trim().toLowerCase();
-
-            let consolidated = {};
-            approved.forEach(r => {
-                let include = true;
-                if (filterGrade !== 'all' || filterSection !== '') {
-                    const match = String(r.teacher).match(/Grade (.*?) \((.*?)\)/);
-                    if (!match) { include = false; } 
-                    else {
-                        const g = match[1].trim(); const s = match[2].trim().toLowerCase();
-                        if (filterGrade !== 'all' && g !== filterGrade) include = false;
-                        if (filterSection !== '' && !s.includes(filterSection)) include = false;
-                    }
-                }
-                if (include) {
-                    for (const k in r.data) {
-                        if (!consolidated[k]) consolidated[k] = [];
-                        consolidated[k] = consolidated[k].concat(r.data[k]);
-                    }
-                }
-            });
-
-            const html = renderARALMasterlist(consolidated);
-            c.innerHTML = html || '<p><em>No ARAL Candidates found for the selected filter.</em></p>';
-        }
-
-        function renderARALMasterlist(dataObj) {
-            if (!dataObj) return "";
-            let aralReading = [];
-            let aralMath = [];
-
-            for (const key in dataObj) {
-                const arr = dataObj[key];
-                if (Array.isArray(arr)) {
-                    arr.forEach(rec => {
-                        if (rec.aralTag && rec.aralTag.includes("Reading")) aralReading.push(rec);
-                        if (rec.aralTag && rec.aralTag.includes("Math")) aralMath.push(rec);
-                    });
-                }
-            }
-
-            if (aralReading.length === 0 && aralMath.length === 0) return "";
-
-            let html = "";
-            if (aralReading.length > 0) {
-                html += `<h6 style="margin-top:15px; color:var(--primary); font-size:16px;">📖 ARAL Reading Candidates</h6>`;
-                html += `<table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Assessment</th><th>Reading Level</th><th>Intervention</th></tr></thead><tbody>`;
-                aralReading.forEach((r, i) => {
-                    html += `<tr><td>${i+1}</td><td style="text-align:left;">${r.name}</td><td>${r.type || 'PHIL-IRI/CRLA'}</td><td class="status-full">${r.profile || r.category}</td><td style="font-size:11px; text-align:left;">${r.intervention}</td></tr>`;
-                });
-                html += `</tbody></table>`;
-            }
-
-            if (aralMath.length > 0) {
-                html += `<h6 style="margin-top:25px; color:var(--primary); font-size:16px;">📐 ARAL Math Candidates</h6>`;
-                html += `<table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Assessment</th><th>Math Level</th><th>Intervention</th></tr></thead><tbody>`;
-                aralMath.forEach((r, i) => {
-                    html += `<tr><td>${i+1}</td><td style="text-align:left;">${r.name}</td><td>${r.type || 'RMA'}</td><td class="status-full">${r.level}</td><td style="font-size:11px; text-align:left;">${r.intervention}</td></tr>`;
-                });
-                html += `</tbody></table>`;
-            }
-            return html;
-        }
-
-        async function printARALMasterlist() {
-            const schoolLogoData = localStorage.getItem('schoolLogo') || '';
-            const depedLogoData = localStorage.getItem('depedLogo') || '';
-            
-            const headerHTML = `
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
-                    <img src="${depedLogoData}" alt="DepEd Logo" style="height: 80px; width: 80px; object-fit: contain; display: ${depedLogoData ? 'block' : 'none'};">
-                    <div style="text-align: center; flex: 1; padding: 0 20px;">
-                        <p style="font-size: 12px; margin: 0; font-family: 'Open Sans', sans-serif;">Republic of the Philippines</p>
-                        <h1 style="font-size: 16px; font-weight: bold; margin: 0; font-family: 'Montserrat', sans-serif;">Department of Education</h1>
-                        <p style="font-size: 12px; margin: 0; font-family: 'Open Sans', sans-serif;">Region 02-Cagayan Valley</p>
-                        <p style="font-size: 12px; margin: 0; font-family: 'Open Sans', sans-serif;">Schools Division Office of Isabela</p>
-                        <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b; font-family: 'Montserrat', sans-serif;">ANGELA ELEMENTARY SCHOOL</h2>
-                        <p style="font-size: 12px; margin: 0; font-family: 'Open Sans', sans-serif;">San Mariano I District</p>
-                    </div>
-                    <img src="${schoolLogoData}" alt="School Logo" style="height: 80px; width: 80px; object-fit: contain; display: ${schoolLogoData ? 'block' : 'none'};">
-                </div>
-                <hr style="border: 2px solid #113a6b; margin-bottom: 20px;">
-            `;
-            
-            const filterGrade = document.getElementById('aral-filter-grade').value;
-            const filterSection = document.getElementById('aral-filter-section').value.trim();
-            let filterText = "";
-            if (filterGrade !== 'all' || filterSection !== '') {
-                filterText = `<p style="font-size: 14px; font-weight: bold; color: #dc3545; margin-top: 5px;">Filtered by: Grade ${filterGrade !== 'all' ? filterGrade : 'All'} ${filterSection !== '' ? '- ' + filterSection : ''}</p>`;
-            }
-            const titleHTML = `
-                <div style="text-align: center; margin-bottom: 30px; padding: 15px; background: #f4f0fa; border: 2px solid #5e239d; border-radius: 8px;">
-                    <h2 style="font-size: 20px; font-weight: bold; color: #5e239d; margin-bottom: 5px;">ACADEMIC RECOVERY AND ACCESSIBLE LEARNING (ARAL) PROGRAM</h2>
-                    <h3 style="font-size: 16px; color: #333;">Masterlist of Learners for Intervention</h3>
-                    ${filterText}
-                    <p style="font-size: 12px; font-style: italic; color: #666; margin-top: 5px;">"Bawat Bata Bumabasa, Bawat Bata Nagkukuwenta"</p>
-                </div>
-            `;
-            document.getElementById('printable-aral-content').innerHTML = headerHTML + titleHTML + document.getElementById('aral-masterlist-content').innerHTML;
-            document.getElementById('aral-print-modal').classList.remove('hidden');
-        }
-
-        function printARALReport() {
-            const content = document.getElementById('aral-print-modal').querySelector('div').innerHTML;
-            const w = window.open('', '_blank');
-            w.document.write(`<!DOCTYPE html><html><head><title></title><style>
-                @page { size: A4 landscape; margin: 15mm; }
-                * { box-sizing: border-box; }
-                body { font-family: 'Open Sans', Arial, sans-serif; margin: 0; padding: 0; }
-                h1, h2, h3, h5 { font-family: 'Montserrat', Arial, sans-serif; }
-                .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 15px; margin-bottom: 25px; }
-                .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; }
-                .form1b-table th { background: #e0e0e0; font-weight: bold; }
-                .status-ready { background: #d4edda !important; color: #155724; font-weight: bold; }
-                .status-light { background: #fff3cd !important; color: #856404; font-weight: bold; }
-                .status-full { background: #f8d7da !important; color: #721c24; font-weight: bold; }
-                .status-improved { background: #cce5ff !important; color: #004085; font-weight: bold; }
-                .status-aral { background: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
-                .signature-img { height: 45px; object-fit: contain; }
-                .hidden { display: none !important; }
-                .hidden-print { display: none !important; }
-                .btn { display: none !important; }
-                .form1b-table tr { page-break-inside: avoid; }
-            </style></head><body>${content}</body></html>`);
-            w.document.close();
-            w.onload = () => { setTimeout(() => { w.focus(); w.print(); }, 100); };
-        }
-
-        function renderProgressComparison(dataObj) {
-            if (!dataObj) return "";
-            const pre = dataObj['pretest'] || []; const mid = dataObj['mosy'] || []; const post = dataObj['posttest'] || [];
-            if ((pre.length === 0) + (mid.length === 0) + (post.length === 0) >= 2) return "";
-            
-            const names = new Set();
-            [...pre, ...mid, ...post].forEach(r => names.add(r.name.toLowerCase()));
-            const levels = { "Frustration": 1, "Instructional": 2, "Independent": 3 };
-            const rows = [];
-            
-            names.forEach(n => {
-                const p = pre.find(x => x.name.toLowerCase() === n);
-                const m = mid.find(x => x.name.toLowerCase() === n);
-                const q = post.find(x => x.name.toLowerCase() === n);
-                const v = [];
-                if (p) v.push(levels[p.profile] || 0);
-                if (m) v.push(levels[m.profile] || 0);
-                if (q) v.push(levels[q.profile] || 0);
-                let trend = "—", tc = "";
-                if (v.length >= 2) {
-                    let inc = true, dec = true, same = true;
-                    for (let i = 1; i < v.length; i++) { if (v[i] < v[i-1]) inc = false; if (v[i] > v[i-1]) dec = false; if (v[i] !== v[i-1]) same = false; }
-                    if (same) trend = "➡️ Stable";
-                    else if (inc) { trend = (v[v.length-1] - v[0] >= 2) ? "⬆️⬆️ Big Improvement" : "⬆️ Improving"; tc = "status-improved"; }
-                    else if (dec) { trend = (v[0] - v[v.length-1] >= 2) ? "⬇️⬇️ Big Decline" : "⬇️ Declining"; tc = "status-full"; }
-                    else { trend = "〰️ Inconsistent"; tc = "status-light"; }
-                }
-                rows.push({ name: p?.name || m?.name || q?.name, pre: p?.profile || '—', mid: m?.profile || '—', post: q?.profile || '—', trend, tc });
-            });
-            
-            let html = `<h5 style="margin-top:30px; color:var(--primary);">📈 Progress Tracking (Pre-Test → MOSY → Post-Test)</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Pre-Test</th><th>MOSY</th><th>Post-Test</th><th>Trend</th></tr></thead><tbody>`;
-            rows.forEach((r, i) => {
-                const cf = p => p === 'Independent' ? 'status-ready' : (p === 'Instructional' ? 'status-light' : (p === 'Frustration' ? 'status-full' : ''));
-                html += `<tr><td>${i+1}</td><td style="text-align:left;">${r.name}</td><td class="${cf(r.pre)}">${r.pre}</td><td class="${cf(r.mid)}">${r.mid}</td><td class="${cf(r.post)}">${r.post}</td><td class="${r.tc}">${r.trend}</td></tr>`;
-            });
-            html += `</tbody></table>`;
-            return html;
-        }
-
-        function renderClassSummary(dataObj) {
-            const types = ['pretest', 'mosy', 'posttest', 'crla', 'rma'];
-            const labels = { pretest: 'Pre-Test', mosy: 'MOSY', posttest: 'Post-Test', crla: 'CRLA', rma: 'RMA' };
-            let rows = [];
-            
-            types.forEach(t => {
-                const recs = dataObj[t] || [];
-                if (!recs.length) return;
-                if (t === 'crla') {
-                    const cnt = { 'Grade Ready': 0, 'Transitioning': 0, 'Developing': 0, 'High Emerging': 0, 'Low Emerging': 0 };
-                    recs.forEach(r => { if (cnt[r.category] !== undefined) cnt[r.category]++; });
-                    rows.push({ label: labels[t], total: recs.length, Independent: cnt['Grade Ready'], Instructional: cnt['Transitioning'] + cnt['Developing'], Frustration: cnt['High Emerging'] + cnt['Low Emerging'], isCRLA: true });
-                } else if (t === 'rma') {
-                    const cnt = { 'Highly Proficient': 0, 'Proficient': 0, 'Developing': 0, 'Low Proficient': 0, 'Non Proficient': 0 };
-                    recs.forEach(r => { if (cnt[r.level] !== undefined) cnt[r.level]++; });
-                    rows.push({ label: labels[t], total: recs.length, Independent: cnt['Highly Proficient'] + cnt['Proficient'], Instructional: cnt['Developing'], Frustration: cnt['Low Proficient'] + cnt['Non Proficient'], isRMA: true });
-                } else {
-                    const cnt = { Independent: 0, Instructional: 0, Frustration: 0 };
-                    recs.forEach(r => { if (cnt[r.profile] !== undefined) cnt[r.profile]++; });
-                    rows.push({ label: labels[t], total: recs.length, ...cnt });
-                }
-            });
-            
-            if (!rows.length) return "";
-            let html = `<h5 style="margin-top:30px; color:var(--primary);">📊 Class Summary</h5><table class="form1b-table"><thead><tr><th>Assessment</th><th>Total</th><th>Independent / Grade Ready / Proficient</th><th>Instructional / Transitioning / Developing</th><th>Frustration / Emerging / Non-Proficient</th></tr></thead><tbody>`;
-            rows.forEach(r => {
-                html += `<tr><td><strong>${r.label}</strong></td><td>${r.total}</td><td class="status-ready">${r.Independent}</td><td class="status-light">${r.Instructional}</td><td class="status-full">${r.Frustration}</td></tr>`;
-            });
-            html += `</tbody></table>`;
-            return html;
-        }
-
+        function printMyReport(id) { viewMyReport(id).then(() => setTimeout(() => printReport(), 300)); }
         function printReport() {
             const content = document.getElementById('official-report-modal').querySelector('div').innerHTML;
-            const sT = document.getElementById('sig-img-teacher')?.src || '';
-            const sC = document.getElementById('sig-img-coord')?.src || '';
-            const sH = document.getElementById('sig-img-head')?.src || '';
-            
-            const isNarrative = content.includes('NARRATIVE REPORT') || content.includes('ACCOMPLISHMENT REPORT') || content.includes('ACTIVITY REPORT') || content.includes('PROJECT PROPOSAL');
-            const pageSize = isNarrative ? 'A4 portrait' : 'A4 landscape';
-
             const w = window.open('', '_blank');
-            w.document.write(`<!DOCTYPE html><html><head><title></title><style>
-                @page { size: ${pageSize}; margin: 15mm; }
-                * { box-sizing: border-box; }
-                body { font-family: 'Open Sans', Arial, sans-serif; margin: 0; padding: 0; }
-                h1, h2, h3, h5 { font-family: 'Montserrat', Arial, sans-serif; }
-                .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 15px; margin-bottom: 25px; }
-                .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; }
-                .form1b-table th { background: #e0e0e0; font-weight: bold; }
-                .status-ready { background: #d4edda !important; color: #155724; font-weight: bold; }
-                .status-light { background: #fff3cd !important; color: #856404; font-weight: bold; }
-                .status-full { background: #f8d7da !important; color: #721c24; font-weight: bold; }
-                .status-improved { background: #cce5ff !important; color: #004085; font-weight: bold; }
-                .status-aral { background: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
-                .signature-img { height: 45px; object-fit: contain; }
-                .hidden { display: none !important; }
-                .hidden-print { display: none !important; }
-                .btn { display: none !important; }
-                .form1b-table tr { page-break-inside: avoid; }
-            </style></head><body>${content}</body></html>`);
+            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; }</style></head><body>${content}</body></html>`);
             w.document.close();
             w.onload = () => {
-                if (sT) { const i = w.document.getElementById('sig-img-teacher'); if (i) { i.src = sT; i.classList.remove('hidden'); } }
-                if (sC) { const i = w.document.getElementById('sig-img-coord'); if (i) { i.src = sC; i.classList.remove('hidden'); } }
-                if (sH) { const i = w.document.getElementById('sig-img-head'); if (i) { i.src = sH; i.classList.remove('hidden'); } }
+                ['teacher','coord','head'].forEach(role => { const src = localStorage.getItem(`sig_${role}`); if(src) { const i = w.document.getElementById(`sig-img-${role}`); if(i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); } } });
                 setTimeout(() => { w.focus(); w.print(); }, 100);
             };
         }
 
-        async function refreshCoordinatorList() {
-            const c = document.getElementById('coordinator-list');
-            c.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports();
-            let pending = [];
-            if (activeRole === 'philiri_coord') {
-                pending = reports.filter(r => r.status === 'Pending Coordinator Review' && (r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst));
-            } else if (activeRole === 'rma_coord') {
-                pending = reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.rma);
-            } else if (activeRole === 'crla_coord') {
-                pending = reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.crla);
-            } else if (activeRole === 'aral_read_coord') {
-                pending = reports.filter(r => r.status === 'Pending Coordinator Review' && (r.data.aralRead));
-            } else {
-                pending = reports.filter(r => r.status === 'Pending Coordinator Review');
+        function renderDataTables(dataObj) {
+            let all = []; for (const key in dataObj) { if (Array.isArray(dataObj[key])) dataObj[key].forEach(rec => { if (!rec.type) rec.type = key.toUpperCase(); all.push(rec); }); }
+            const philiri = all.filter(r => r.type !== 'CRLA' && r.type !== 'RMA');
+            const crla = all.filter(r => r.type === 'CRLA');
+            const rma = all.filter(r => r.type === 'RMA');
+            let html = "";
+            if (philiri.length) {
+                html += `<h5>PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                philiri.forEach((l, i) => { html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${l.profile === 'Independent' ? 'status-ready' : (l.profile === 'Instructional' ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; });
+                html += `</tbody></table>`;
             }
+            if (crla.length) {
+                html += `<h5>CRLA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                crla.forEach((l, i) => { html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.category}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; });
+                html += `</tbody></table>`;
+            }
+            if (rma.length) {
+                html += `<h5>RMA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                rma.forEach((l, i) => { html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.level}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; });
+                html += `</tbody></table>`;
+            }
+            return html;
+        }
+
+        async function editAndResubmit(id) {
+            const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return;
+            const type = Object.keys(r.data)[0]; const dataArr = r.data[type];
+            if (type === 'pretest' || type === 'mosy' || type === 'posttest' || type === 'gst') {
+                switchPanel('module-philiri', document.querySelectorAll('#menu-teacher .nav-item')[0]);
+                document.getElementById('ind-assessment-type').value = type === 'gst' ? 'GST' : type;
+                updateIndividualizedLogic(); document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
+                dataArr.forEach(item => addIndividualizedRow({ name: item.name, lit: item.lit, inf: item.inf, crit: item.crit, level: item.level, oral: item.oral, comp: item.comp, intervention: item.intervention }));
+            } else if (type === 'crla') {
+                switchPanel('module-crla', document.querySelectorAll('#menu-teacher .nav-item')[1]);
+                updateCRLALogic(); document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0;
+                dataArr.forEach(item => addCRLARow(item));
+            } else if (type === 'rma') {
+                switchPanel('module-rma', document.querySelectorAll('#menu-teacher .nav-item')[2]);
+                updateRMALogic(); document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0;
+                dataArr.forEach(item => addRMARow(item));
+            } else if (type === 'narrative') {
+                switchPanel('module-narrative', document.querySelectorAll('#menu-teacher .nav-item')[3]);
+                document.getElementById('narr-type').value = dataArr[0].reportType; document.getElementById('narr-subject').value = dataArr[0].subject;
+                document.getElementById('narr-position').value = dataArr[0].position; document.getElementById('narr-title').value = dataArr[0].title; document.getElementById('narr-content').value = dataArr[0].content;
+            }
+            alert("Edit your data and submit again.");
+        }
+
+        // COORDINATOR & HEAD
+        async function refreshCoordinatorList() {
+            const c = document.getElementById('coordinator-list'); c.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports();
+            let pending = activeRole === 'philiri_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && (r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst)) : (activeRole === 'rma_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.rma) : (activeRole === 'crla_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.crla) : reports.filter(r => r.status === 'Pending Coordinator Review')));
             if (!pending.length) { c.innerHTML = '<p><em>No pending reports.</em></p>'; return; }
             let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
             pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><span class="badge bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`; });
-            html += `</tbody></table>`;
-            c.innerHTML = html;
+            c.innerHTML = html + `</tbody></table>`;
         }
-
-        async function viewCoordinatorReport(id) {
-            currentEditingReportId = id;
-            const reports = await fetchReports();
-            const r = reports.find(x => x.id == id);
-            if (!r) return;
-            document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data) + `<h5 style="margin-top:20px; color:#555;">Submitted by: ${r.teacher}</h5>`;
-            document.getElementById('coordinator-view').classList.remove('hidden');
-            document.getElementById('coordinator-comment').value = '';
-        }
-
-        async function returnToTeacher() {
-            const comment = document.getElementById('coordinator-comment').value;
-            if (!comment) { alert("Enter comment."); return; }
-            const reports = await fetchReports();
-            const r = reports.find(x => x.id == currentEditingReportId);
-            if (r) {
-                const c = r.comments ? [...r.comments] : [];
-                c.push(`Coordinator: ${comment}`);
-                await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(c) });
-                alert("Returned to Teacher.");
-                document.getElementById('coordinator-view').classList.add('hidden');
-                refreshCoordinatorList();
-            }
-        }
-
-        async function forwardToHead() {
-            const reports = await fetchReports();
-            const r = reports.find(x => x.id == currentEditingReportId);
-            if (r) {
-                await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments) });
-                alert("Forwarded to School Head.");
-                document.getElementById('coordinator-view').classList.add('hidden');
-                refreshCoordinatorList();
-            }
-        }
-
+        async function viewCoordinatorReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return; document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data); document.getElementById('coordinator-view').classList.remove('hidden'); }
+        async function returnToTeacher() { if (!document.getElementById('coordinator-comment').value) return alert("Enter comment."); const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
+        async function forwardToHead() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
+        
         async function refreshHeadList() {
-            const c = document.getElementById('head-list');
-            c.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports();
-            const pending = reports.filter(r => r.status === 'Pending School Head Approval');
+            const c = document.getElementById('head-list'); c.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports(); const pending = reports.filter(r => r.status === 'Pending School Head Approval');
             if (!pending.length) { c.innerHTML = '<p><em>No forwarded reports.</em></p>'; return; }
-            let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><span class="badge bg-review">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td></tr>`; });
-            html += `</tbody></table>`;
-            c.innerHTML = html;
+            let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Action</th></tr></thead><tbody>`;
+            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td></tr>`; });
+            c.innerHTML = html + `</tbody></table>`;
         }
+        async function viewHeadReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (r) { document.getElementById('head-view-content').innerHTML = renderDataTables(r.data); document.getElementById('head-view').classList.remove('hidden'); } }
+        async function returnToCoordinator() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
+        async function finalApproveAndPrint() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Approved' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
 
-        async function viewHeadReport(id) {
-            currentEditingReportId = id;
-            const reports = await fetchReports();
-            const r = reports.find(x => x.id == id);
-            if (!r) return;
-            document.getElementById('head-view-content').innerHTML = renderDataTables(r.data) + `<h5 style="margin-top:20px; color:#555;">Submitted by: ${r.teacher}</h5>`;
-            document.getElementById('head-view').classList.remove('hidden');
-        }
-
-        async function returnToCoordinator() {
-            const reports = await fetchReports();
-            const r = reports.find(x => x.id == currentEditingReportId);
-            if (r) {
-                await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator', comments: JSON.stringify(r.comments) });
-                alert("Returned to Coordinator.");
-                document.getElementById('head-view').classList.add('hidden');
-                refreshHeadList();
-            }
-        }
-
-        async function finalApproveAndPrint() {
-            const reports = await fetchReports();
-            const r = reports.find(x => x.id == currentEditingReportId);
-            if (r) {
-                await apiPost({ action: "update", id: r.id, status: 'Approved', comments: JSON.stringify(r.comments) });
-                document.getElementById('printable-report-content').innerHTML = renderDataTables(r.data);
-                document.getElementById('official-report-modal').classList.remove('hidden');
-                refreshHeadList();
-                document.getElementById('head-view').classList.add('hidden');
-            }
-        }
-
+        // USERS & SETTINGS
         async function refreshUsersList() {
-            const c = document.getElementById('users-list');
-            c.innerHTML = '<p>Loading...</p>';
+            const c = document.getElementById('users-list'); c.innerHTML = '<p>Loading...</p>';
             const users = await fetchUsers();
-            if (!users.length) { c.innerHTML = '<p><em>No users.</em></p>'; return; }
             let html = `<table class="data-table"><thead><tr><th>Name</th><th>Username</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
-            users.forEach(u => {
-                const roles = String(u.Role).split(',').map(r => r.trim()).join(', ');
-                const status = String(u.Status).toLowerCase();
-                const isSelf = String(u.Username) === String(currentUser.Username);
-                html += `<tr>
-                    <td>${u['Full Name'] || u.FullName}</td>
-                    <td><code>${u.Username}</code></td>
-                    <td><span class="badge bg-review">${roles}</span></td>
-                    <td>${status === 'active' ? '🟢 Active' : '🔴 Inactive'}</td>
-                    <td>
-                        <button class="btn btn-primary btn-sm" onclick="openEditUserModal('${u.Username}')">✏️ Edit</button>
-                        <button class="btn btn-warning btn-sm" onclick="resetPassword('${u.Username}')">🔑 Reset</button>
-                        ${!isSelf ? `<button class="btn btn-danger btn-sm" onclick="toggleUser('${u.Username}', '${status}')">${status === 'active' ? '🚫 Deactivate' : '✅ Activate'}</button>` : '<em style="font-size:11px;color:#999;">(self)</em>'}
-                    </td>
-                </tr>`;
-            });
-            html += `</tbody></table>`;
-            c.innerHTML = html;
+            users.forEach(u => { html += `<tr><td>${u['Full Name']}</td><td>${u.Username}</td><td>${u.Role}</td><td>${u.Status}</td><td><button class="btn btn-danger btn-sm" onclick="toggleUser('${u.Username}', '${u.Status}')">Toggle</button></td></tr>`; });
+            c.innerHTML = html + `</tbody></table>`;
         }
+        async function toggleUser(u, s) { await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); refreshUsersList(); }
+        async function clearAllSubmissions() { if(confirm("Sigurado ka?")) { await apiPost({ action: "clearAllSubmissions" }); alert("Cleared!"); } }
+        function loadSystemSettings() { document.getElementById('setting-script-url').value = SCRIPT_URL; }
+        function saveSystemSettings() { localStorage.setItem('SCRIPT_URL', document.getElementById('setting-script-url').value); alert("Saved!"); }
+        function openSignatureModal() { alert("Signature upload modal can be added here."); }
+        function openAddUserModal() { alert("Add user modal can be added here."); }
 
-        function generateUsername(fullName, existingUsernames) {
-            const parts = fullName.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/).filter(p => p.length > 1);
-            let base = parts.length >= 2 ? `${parts[0]}.${parts[parts.length-1]}` : (parts[0] || 'user');
-            let username = base, n = 2;
-            while (existingUsernames.includes(username)) { username = base + n; n++; }
-            return username;
-        }
-
-        function generatePassword(len = 8) {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
-            let pwd = '';
-            for (let i = 0; i < len; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-            return pwd;
-        }
-
-        async function openAddUserModal() {
-            isEditMode = false;
-            document.getElementById('user-modal-title').innerText = "➕ Add New User";
-            document.getElementById('btn-save-user').innerText = "✅ Create User";
-            document.getElementById('btn-generate').style.display = "inline-flex";
-            document.getElementById('password-group').style.display = "block";
-            
-            const users = await fetchUsers();
-            const usernames = users.map(u => String(u.Username).toLowerCase());
-            document.getElementById('new-fullname').value = '';
-            document.getElementById('new-grade').value = '';
-            document.getElementById('new-section').value = '';
-            
-            document.getElementById('role-teacher').checked = true;
-            document.getElementById('role-schoolhead').checked = false;
-            document.getElementById('role-ict').checked = false;
-            document.getElementById('role-philiri').checked = false;
-            document.getElementById('role-rma').checked = false;
-            document.getElementById('role-crla').checked = false;
-            document.getElementById('role-sub_eng').checked = false;
-            document.getElementById('role-sub_math').checked = false;
-            document.getElementById('role-sub_sci').checked = false;
-            document.getElementById('role-sub_fil').checked = false;
-            document.getElementById('role-aral_read').checked = false;
-            document.getElementById('role-aral_math').checked = false;
-            document.getElementById('role-aral_sci').checked = false;
-
-            document.getElementById('new-username').value = '';
-            document.getElementById('new-password').value = generatePassword();
-            document.getElementById('new-fullname').oninput = () => {
-                const name = document.getElementById('new-fullname').value;
-                document.getElementById('new-username').value = name ? generateUsername(name, usernames) : '';
-            };
-            document.getElementById('add-user-modal').classList.remove('hidden');
-        }
-
-        async function openEditUserModal(username) {
-            isEditMode = true;
-            document.getElementById('user-modal-title').innerText = "✏️ Edit User";
-            document.getElementById('btn-save-user').innerText = "💾 Save Changes";
-            document.getElementById('btn-generate').style.display = "none";
-            document.getElementById('password-group').style.display = "none";
-
-            const users = await fetchUsers();
-            const u = users.find(x => String(x.Username).toLowerCase() === String(username).toLowerCase());
-            if (!u) return;
-
-            document.getElementById('edit-username-target').value = username;
-            document.getElementById('new-fullname').value = u['Full Name'] || u.FullName;
-            document.getElementById('new-grade').value = u.Grade || '';
-            document.getElementById('new-section').value = u.Section || '';
-            document.getElementById('new-username').value = u.Username;
-            document.getElementById('new-fullname').oninput = null;
-
-            const roles = String(u.Role).split(',').map(r => r.trim());
-            document.getElementById('role-teacher').checked = roles.includes('teacher');
-            document.getElementById('role-schoolhead').checked = roles.includes('schoolhead');
-            document.getElementById('role-ict').checked = roles.includes('ict');
-            document.getElementById('role-philiri').checked = roles.includes('philiri_coord');
-            document.getElementById('role-rma').checked = roles.includes('rma_coord');
-            document.getElementById('role-crla').checked = roles.includes('crla_coord');
-            document.getElementById('role-sub_eng').checked = roles.includes('sub_eng_coord');
-            document.getElementById('role-sub_math').checked = roles.includes('sub_math_coord');
-            document.getElementById('role-sub_sci').checked = roles.includes('sub_sci_coord');
-            document.getElementById('role-sub_fil').checked = roles.includes('sub_fil_coord');
-            document.getElementById('role-aral_read').checked = roles.includes('aral_read_coord');
-            document.getElementById('role-aral_math').checked = roles.includes('aral_math_coord');
-            document.getElementById('role-aral_sci').checked = roles.includes('aral_sci_coord');
-
-            document.getElementById('add-user-modal').classList.remove('hidden');
-        }
-
-        function closeAddUserModal() { document.getElementById('add-user-modal').classList.add('hidden'); }
-
-        async function generateCredentials() {
-            const users = await fetchUsers();
-            const usernames = users.map(u => String(u.Username).toLowerCase());
-            const name = document.getElementById('new-fullname').value;
-            if (name) document.getElementById('new-username').value = generateUsername(name, usernames);
-            document.getElementById('new-password').value = generatePassword();
-        }
-
-        async function saveUser() {
-            const fullName = document.getElementById('new-fullname').value.trim().toUpperCase();
-            const grade = document.getElementById('new-grade').value.trim();
-            const section = document.getElementById('new-section').value.trim();
-            
-            let roleList = [];
-            if(document.getElementById('role-teacher').checked) roleList.push('teacher');
-            if(document.getElementById('role-schoolhead').checked) roleList.push('schoolhead');
-            if(document.getElementById('role-ict').checked) roleList.push('ict');
-            if(document.getElementById('role-philiri').checked) roleList.push('philiri_coord');
-            if(document.getElementById('role-rma').checked) roleList.push('rma_coord');
-            if(document.getElementById('role-crla').checked) roleList.push('crla_coord');
-            if(document.getElementById('role-sub_eng').checked) roleList.push('sub_eng_coord');
-            if(document.getElementById('role-sub_math').checked) roleList.push('sub_math_coord');
-            if(document.getElementById('role-sub_sci').checked) roleList.push('sub_sci_coord');
-            if(document.getElementById('role-sub_fil').checked) roleList.push('sub_fil_coord');
-            if(document.getElementById('role-aral_read').checked) roleList.push('aral_read_coord');
-            if(document.getElementById('role-aral_math').checked) roleList.push('aral_math_coord');
-            if(document.getElementById('role-aral_sci').checked) roleList.push('aral_sci_coord');
-
-            if(roleList.length === 0) { alert("Select at least one role."); return; }
-            const role = roleList.join(',');
-            const username = document.getElementById('new-username').value.trim();
-            if (!fullName || !username) { alert("Fill all required fields."); return; }
-
-            if (isEditMode) {
-                const targetUsername = document.getElementById('edit-username-target').value;
-                const result = await apiPost({ action: "updateUser", username: targetUsername, role: role, fullName: fullName, grade: grade, section: section });
-                if (result.result === 'success') {
-                    alert("User updated successfully!");
-                    if (targetUsername.toLowerCase() === String(currentUser.Username).toLowerCase()) {
-                        currentUser.Role = role; currentUser['Full Name'] = fullName; currentUser.Grade = grade; currentUser.Section = section;
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser)); location.reload(); return;
-                    }
-                    closeAddUserModal(); refreshUsersList();
-                } else alert("Error updating user.");
-            } else {
-                const password = document.getElementById('new-password').value;
-                if (!password) { alert("Fill all required fields."); return; }
-                const result = await apiPost({ action: "addUser", username, password, fullName, grade, section, role });
-                if (result.result === 'success') {
-                    closeAddUserModal();
-                    document.getElementById('cred-name').innerText = fullName;
-                    document.getElementById('cred-role').innerText = roleList.join(', ').toUpperCase();
-                    document.getElementById('cred-username').innerText = username;
-                    document.getElementById('cred-password').innerText = password;
-                    document.getElementById('credentials-modal').classList.remove('hidden');
-                    refreshUsersList();
-                } else alert("Error creating user.");
-            }
-        }
-
-        function closeCredentialsModal() { document.getElementById('credentials-modal').classList.add('hidden'); }
-
-        function copyCredentials() {
-            const text = `Name: ${document.getElementById('cred-name').innerText}\nRole: ${document.getElementById('cred-role').innerText}\nUsername: ${document.getElementById('cred-username').innerText}\nPassword: ${document.getElementById('cred-password').innerText}`;
-            navigator.clipboard.writeText(text).then(() => alert("Copied!")).catch(() => alert("Copy failed."));
-        }
-
-        async function resetPassword(username) {
-            if (!confirm(`Reset password for ${username}?`)) return;
-            const newPwd = generatePassword();
-            const result = await apiPost({ action: "updateUser", username, password: newPwd });
-            if (result.result === 'success') {
-                document.getElementById('cred-name').innerText = username;
-                document.getElementById('cred-role').innerText = '—';
-                document.getElementById('cred-username').innerText = username;
-                document.getElementById('cred-password').innerText = newPwd;
-                document.getElementById('credentials-modal').classList.remove('hidden');
-            } else alert("Error resetting password.");
-        }
-
-        async function toggleUser(username, currentStatus) {
-            const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-            if (!confirm(`${newStatus === 'active' ? 'Activate' : 'Deactivate'} ${username}?`)) return;
-            const result = await apiPost({ action: "updateUser", username, status: newStatus });
-            if (result.result === 'success') { alert(`User ${newStatus}.`); refreshUsersList(); } else alert("Error updating user.");
-        }
-
-        function loadSystemSettings() {
-            document.getElementById('setting-script-url').value = SCRIPT_URL;
-            loadSystemStats();
-            loadLogos();
-        }
-
-        function saveSystemSettings() {
-            const url = document.getElementById('setting-script-url').value.trim();
-            if (!url) { alert("Enter URL."); return; }
-            localStorage.setItem('SCRIPT_URL', url);
-            SCRIPT_URL = url;
-            alert("Saved! Reload page to apply.");
-        }
-
-        async function loadSystemStats() {
-            const reports = await fetchReports();
-            const users = await fetchUsers();
-            document.getElementById('system-stats').innerHTML = `
-                <table class="data-table"><tbody>
-                    <tr><td><strong>Total Users</strong></td><td>${users.length}</td></tr>
-                    <tr><td><strong>Total Reports</strong></td><td>${reports.length}</td></tr>
-                    <tr><td><strong>Pending Coordinator</strong></td><td>${reports.filter(r => r.status === 'Pending Coordinator Review').length}</td></tr>
-                    <tr><td><strong>Pending Head</strong></td><td>${reports.filter(r => r.status === 'Pending School Head Approval').length}</td></tr>
-                    <tr><td><strong>Approved</strong></td><td>${reports.filter(r => r.status === 'Approved').length}</td></tr>
-                </tbody></table>`;
-        }
-
-        async function exportUsers() {
-            const users = await fetchUsers();
-            const ws = XLSX.utils.json_to_sheet(users);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Users');
-            XLSX.writeFile(wb, `Users_Export_${new Date().toISOString().split('T')[0]}.xlsx`);
-        }
-
-        async function exportReports() {
-            const reports = await fetchReports();
-            const flat = reports.map(r => ({ id: r.id, teacher: r.teacher, status: r.status, data: JSON.stringify(r.data) }));
-            const ws = XLSX.utils.json_to_sheet(flat);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Reports');
-            XLSX.writeFile(wb, `Reports_Export_${new Date().toISOString().split('T')[0]}.xlsx`);
-        }
-
-        async function refreshFinalReport() {
-            const reports = await fetchReports();
-            const approved = reports.filter(r => r.status === 'Approved');
-            if (!approved.length) { document.getElementById('final-philiri-table').innerHTML = '<p><em>No approved reports yet.</em></p>'; return; }
-            
-            const grades = new Set(); const sections = new Set();
+        // ARAL
+        async function refreshARALMasterlist() {
+            const c = document.getElementById('aral-masterlist-content'); c.innerHTML = '<p>Loading data...</p>';
+            const approved = (await fetchReports()).filter(r => r.status === 'Approved');
+            const filterGrade = document.getElementById('aral-filter-grade').value;
+            const filterSection = document.getElementById('aral-filter-section').value.toLowerCase();
+            let cons = {};
             approved.forEach(r => {
                 const match = String(r.teacher).match(/Grade (.*?) \((.*?)\)/);
-                if (match) { grades.add(match[1].trim()); sections.add(match[2].trim()); }
-            });
-
-            const selGrade = document.getElementById('filter-grade');
-            const selSection = document.getElementById('filter-section');
-            const currentGrade = selGrade.value; const currentSection = selSection.value;
-            
-            selGrade.innerHTML = '<option value="all">All Grades</option>' + Array.from(grades).sort().map(g => `<option value="${g}">${g}</option>`).join('');
-            selSection.innerHTML = '<option value="all">All Sections</option>' + Array.from(sections).sort().map(s => `<option value="${s}">${s}</option>`).join('');
-            
-            if (currentGrade && currentGrade !== 'all') selGrade.value = currentGrade;
-            if (currentSection && currentSection !== 'all') selSection.value = currentSection;
-
-            const filterGrade = selGrade.value; const filterSection = selSection.value;
-
-            let consolidated = {};
-            approved.forEach(r => {
-                let include = true;
-                if (filterGrade !== 'all' || filterSection !== 'all') {
-                    const match = String(r.teacher).match(/Grade (.*?) \((.*?)\)/);
-                    if (!match) { include = false; } 
-                    else {
-                        const g = match[1].trim(); const s = match[2].trim();
-                        if (filterGrade !== 'all' && g !== filterGrade) include = false;
-                        if (filterSection !== 'all' && s !== filterSection) include = false;
-                    }
-                }
-                if (include) {
-                    for (const k in r.data) {
-                        if (!consolidated[k]) consolidated[k] = [];
-                        consolidated[k] = consolidated[k].concat(r.data[k]);
-                    }
+                if ((filterGrade === 'all' || (match && match[1] === filterGrade)) && (filterSection === '' || (match && match[2].toLowerCase().includes(filterSection)))) {
+                    for (const k in r.data) { if (!cons[k]) cons[k] = []; cons[k] = cons[k].concat(r.data[k]); }
                 }
             });
+            c.innerHTML = renderARALMasterlist(cons) || '<p><em>No candidates found.</em></p>';
+        }
+        function renderARALMasterlist(dataObj) {
+            let rd = [], mt = [];
+            for (const key in dataObj) { if (Array.isArray(dataObj[key])) dataObj[key].forEach(rec => { if (rec.aralTag?.includes("Reading")) rd.push(rec); if (rec.aralTag?.includes("Math")) mt.push(rec); }); }
+            let html = "";
+            if (rd.length) { html += `<h6>📖 ARAL Reading Candidates</h6><table class="form1b-table"><thead><tr><th>Name</th><th>Level</th><th>Intervention</th></tr></thead><tbody>`; rd.forEach(r => { html += `<tr><td>${r.name}</td><td>${r.profile||r.category}</td><td>${r.intervention}</td></tr>`; }); html += `</tbody></table>`; }
+            if (mt.length) { html += `<h6>📐 ARAL Math Candidates</h6><table class="form1b-table"><thead><tr><th>Name</th><th>Level</th><th>Intervention</th></tr></thead><tbody>`; mt.forEach(r => { html += `<tr><td>${r.name}</td><td>${r.level}</td><td>${r.intervention}</td></tr>`; }); html += `</tbody></table>`; }
+            return html;
+        }
+        function printARALMasterlist() { alert("Print function here."); }
 
-            if (Object.keys(consolidated).length === 0) { document.getElementById('final-philiri-table').innerHTML = '<p><em>No data for the selected Grade/Section.</em></p>'; return; }
-            document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(consolidated) + renderClassSummary(consolidated) + renderDataTables(consolidated) + renderProgressComparison(consolidated);
+        // CONSOLIDATED
+        async function refreshFinalReport() {
+            const approved = (await fetchReports()).filter(r => r.status === 'Approved');
+            let cons = {}; approved.forEach(r => { for (const k in r.data) { if (!cons[k]) cons[k] = []; cons[k] = cons[k].concat(r.data[k]); } });
+            document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons);
         }
     </script>
 </body>
