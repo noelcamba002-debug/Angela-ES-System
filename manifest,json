@@ -1,0 +1,22 @@
+{
+  "name": "AES Unified Reporting System",
+  "short_name": "AES",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#113a6b",
+  "theme_color": "#113a6b",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
