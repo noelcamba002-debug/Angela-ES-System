@@ -1105,29 +1105,71 @@
 
         function generateClassSummary() {
             const approved = (window.cachedApprovedForPrint || []);
-            const summary = {}; 
+            
+            // Hahatiin natin ang data base sa uri ng assessment (GST, CRLA, RMA, Phil-IRI Other)
+            const summary = {
+                'GST': {},
+                'CRLA': {},
+                'RMA': {},
+                'PHILIRI': {} // Para sa Pre-test, MOSY, Post-test
+            };
+
             approved.forEach(r => {
                 const match = String(r.teacher).match(/Grade (.*?) \((.*?)\)/);
                 const grade = match ? match[1].trim() : 'Unknown';
-                if (!summary[grade]) summary[grade] = { total: 0, frustration: 0, instructional: 0, independent: 0 };
+
                 for (const key in r.data) {
                     if (Array.isArray(r.data[key])) {
                         r.data[key].forEach(rec => {
-                            summary[grade].total++;
-                            if (rec.profile && rec.profile.includes('Frustration')) summary[grade].frustration++;
-                            else if (rec.profile && rec.profile.includes('Instructional')) summary[grade].instructional++;
-                            else if (rec.profile && rec.profile.includes('Independent')) summary[grade].independent++;
+                            let type = '';
+                            if (rec.type === 'GST') type = 'GST';
+                            else if (rec.type === 'CRLA') type = 'CRLA';
+                            else if (rec.type === 'RMA') type = 'RMA';
+                            else if (rec.type === 'Pre-test' || rec.type === 'MOSY' || rec.type === 'Post-test') type = 'PHILIRI';
+                            else return; // Skip kung walang match
+
+                            if (!summary[type][grade]) summary[type][grade] = { total: 0, frustration: 0, instructional: 0, independent: 0 };
+                            
+                            summary[type][grade].total++;
+                            
+                            // Iba-iba ang criteria per type
+                            if (type === 'RMA') {
+                                if (rec.level && (rec.level.includes('Low Proficient') || rec.level.includes('Non Proficient'))) summary[type][grade].frustration++;
+                                else if (rec.level && rec.level.includes('Developing')) summary[type][grade].instructional++;
+                                else summary[type][grade].independent++;
+                            } else if (type === 'CRLA') {
+                                if (rec.category && (rec.category.includes('Low Emerging') || rec.category.includes('High Emerging'))) summary[type][grade].frustration++;
+                                else if (rec.category && rec.category.includes('Developing')) summary[type][grade].instructional++;
+                                else summary[type][grade].independent++;
+                            } else {
+                                // GST at PHIL-IRI
+                                if (rec.profile && rec.profile.includes('Frustration')) summary[type][grade].frustration++;
+                                else if (rec.profile && rec.profile.includes('Instructional')) summary[type][grade].instructional++;
+                                else summary[type][grade].independent++;
+                            }
                         });
                     }
                 }
             });
 
-            let html = `<h5>Class Summary (All Grades)</h5><table class="form1b-table"><thead><tr><th>Grade Level</th><th>Total Learners</th><th>Frustration</th><th>Instructional</th><th>Independent</th></tr></thead><tbody>`;
-            for (const grade in summary) {
-                const s = summary[grade];
-                html += `<tr><td><strong>Grade ${grade}</strong></td><td>${s.total}</td><td class="status-full">${s.frustration}</td><td class="status-light">${s.instructional}</td><td class="status-ready">${s.independent}</td></tr>`;
+            let html = "";
+
+            // Gumawa ng table para sa bawat uri
+            const titles = { 'GST': 'GST (Reading)', 'CRLA': 'CRLA (Reading)', 'RMA': 'RMA (Math)', 'PHILIRI': 'PHIL-IRI (Reading)' };
+            
+            for (const type in summary) {
+                if (Object.keys(summary[type]).length === 0) continue; // Skip kung walang data
+
+                html += `<h5 style="margin-top:20px;">${titles[type]} Summary</h5>`;
+                html += `<table class="form1b-table"><thead><tr><th>Grade Level</th><th>Total Learners</th><th>Frustration / Low Emerging</th><th>Instructional / Developing</th><th>Independent / Grade Ready</th></tr></thead><tbody>`;
+                
+                for (const grade in summary[type]) {
+                    const s = summary[type][grade];
+                    html += `<tr><td><strong>Grade ${grade}</strong></td><td>${s.total}</td><td class="status-full">${s.frustration}</td><td class="status-light">${s.instructional}</td><td class="status-ready">${s.independent}</td></tr>`;
+                }
+                html += `</tbody></table>`;
             }
-            html += `</tbody></table>`;
+
             return html;
         }
     </script>
