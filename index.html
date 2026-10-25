@@ -891,16 +891,23 @@
             if (gstData.length) {
                 html += `<h5 style="margin-top:25px; color:var(--primary);">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 gstData.forEach((l, i) => { 
-                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${l.profile.includes('Independent') ? 'status-ready' : (l.profile.includes('Instructional') ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                    let colorClass = 'status-full';
+                    if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
+                    else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
+                    
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
             }
 
-            // IBA PANG PHIL-IRI (Pre-test, MOSY, Post-test)
             if (philiriOther.length) {
                 html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 philiriOther.forEach((l, i) => { 
-                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${l.profile.includes('Independent') ? 'status-ready' : (l.profile.includes('Instructional') ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                    let colorClass = 'status-full';
+                    if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
+                    else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
+
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
             }
