@@ -915,14 +915,13 @@
                     let colorClass = 'status-full';
                     if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
                     else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
-                    
-                    // Dito natin ilalabas ang buong text (e.g. Frustration (Gr. 2))
+
+                    // Dito natin ilalabas ang buong l.profile (e.g. "Frustration (Gr. 2)")
                     html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
             }
 
-            // PHIL-IRI OTHER
             if (philiriOther.length) {
                 html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 philiriOther.forEach((l, i) => { 
@@ -1020,6 +1019,7 @@
         async function refreshARALMasterlist() {
             const c = document.getElementById('aral-masterlist-content'); c.innerHTML = '<p>Loading data...</p>';
             const approved = (await fetchReports()).filter(r => r.status === 'Approved');
+            window.cachedApprovedForPrint = approved; // Save for print
             const filterGrade = document.getElementById('aral-filter-grade').value;
             const filterSection = document.getElementById('aral-filter-section').value.toLowerCase();
             let cons = {};
@@ -1043,12 +1043,22 @@
 
         async function refreshFinalReport() {
             const approved = (await fetchReports()).filter(r => r.status === 'Approved');
-            let cons = {}; approved.forEach(r => { for (const k in r.data) { if (!cons[k]) cons[k] = []; cons[k] = cons[k].concat(r.data[k]); } });
+            window.cachedApprovedForPrint = approved; 
+            
+            let cons = {}; 
+            approved.forEach(r => { 
+                for (const k in r.data) { 
+                    if (!cons[k]) cons[k] = []; 
+                    cons[k] = cons[k].concat(r.data[k]); 
+                } 
+            });
             document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons, "All Teachers");
         }
 
         function printConsolidatedReport() {
-            const content = document.getElementById('final-philiri-table').innerHTML;
+            const aralContent = document.getElementById('aral-masterlist-content').innerHTML;
+            const summaryContent = generateClassSummary();
+
             const headerHTML = `
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
                     <img src="${localStorage.getItem('depedLogo')||''}" style="height: 80px; display:${localStorage.getItem('depedLogo')?'block':'none'};">
@@ -1063,13 +1073,62 @@
                     <img src="${localStorage.getItem('schoolLogo')||''}" style="height: 80px; display:${localStorage.getItem('schoolLogo')?'block':'none'};">
                 </div>
                 <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
-                <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">CONSOLIDATED SCHOOL REPORT</h3>
+                <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">SCHOOL CONSOLIDATED REPORT</h3>
             `;
 
+            const signaturesHTML = `
+                <div style="display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid;">
+                    <div style="text-align: center; width: 45%;">
+                        <p style="margin-bottom: 5px;">Prepared by:</p>
+                        <img id="sig-img-coord" class="signature-img hidden" style="margin-top: 5px; margin-bottom: -10px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin-top: 40px; margin-bottom: 2px;">NOEL D. CAMBA</p>
+                        <p style="margin: 0;">ICT Coordinator / System Developer</p>
+                    </div>
+                    <div style="text-align: center; width: 45%;">
+                        <p style="margin-bottom: 5px;">Noted by:</p>
+                        <img id="sig-img-head" class="signature-img hidden" style="margin-top: 5px; margin-bottom: -10px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin-top: 40px; margin-bottom: 2px;">RONELYN M. PRODIGO</p>
+                        <p style="margin: 0;">School Head</p>
+                    </div>
+                </div>`;
+
             const w = window.open('', '_blank');
-            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; }</style></head><body>${headerHTML}${content}</body></html>`);
+            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .form1b-table th { background: #e0e0e0; font-weight: bold; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; } h4, h5 { margin-top: 15px; margin-bottom: 5px; color: #113a6b; }</style></head><body>${headerHTML}${summaryContent}${aralContent}${signaturesHTML}</body></html>`);
             w.document.close();
-            w.onload = () => { setTimeout(() => { w.focus(); w.print(); }, 100); };
+            w.onload = () => {
+                const sC = localStorage.getItem('sig_coord'); const sH = localStorage.getItem('sig_head');
+                if (sC) { const i = w.document.getElementById('sig-img-coord'); if (i) { i.src = sC; i.style.height = '45px'; i.classList.remove('hidden'); } }
+                if (sH) { const i = w.document.getElementById('sig-img-head'); if (i) { i.src = sH; i.style.height = '45px'; i.classList.remove('hidden'); } }
+                setTimeout(() => { w.focus(); w.print(); }, 100);
+            };
+        }
+
+        function generateClassSummary() {
+            const approved = (window.cachedApprovedForPrint || []);
+            const summary = {}; 
+            approved.forEach(r => {
+                const match = String(r.teacher).match(/Grade (.*?) \((.*?)\)/);
+                const grade = match ? match[1].trim() : 'Unknown';
+                if (!summary[grade]) summary[grade] = { total: 0, frustration: 0, instructional: 0, independent: 0 };
+                for (const key in r.data) {
+                    if (Array.isArray(r.data[key])) {
+                        r.data[key].forEach(rec => {
+                            summary[grade].total++;
+                            if (rec.profile && rec.profile.includes('Frustration')) summary[grade].frustration++;
+                            else if (rec.profile && rec.profile.includes('Instructional')) summary[grade].instructional++;
+                            else if (rec.profile && rec.profile.includes('Independent')) summary[grade].independent++;
+                        });
+                    }
+                }
+            });
+
+            let html = `<h5>Class Summary (All Grades)</h5><table class="form1b-table"><thead><tr><th>Grade Level</th><th>Total Learners</th><th>Frustration</th><th>Instructional</th><th>Independent</th></tr></thead><tbody>`;
+            for (const grade in summary) {
+                const s = summary[grade];
+                html += `<tr><td><strong>Grade ${grade}</strong></td><td>${s.total}</td><td class="status-full">${s.frustration}</td><td class="status-light">${s.instructional}</td><td class="status-ready">${s.independent}</td></tr>`;
+            }
+            html += `</tbody></table>`;
+            return html;
         }
     </script>
 </body>
