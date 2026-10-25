@@ -317,9 +317,30 @@
                 </div>
             </div>
 
+            <!-- FINAL CONSOLIDATED -->
             <div id="report-consolidated" class="panel">
                 <div class="card">
-                    <h3>Consolidated Report</h3>
+                    <div class="flex-between" style="flex-wrap:wrap; gap:10px;">
+                        <div>
+                            <h3>Final School Consolidated Report</h3>
+                            <p class="info-box" style="margin-bottom:0;">Only <strong>Final Approved</strong> data is shown here.</p>
+                        </div>
+                        <div style="display:flex; gap:15px; align-items:flex-end;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Filter by Grade</label>
+                                <select id="filter-grade" onchange="refreshFinalReport()" style="padding:8px; min-width:150px;">
+                                    <option value="all">All Grades</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Filter by Section</label>
+                                <select id="filter-section" onchange="refreshFinalReport()" style="padding:8px; min-width:150px;">
+                                    <option value="all">All Sections</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="printConsolidatedReport()">🖨️ Print Consolidated Report</button>
+                        </div>
+                    </div>
                     <div id="final-philiri-table"></div>
                 </div>
             </div>
@@ -894,13 +915,14 @@
                     let colorClass = 'status-full';
                     if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
                     else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
-
-                    // Dito natin ilalabas ang buong l.profile (e.g. "Frustration (Gr. 2)")
+                    
+                    // Dito natin ilalabas ang buong text (e.g. Frustration (Gr. 2))
                     html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
             }
 
+            // PHIL-IRI OTHER
             if (philiriOther.length) {
                 html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 philiriOther.forEach((l, i) => { 
@@ -1023,6 +1045,31 @@
             const approved = (await fetchReports()).filter(r => r.status === 'Approved');
             let cons = {}; approved.forEach(r => { for (const k in r.data) { if (!cons[k]) cons[k] = []; cons[k] = cons[k].concat(r.data[k]); } });
             document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons, "All Teachers");
+        }
+
+        function printConsolidatedReport() {
+            const content = document.getElementById('final-philiri-table').innerHTML;
+            const headerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
+                    <img src="${localStorage.getItem('depedLogo')||''}" style="height: 80px; display:${localStorage.getItem('depedLogo')?'block':'none'};">
+                    <div style="text-align: center; flex: 1; padding: 0 20px;">
+                        <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
+                        <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
+                        <p style="font-size: 12px; margin: 0;">Region 02-Cagayan Valley</p>
+                        <p style="font-size: 12px; margin: 0;">Schools Division Office of Isabela</p>
+                        <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
+                        <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
+                    </div>
+                    <img src="${localStorage.getItem('schoolLogo')||''}" style="height: 80px; display:${localStorage.getItem('schoolLogo')?'block':'none'};">
+                </div>
+                <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
+                <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">CONSOLIDATED SCHOOL REPORT</h3>
+            `;
+
+            const w = window.open('', '_blank');
+            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; }</style></head><body>${headerHTML}${content}</body></html>`);
+            w.document.close();
+            w.onload = () => { setTimeout(() => { w.focus(); w.print(); }, 100); };
         }
     </script>
 </body>
