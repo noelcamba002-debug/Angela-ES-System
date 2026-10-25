@@ -887,18 +887,20 @@
                 html += `<h4 style="margin-top:20px; margin-bottom:10px; color:#333;">Grade Level: <span style="color:#113a6b;">${gradeLevelStr}</span></h4>`;
             }
 
+            // GST TABLE
             if (gstData.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                html += `<h5 style="margin-top:25px; color:var(--primary);">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 gstData.forEach((l, i) => { 
-                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${l.profile === 'Independent' ? 'status-ready' : (l.profile === 'Instructional' ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${l.profile.includes('Independent') ? 'status-ready' : (l.profile.includes('Instructional') ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
             }
 
+            // IBA PANG PHIL-IRI (Pre-test, MOSY, Post-test)
             if (philiriOther.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 philiriOther.forEach((l, i) => { 
-                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${l.profile === 'Independent' ? 'status-ready' : (l.profile === 'Instructional' ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${l.profile.includes('Independent') ? 'status-ready' : (l.profile.includes('Instructional') ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
             }
