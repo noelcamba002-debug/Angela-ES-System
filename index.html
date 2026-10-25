@@ -7,13 +7,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
-
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
         h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
-
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
         .login-box h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
@@ -450,7 +447,7 @@
             return line.split(/\s{2,}|\s+/).map(s => s.trim());
         }
 
-        // --- GST LOGIC (FINAL) ---
+        // --- GST LOGIC ---
         function updateIndividualizedLogic() {
             const type = document.getElementById('ind-assessment-type').value;
             const thead = document.getElementById('ind-table-head');
@@ -555,7 +552,6 @@
                 
                 displayStr = `Grade Ready (${profile})`;
                 
-                // ENRICHMENT INTERVENTIONS
                 if (profile === "Independent") {
                     suggestion = "ENRICHMENT: Provide advanced reading materials, book reports, or peer tutoring roles.";
                 } else if (profile === "Instructional") {
@@ -563,8 +559,7 @@
                 } else {
                     suggestion = "ENRICHMENT: Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
                 }
-                
-                isAral = false; // HINDI ARAL
+                isAral = false;
 
             // --- LOGIC 2: DOWNGRADE (0-13) -> REMEDIATION ---
             } else {
@@ -593,16 +588,13 @@
                 displayStr = `${profile} (Gr. ${readingLevel})`;
             }
 
-            // Set Profile text
             pc.innerText = displayStr;
             pc.className = "auto-calc"; 
 
-            // Set Color Coding
             if (profile === "Frustration") pc.classList.add("status-full");
             else if (profile === "Instructional") pc.classList.add("status-light");
             else pc.classList.add("status-ready");
 
-            // Set ARAL Tag (Lahat ng 0-13, kahit Independent, ay may ARAL Tag)
             aralCell.className = "auto-calc";
             if (isAral) {
                 aralCell.innerText = "ARAL Reading Candidate";
@@ -611,7 +603,6 @@
                 aralCell.innerText = "";
             }
 
-            // Set Intervention
             if (intCell.value === "" || intCell.dataset.auto === "true") { 
                 intCell.value = suggestion; 
                 intCell.dataset.auto = "true"; 
@@ -853,7 +844,7 @@
                 const narr = r.data.narrative[0];
                 document.getElementById('printable-report-content').innerHTML = `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML.replace('Class Adviser', narr.position)}`;
             } else {
-                document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data) + signaturesHTML;
+                document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + signaturesHTML;
             }
             document.getElementById('official-report-modal').classList.remove('hidden');
         }
@@ -870,27 +861,64 @@
             };
         }
 
-        function renderDataTables(dataObj) {
-            let all = []; for (const key in dataObj) { if (Array.isArray(dataObj[key])) dataObj[key].forEach(rec => { if (!rec.type) rec.type = key.toUpperCase(); all.push(rec); }); }
-            const philiri = all.filter(r => r.type !== 'CRLA' && r.type !== 'RMA');
+        function renderDataTables(dataObj, teacherName) {
+            let gradeLevelStr = "";
+            if (teacherName) {
+                const match = teacherName.match(/Grade (.*?) \((.*?)\)/);
+                if (match) gradeLevelStr = `Grade ${match[1]} - ${match[2]}`;
+            }
+
+            let all = []; 
+            for (const key in dataObj) { 
+                if (Array.isArray(dataObj[key])) dataObj[key].forEach(rec => { 
+                    if (!rec.type) rec.type = key.toUpperCase(); 
+                    all.push(rec); 
+                }); 
+            }
+            
+            const gstData = all.filter(r => r.type === 'GST');
+            const philiriOther = all.filter(r => r.type !== 'CRLA' && r.type !== 'RMA' && r.type !== 'GST');
             const crla = all.filter(r => r.type === 'CRLA');
             const rma = all.filter(r => r.type === 'RMA');
+            
             let html = "";
-            if (philiri.length) {
-                html += `<h5>PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                philiri.forEach((l, i) => { html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${l.profile === 'Independent' ? 'status-ready' : (l.profile === 'Instructional' ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; });
+            
+            if (gradeLevelStr) {
+                html += `<h4 style="margin-top:20px; margin-bottom:10px; color:#333;">Grade Level: <span style="color:#113a6b;">${gradeLevelStr}</span></h4>`;
+            }
+
+            if (gstData.length) {
+                html += `<h5 style="margin-top:25px; color:var(--primary);">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                gstData.forEach((l, i) => { 
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${l.profile === 'Independent' ? 'status-ready' : (l.profile === 'Instructional' ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                });
                 html += `</tbody></table>`;
             }
+
+            if (philiriOther.length) {
+                html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                philiriOther.forEach((l, i) => { 
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${l.profile === 'Independent' ? 'status-ready' : (l.profile === 'Instructional' ? 'status-light' : 'status-full')}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                });
+                html += `</tbody></table>`;
+            }
+
             if (crla.length) {
-                html += `<h5>CRLA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                crla.forEach((l, i) => { html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.category}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; });
+                html += `<h5 style="margin-top:25px; color:var(--primary);">CRLA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                crla.forEach((l, i) => { 
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.category}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                });
                 html += `</tbody></table>`;
             }
+
             if (rma.length) {
-                html += `<h5>RMA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                rma.forEach((l, i) => { html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.level}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; });
+                html += `<h5 style="margin-top:25px; color:var(--primary);">RMA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                rma.forEach((l, i) => { 
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.level}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                });
                 html += `</tbody></table>`;
             }
+            
             return html;
         }
 
@@ -927,7 +955,7 @@
             pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><span class="badge bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`; });
             c.innerHTML = html + `</tbody></table>`;
         }
-        async function viewCoordinatorReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return; document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data); document.getElementById('coordinator-view').classList.remove('hidden'); }
+        async function viewCoordinatorReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return; document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('coordinator-view').classList.remove('hidden'); }
         async function returnToTeacher() { if (!document.getElementById('coordinator-comment').value) return alert("Enter comment."); const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
         async function forwardToHead() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
         
@@ -939,7 +967,7 @@
             pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td></tr>`; });
             c.innerHTML = html + `</tbody></table>`;
         }
-        async function viewHeadReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (r) { document.getElementById('head-view-content').innerHTML = renderDataTables(r.data); document.getElementById('head-view').classList.remove('hidden'); } }
+        async function viewHeadReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (r) { document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('head-view').classList.remove('hidden'); } }
         async function returnToCoordinator() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
         async function finalApproveAndPrint() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Approved' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
 
@@ -984,7 +1012,7 @@
         async function refreshFinalReport() {
             const approved = (await fetchReports()).filter(r => r.status === 'Approved');
             let cons = {}; approved.forEach(r => { for (const k in r.data) { if (!cons[k]) cons[k] = []; cons[k] = cons[k].concat(r.data[k]); } });
-            document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons);
+            document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons, "All Teachers");
         }
     </script>
 </body>
