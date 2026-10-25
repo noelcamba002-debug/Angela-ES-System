@@ -7,12 +7,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
         
-        /* PANGKALAHATANG SUKAT PARA SA A4 */
         @page { size: A4 portrait; margin: 0; }
 
         body { background: #525659; font-family: 'Open Sans', sans-serif; color: #333; margin: 0; padding: 40px 0; line-height: 1.6; }
 
-        /* A4 PAPER CONTAINER */
         .paper { background: white; width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20mm 20mm; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
 
         .top-buttons { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
@@ -23,29 +21,21 @@
         /* COVER PAGE */
         .cover-page { height: 100%; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; position: relative; z-index: 1; }
         .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 150mm; font-weight: 900; color: #113a6b; opacity: 0.03; z-index: -1; font-family: 'Montserrat', sans-serif; pointer-events: none; letter-spacing: -5mm; }
-        
-        /* COVER HEADER (FLEXBOX ALIGNMENT) */
-        .cover-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .logo-container { position: relative; width: 28mm; height: 28mm; display: flex; flex-direction: column; align-items: center; justify-content: center;}
-        .logo-img { height: 20mm; width: 20mm; object-fit: contain; }
+        .cover-header { display: flex; justify-content: space-between; align-items: center; }
+        .logo-container { position: relative; width: 30mm; height: 30mm; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        .logo-img { height: 22mm; width: 22mm; object-fit: contain; }
         .upload-btn { margin-top: 5px; font-size: 8px; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #64748b; display: block; }
-        
-        /* CENTER TEXT (DEPED INFO) */
-        .cover-text { flex: 1; text-align: center; padding: 0 10px;}
-        .cover-text p { margin: 0; font-size: 11px; color: #555; letter-spacing: 1px; text-transform: uppercase; text-align: center; }
-        .cover-text h1 { font-size: 16px; font-weight: 800; margin: 3px 0; font-family: 'Montserrat', sans-serif; color: #113a6b; letter-spacing: 1px; text-align: center;}
-        
-        /* CENTER TITLE (USER MANUAL) */
-        .cover-title { text-align: center; margin: auto 0; padding: 30px 0; border-top: 3px solid #ffc107; border-bottom: 3px solid #ffc107; background: rgba(255,255,255,0.9); width: 100%;}
-        .cover-title h2 { font-size: 40px; color: #113a6b; font-family: 'Montserrat', sans-serif; margin-bottom: 5px; letter-spacing: 4px; line-height: 1.1; text-transform: uppercase; text-align: center;}
-        .cover-title h3 { font-size: 18px; color: #2a5a9b; font-family: 'Montserrat', sans-serif; font-weight: 700; margin-top: 0; letter-spacing: 1px; text-align: center;}
-        .cover-title p { font-size: 12px; color: #666; margin-top: 15px; font-style: italic; text-align: center;}
-        
-        /* COVER FOOTER (PERFECTLY CENTERED) */
-        .cover-footer { text-align: center; margin-bottom: 5mm; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;}
-        .cover-footer h4 { font-size: 18px; color: #113a6b; margin-bottom: 5px; font-family: 'Montserrat', sans-serif; letter-spacing: 2px; text-align: center;}
-        .cover-footer p { margin: 0; font-size: 13px; color: #666; text-align: center;}
-        .seal { display: inline-block; margin-top: 15px; padding: 6px 15px; border: 2px solid #113a6b; border-radius: 50px; color: #113a6b; font-weight: bold; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; text-align: center;}
+        .cover-text { flex: 1; text-align: center;}
+        .cover-text p { margin: 0; font-size: 11px; color: #555; letter-spacing: 1px; text-transform: uppercase;}
+        .cover-text h1 { font-size: 16px; font-weight: 800; margin: 2px 0; font-family: 'Montserrat', sans-serif; color: #113a6b; letter-spacing: 1px;}
+        .cover-title { text-align: center; margin: auto 0; padding: 30px 0; border-top: 3px solid #ffc107; border-bottom: 3px solid #ffc107; background: rgba(255,255,255,0.8); }
+        .cover-title h2 { font-size: 42px; color: #113a6b; font-family: 'Montserrat', sans-serif; margin-bottom: 5px; letter-spacing: 5px; line-height: 1.1; text-transform: uppercase; }
+        .cover-title h3 { font-size: 20px; color: #2a5a9b; font-family: 'Montserrat', sans-serif; font-weight: 700; margin-top: 0; letter-spacing: 1px; }
+        .cover-title p { font-size: 12px; color: #666; margin-top: 15px; font-style: italic; }
+        .cover-footer { text-align: center; margin-bottom: 10mm; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;}
+        .cover-footer h4 { font-size: 18px; color: #113a6b; margin-bottom: 5px; font-family: 'Montserrat', sans-serif; letter-spacing: 2px;}
+        .cover-footer p { margin: 0; font-size: 13px; color: #666; }
+        .seal { display: inline-block; margin-top: 15px; padding: 6px 15px; border: 2px solid #113a6b; border-radius: 50px; color: #113a6b; font-weight: bold; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
 
         /* TABLE OF CONTENTS */
         .toc-container { page-break-after: always; }
@@ -62,7 +52,6 @@
         h2.section-title { color: #113a6b; font-family: 'Montserrat', sans-serif; border-bottom: 3px solid #ffc107; padding-bottom: 8px; margin-top: 30px; font-size: 22px;}
         h3.sub-title { color: #2a5a9b; font-family: 'Montserrat', sans-serif; margin-top: 20px; font-size: 16px;}
         
-        /* INALIS ANG JUSTIFY DITO PARA HINDI MAGULO */
         p { font-size: 13px; text-align: left; margin-bottom: 15px;}
         ul, ol { font-size: 13px; padding-left: 20px; margin-bottom: 15px; text-align: left;}
         li { margin-bottom: 8px; text-align: left;}
@@ -144,7 +133,8 @@
                 <li><a href="#problems">2. Problems Solved by the System</a></li>
                 <li><a href="#basis">3. Educational and Legal Basis</a></li>
                 <li><a href="#definition">4. Definition of Terms</a></li>
-                <li><a href="#teachers">5. Guide for Teachers</a>
+                <li><a href="#aral-process">5. ARAL Identification & Intervention Process</a></li>
+                <li><a href="#teachers">6. Guide for Teachers</a>
                     <ul class="toc-sub">
                         <li><a href="#login">A. Login and Uploading E-Signature</a></li>
                         <li><a href="#narrative">B. Submitting Narrative and Activity Reports</a></li>
@@ -154,9 +144,9 @@
                         <li><a href="#returned">F. Editing a "Returned" Report</a></li>
                     </ul>
                 </li>
-                <li><a href="#coordinators">6. Guide for Coordinators</a></li>
-                <li><a href="#admin">7. Guide for ICT / Admin</a></li>
-                <li><a href="#faq">8. Frequently Asked Questions (FAQ)</a></li>
+                <li><a href="#coordinators">7. Guide for Coordinators</a></li>
+                <li><a href="#admin">8. Guide for ICT / Admin</a></li>
+                <li><a href="#faq">9. Frequently Asked Questions (FAQ)</a></li>
             </ul>
         </div>
     </div>
@@ -271,10 +261,38 @@
         </div>
     </div>
 
-    <!-- PAPER PAGE 7 (TEACHER GUIDE PART 1) -->
+    <!-- PAPER PAGE 7 (ARAL PROCESS) -->
+    <div class="paper">
+        <div class="content-section" id="aral-process">
+            <h2 class="section-title">5. ARAL Identification & Intervention Process</h2>
+            <p>To ensure that no learner is left behind, the AES Unified Reporting System has a built-in automatic tagging feature for the <strong>Academic Recovery and Accessible Learning (ARAL) Program</strong>. The system strictly follows the DepEd guidelines in identifying learners who need reading and numeracy interventions.</p>
+
+            <h3 class="sub-title">A. Who are automatically tagged as ARAL Candidates?</h3>
+            <p>The system automatically flags a learner as an ARAL candidate based on their performance in the following assessments:</p>
+            <ul>
+                <li><strong>PHIL-IRI (GST):</strong> Learners who score <strong>0 to 13</strong> in the Group Screening Test. Regardless of their reading profile (Frustration, Instructional, or Independent), they are considered for ARAL because their reading level is below their current grade level.</li>
+                <li><strong>CRLA (KS1):</strong> Learners who fall under the <strong>"Low Emerging"</strong> category.</li>
+                <li><strong>RMA (Math):</strong> Learners who score below 50% (categorized as <strong>Low Proficient</strong> or <strong>Non Proficient</strong>).</li>
+            </ul>
+
+            <h3 class="sub-title">B. The Intervention Process (Pre-test, MOSY, Post-test)</h3>
+            <p>Once identified via GST or CRLA, these learners will undergo a deeper assessment to track their progress:</p>
+            <ol>
+                <li><strong>Pre-Test:</strong> To establish the learner's baseline reading level at the start of the intervention.</li>
+                <li><strong>MOSY (Middle of School Year):</strong> To monitor their progress and adjust the intervention strategies if needed.</li>
+                <li><strong>Post-Test:</strong> To evaluate the effectiveness of the intervention at the end of the school year.</li>
+            </ol>
+            <p>The system will automatically compute and show the progress of the learner from Pre-test to Post-test in the Consolidated Reports.</p>
+
+            <h3 class="sub-title">C. The ARAL Masterlist</h3>
+            <p>All identified learners are automatically compiled in the <strong>ARAL Masterlist</strong> page. Teachers and coordinators can filter this list by Grade Level and Section, and print it for their physical records and parent conferences.</p>
+        </div>
+    </div>
+
+    <!-- PAPER PAGE 8 (TEACHER GUIDE PART 1) -->
     <div class="paper">
         <div class="content-section" id="teachers">
-            <h2 class="section-title">5. Guide for Teachers</h2>
+            <h2 class="section-title">6. Guide for Teachers</h2>
             
             <h3 class="sub-title" id="login">A. Login and Uploading E-Signature</h3>
             <ol>
@@ -298,14 +316,14 @@
             <ol>
                 <li>Go to <strong>Data Entry</strong> and select the assessment type (e.g., PHIL-IRI).</li>
                 <li>Enter the Grade and Section.</li>
-                <li>Copy-paste your data from Excel into the Paste Box. Example: <code>Juan Dela Cruz, 2, 4, 3</code>.</li>
+                <li>For GST, simply enter <code>Name, Total Score</code>. For others (Pre-test, MOSY, Post-test), enter <code>Name, Level Passed, Oral Level, Comp Level</code>.</li>
                 <li>Click <strong>"🔍 Parse Data"</strong>. The Reading Profile and ARAL Tag will automatically appear.</li>
                 <li>Click <strong>"🚀 Submit All Data"</strong> at the top right.</li>
             </ol>
         </div>
     </div>
 
-    <!-- PAPER PAGE 8 (TEACHER GUIDE PART 2) -->
+    <!-- PAPER PAGE 9 (TEACHER GUIDE PART 2) -->
     <div class="paper">
         <div class="content-section">
             <h3 class="sub-title" id="aral" style="margin-top: 0;">D. Viewing the ARAL Masterlist</h3>
@@ -334,10 +352,10 @@
         </div>
     </div>
 
-    <!-- PAPER PAGE 9 (COORDINATOR & ADMIN) -->
+    <!-- PAPER PAGE 10 (COORDINATOR & ADMIN) -->
     <div class="paper">
         <div class="content-section" id="coordinators">
-            <h2 class="section-title">6. Guide for Coordinators</h2>
+            <h2 class="section-title">7. Guide for Coordinators</h2>
             <p>As a coordinator, you are the first to validate assessment reports before they reach the School Head.</p>
             <ul>
                 <li>Go to <strong>Teacher Submissions</strong>.</li>
@@ -349,7 +367,7 @@
         </div>
 
         <div class="content-section" id="admin">
-            <h2 class="section-title">7. Guide for ICT / Admin</h2>
+            <h2 class="section-title">8. Guide for ICT / Admin</h2>
             <h3 class="sub-title">Managing Users</h3>
             <p>Go to <strong>Manage Users</strong>. This is where you create teacher accounts and assign roles (Teacher, Coordinator, School Head). Always copy the auto-generated password and provide it to the user.</p>
             
@@ -358,10 +376,10 @@
         </div>
     </div>
 
-    <!-- PAPER PAGE 10 (FAQ) -->
+    <!-- PAPER PAGE 11 (FAQ) -->
     <div class="paper">
         <div class="content-section" id="faq">
-            <h2 class="section-title">8. Frequently Asked Questions (FAQ)</h2>
+            <h2 class="section-title">9. Frequently Asked Questions (FAQ)</h2>
             
             <div class="faq-box">
                 <strong>1. I forgot my password. How can I log in?</strong>
