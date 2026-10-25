@@ -861,7 +861,7 @@
             };
         }
 
-                function renderDataTables(dataObj, teacherName) {
+        function renderDataTables(dataObj, teacherName) {
             let gradeLevelStr = "";
             if (teacherName) {
                 const match = teacherName.match(/Grade (.*?) \((.*?)\)/);
@@ -894,14 +894,13 @@
                     let colorClass = 'status-full';
                     if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
                     else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
-                    
-                    // Dito natin ilalabas ang buong text (e.g. Frustration (Gr. 2))
+
+                    // Dito natin ilalabas ang buong l.profile (e.g. "Frustration (Gr. 2)")
                     html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
             }
 
-            // PHIL-IRI OTHER
             if (philiriOther.length) {
                 html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 philiriOther.forEach((l, i) => { 
@@ -932,6 +931,7 @@
             
             return html;
         }
+
         async function editAndResubmit(id) {
             const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return;
             const type = Object.keys(r.data)[0]; const dataArr = r.data[type];
