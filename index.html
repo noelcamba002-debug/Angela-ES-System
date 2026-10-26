@@ -165,6 +165,7 @@
         </div>
 
         <div class="workspace">
+            
             <!-- PHIL-IRI -->
             <div id="module-philiri" class="panel">
                 <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
@@ -250,6 +251,14 @@
                         <div class="form-group"><label>Your Position / Title</label><input type="text" id="narr-position"></div>
                     </div>
                     <div class="form-row"><div class="form-group"><label>Title</label><input type="text" id="narr-title"></div></div>
+                    
+                    <!-- BAGONG DAGDAG: PHOTO UPLOAD -->
+                    <div class="form-group" style="margin-bottom:15px;">
+                        <label>Upload Activity Photos (Optional)</label>
+                        <input type="file" id="narr-photos" accept="image/*" multiple onchange="previewNarrativePhotos()" style="padding: 10px; border: 1px dashed #ccc; width: 100%;">
+                        <div id="narr-photo-previews" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;"></div>
+                    </div>
+
                     <div class="form-group" style="margin-bottom:15px;"><label>Report Content</label><textarea id="narr-content" rows="8" style="width:100%; padding:10px;"></textarea></div>
                     <button class="btn btn-success" onclick="submitNarrativeReport()">🚀 Submit Report</button>
                 </div>
@@ -311,9 +320,27 @@
                     <h3>🔧 System Settings</h3>
                     <div class="form-group"><label>Google Apps Script URL</label><input type="text" id="setting-script-url"></div>
                     <button class="btn btn-primary" onclick="saveSystemSettings()">💾 Save</button>
+                    
+                    <!-- BAGONG DAGDAG: LOGO UPLOAD -->
+                    <h3 style="margin-top:30px;">🖼️ School & DepEd Logos</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>DepEd Logo (Left)</label>
+                            <input type="file" id="upload-deped-logo" accept="image/*" onchange="handleLogoUpload(event, 'depedLogo')">
+                            <img id="preview-deped-logo" style="height: 50px; margin-top: 10px; display: none;">
+                        </div>
+                        <div class="form-group">
+                            <label>School Logo (Right)</label>
+                            <input type="file" id="upload-school-logo" accept="image/*" onchange="handleLogoUpload(event, 'schoolLogo')">
+                            <img id="preview-school-logo" style="height: 50px; margin-top: 10px; display: none;">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveLogos()">💾 Save Logos</button>
+
                     <h3 style="margin-top:30px;">📊 Stats</h3><div id="system-stats"></div>
+                    
                     <h3 style="margin-top:30px; color: var(--danger);">⚠️ Danger Zone</h3>
-                    <button class="btn btn-danger" onclick="clearAllSubmissions()">🗑️ CLEAR ALL SUBMISSIONS</button>
+                    <button class="btn btn-danger" onclick="clearAllSubmissions()">🗑️ CLEAR ALL SUBMISSIONS & PHOTOS</button>
                 </div>
             </div>
 
@@ -347,6 +374,7 @@
         </div>
     </main>
 
+    <!-- MGA MODALS -->
     <div id="official-report-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
         <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
             <button class="btn btn-danger hidden-print" onclick="document.getElementById('official-report-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
@@ -363,6 +391,7 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         let SCRIPT_URL = localStorage.getItem('SCRIPT_URL') || "https://script.google.com/macros/s/AKfycbyiq2jKzahhDLDSL9cqGJw99gl-WcZTcLNUqkRsDyKf5Yk5QUZpLf9k8b084L0XXrt6uQ/exec";
         let currentUser = null, activeRole = '', currentEditingReportId = null;
@@ -372,8 +401,58 @@
         async function fetchUsers() { try { const r = await fetch(SCRIPT_URL + '?action=getUsers'); cachedUsers = await r.json(); return cachedUsers; } catch(e) { return []; } }
         async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
 
-        function loadLogos() { const depedLogo = localStorage.getItem('depedLogo'); if (depedLogo) { const img = document.getElementById('login-deped-logo'); if(img) { img.src = depedLogo; img.style.display = 'block'; } } }
-        
+        // LOGO HANDLER FUNCTIONS
+        function loadLogos() { 
+            const depedLogo = localStorage.getItem('depedLogo'); 
+            const schoolLogo = localStorage.getItem('schoolLogo');
+            if (depedLogo) { const img = document.getElementById('login-deped-logo'); if(img) { img.src = depedLogo; img.style.display = 'block'; } }
+            if (schoolLogo) { const img2 = document.getElementById('login-school-logo'); if(img2) { img2.src = schoolLogo; img2.style.display = 'block'; } }
+        }
+
+        function handleLogoUpload(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 200; const MAX_HEIGHT = 200;
+                    let width = img.width; let height = img.height;
+                    if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+                    else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const resizedBase64 = canvas.toDataURL('image/png');
+                    window.tempLogoData = window.tempLogoData || {};
+                    window.tempLogoData[type] = resizedBase64;
+                    const previewId = type === 'depedLogo' ? 'preview-deped-logo' : 'preview-school-logo';
+                    const previewImg = document.getElementById(previewId);
+                    if(previewImg) { previewImg.src = resizedBase64; previewImg.style.display = 'block'; }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveLogos() {
+            if (window.tempLogoData) {
+                if (window.tempLogoData.depedLogo) localStorage.setItem('depedLogo', window.tempLogoData.depedLogo);
+                if (window.tempLogoData.schoolLogo) localStorage.setItem('schoolLogo', window.tempLogoData.schoolLogo);
+                alert("Logos saved successfully!");
+                loadSystemSettings(); 
+            } else { alert("Walang bagong logo na in-upload."); }
+        }
+
+        function loadSystemSettings() { 
+            document.getElementById('setting-script-url').value = SCRIPT_URL; 
+            const dLogo = localStorage.getItem('depedLogo'); const sLogo = localStorage.getItem('schoolLogo');
+            if(dLogo) { const p1 = document.getElementById('preview-deped-logo'); if(p1) { p1.src = dLogo; p1.style.display = 'block'; } }
+            if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
+        }
+
+        // LOGIN LOGIC
         async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value;
@@ -555,79 +634,41 @@
             const targetGrade = parseInt(document.getElementById('teacher-grade').value) || 0;
             
             if (!targetGrade || targetGrade < 1 || targetGrade > 6) { 
-                pc.innerText = "Set Grade"; 
-                pc.className = "auto-calc status-light"; 
-                return; 
+                pc.innerText = "Set Grade"; pc.className = "auto-calc status-light"; return; 
             }
             
-            let profile = ""; 
-            let suggestion = ""; 
-            let displayStr = "";
-            let isAral = false;
+            let profile = ""; let suggestion = ""; let displayStr = ""; let isAral = false;
 
-            // --- LOGIC 1: GRADE READY (14-20) -> ENRICHMENT ---
             if (total >= 14 && total <= 20) {
                 if (total >= 18) { profile = "Independent"; }
                 else if (total >= 16) { profile = "Instructional"; }
                 else { profile = "Frustration"; }
-                
                 displayStr = `Grade Ready (${profile})`;
-                
-                if (profile === "Independent") {
-                    suggestion = "ENRICHMENT: Provide advanced reading materials, book reports, or peer tutoring roles.";
-                } else if (profile === "Instructional") {
-                    suggestion = "ENRICHMENT: Encourage independent reading with minimal guidance, vocabulary expansion.";
-                } else {
-                    suggestion = "ENRICHMENT: Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
-                }
+                if (profile === "Independent") suggestion = "ENRICHMENT: Provide advanced reading materials, book reports, or peer tutoring roles.";
+                else if (profile === "Instructional") suggestion = "ENRICHMENT: Encourage independent reading with minimal guidance, vocabulary expansion.";
+                else suggestion = "ENRICHMENT: Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
                 isAral = false;
-
-            // --- LOGIC 2: DOWNGRADE (0-13) -> REMEDIATION ---
             } else {
-                isAral = true; // LAHAT NG 0-13 AY ARAL
-
+                isAral = true; 
                 let offset = 0;
-                if (total >= 0 && total <= 4) { 
-                    profile = "Frustration"; 
-                    offset = 3; 
-                    suggestion = "REMEDIATION: Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
-                }
-                else if (total >= 5 && total <= 10) { 
-                    profile = "Instructional"; 
-                    offset = 2; 
-                    suggestion = "REMEDIATION: Guided Reading, Vocabulary Enhancement, Peer Buddy System";
-                }
-                else if (total >= 11 && total <= 13) { 
-                    profile = "Independent"; 
-                    offset = 1; 
-                    suggestion = "REMEDIATION: Enrichment Activities within the Lower Grade Level, Independent Reading Projects";
-                }
-
+                if (total >= 0 && total <= 4) { profile = "Frustration"; offset = 3; suggestion = "REMEDIATION: Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference"; }
+                else if (total >= 5 && total <= 10) { profile = "Instructional"; offset = 2; suggestion = "REMEDIATION: Guided Reading, Vocabulary Enhancement, Peer Buddy System"; }
+                else if (total >= 11 && total <= 13) { profile = "Independent"; offset = 1; suggestion = "REMEDIATION: Enrichment Activities within the Lower Grade Level, Independent Reading Projects"; }
                 let readingLevel = targetGrade - offset;
                 if (readingLevel < 1) readingLevel = 1; 
-
                 displayStr = `${profile} (Gr. ${readingLevel})`;
             }
 
-            pc.innerText = displayStr;
-            pc.className = "auto-calc"; 
-
+            pc.innerText = displayStr; pc.className = "auto-calc"; 
             if (profile === "Frustration") pc.classList.add("status-full");
             else if (profile === "Instructional") pc.classList.add("status-light");
             else pc.classList.add("status-ready");
 
             aralCell.className = "auto-calc";
-            if (isAral) {
-                aralCell.innerText = "ARAL Reading Candidate";
-                aralCell.classList.add("status-aral");
-            } else {
-                aralCell.innerText = "";
-            }
+            if (isAral) { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); } 
+            else { aralCell.innerText = ""; }
 
-            if (intCell.value === "" || intCell.dataset.auto === "true") { 
-                intCell.value = suggestion; 
-                intCell.dataset.auto = "true"; 
-            }
+            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
         function calcIndividualized(row) {
@@ -737,6 +778,23 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
+        // --- NARRATIVE PHOTOS PREVIEW ---
+        function previewNarrativePhotos() {
+            const input = document.getElementById('narr-photos');
+            const previewContainer = document.getElementById('narr-photo-previews');
+            previewContainer.innerHTML = '';
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.height = '80px'; img.style.borderRadius = '5px'; img.style.border = '1px solid #ccc';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
         // SUBMISSIONS
         async function submitAllToCoordinator() {
             const active = document.querySelector('.panel.active');
@@ -789,15 +847,46 @@
             const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({rma: data}), comments: "[]" });
             if (result.result === "success") { alert(`RMA submitted!`); showDashboard(); } else alert("Error submitting.");
         }
+        
         async function submitNarrativeReport() {
             const position = document.getElementById('narr-position').value.trim();
             const title = document.getElementById('narr-title').value.trim();
             const content = document.getElementById('narr-content').value.trim();
+            const photoInput = document.getElementById('narr-photos');
+            
             if (!title || !content || !position) { alert("Title, Content, and Position are required."); return; }
+
+            let photoLinks = [];
+            if (photoInput.files.length > 0) {
+                alert(`Nag-a-upload ng ${photoInput.files.length} photos... Mangyaring maghintay.`);
+                for (let i = 0; i < photoInput.files.length; i++) {
+                    const file = photoInput.files[i];
+                    const base64String = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => resolve(e.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                    const res = await apiPost({ 
+                        action: "uploadPhoto", 
+                        fileName: `AES_${Date.now()}_${file.name.replace(/\s+/g, '_')}`, 
+                        base64: base64String 
+                    });
+                    if (res.result === "success") photoLinks.push(res.url);
+                }
+            }
+
             const teacherName = `${currentUser['Full Name']} - Grade ${currentUser.Grade || '-'} (${currentUser.Section || '-'})`;
-            const reportData = { narrative: [{ reportType: document.getElementById('narr-type').value, subject: document.getElementById('narr-subject').value, position, title, content }] };
+            const reportData = { narrative: [{ reportType: document.getElementById('narr-type').value, subject: document.getElementById('narr-subject').value, position, title, content, photos: photoLinks }] };
             const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending School Head Approval', data: JSON.stringify(reportData), comments: "[]" });
-            if (result.result === "success") { alert("Report submitted!"); showDashboard(); } else alert("Error submitting.");
+            
+            if (result.result === "success") { 
+                alert("Report submitted!"); 
+                document.getElementById('narr-photos').value = '';
+                document.getElementById('narr-photo-previews').innerHTML = '';
+                document.getElementById('narr-title').value = '';
+                document.getElementById('narr-content').value = '';
+                showDashboard(); 
+            } else alert("Error submitting.");
         }
 
         // MY REPORTS
@@ -863,7 +952,15 @@
 
             if (r.data && r.data.narrative) {
                 const narr = r.data.narrative[0];
-                document.getElementById('printable-report-content').innerHTML = `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML.replace('Class Adviser', narr.position)}`;
+                let photosHTML = '';
+                if (narr.photos && narr.photos.length > 0) {
+                    photosHTML = `<div style="margin-top: 30px; page-break-inside: avoid;"><h4 style="color: #113a6b; margin-bottom: 10px;">Activity Documentation:</h4><div style="display: flex; gap: 10px; flex-wrap: wrap;">`;
+                    narr.photos.forEach((url, idx) => {
+                        photosHTML += `<div style="width: 48%; max-width: 300px;"><img src="${url}" style="width: 100%; border: 1px solid #ccc; border-radius: 5px;"><p style="font-size: 10px; text-align: center;">Photo ${idx + 1}</p></div>`;
+                    });
+                    photosHTML += `</div></div>`;
+                }
+                document.getElementById('printable-report-content').innerHTML = `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${photosHTML}${signaturesHTML.replace('Class Adviser', narr.position)}`;
             } else {
                 document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + signaturesHTML;
             }
@@ -874,11 +971,11 @@
         function printReport() {
             const content = document.getElementById('official-report-modal').querySelector('div').innerHTML;
             const w = window.open('', '_blank');
-            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; }</style></head><body>${content}</body></html>`);
+            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; } img { object-fit: contain; }</style></head><body>${content}</body></html>`);
             w.document.close();
             w.onload = () => {
                 ['teacher','coord','head'].forEach(role => { const src = localStorage.getItem(`sig_${role}`); if(src) { const i = w.document.getElementById(`sig-img-${role}`); if(i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); } } });
-                setTimeout(() => { w.focus(); w.print(); }, 100);
+                setTimeout(() => { w.focus(); w.print(); }, 500);
             };
         }
 
@@ -908,15 +1005,12 @@
                 html += `<h4 style="margin-top:20px; margin-bottom:10px; color:#333;">Grade Level: <span style="color:#113a6b;">${gradeLevelStr}</span></h4>`;
             }
 
-            // GST TABLE
             if (gstData.length) {
                 html += `<h5 style="margin-top:25px; color:var(--primary);">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 gstData.forEach((l, i) => { 
                     let colorClass = 'status-full';
                     if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
                     else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
-
-                    // Dito natin ilalabas ang buong l.profile (e.g. "Frustration (Gr. 2)")
                     html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
@@ -928,7 +1022,6 @@
                     let colorClass = 'status-full';
                     if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
                     else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
-
                     html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
@@ -1010,8 +1103,23 @@
             c.innerHTML = html + `</tbody></table>`;
         }
         async function toggleUser(u, s) { await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); refreshUsersList(); }
-        async function clearAllSubmissions() { if(confirm("Sigurado ka?")) { await apiPost({ action: "clearAllSubmissions" }); alert("Cleared!"); } }
-        function loadSystemSettings() { document.getElementById('setting-script-url').value = SCRIPT_URL; }
+        
+        // BAGONG CLEAR ALL FUNCTION NA MAY DOUBLE CONFIRMATION
+        async function clearAllSubmissions() { 
+            if(!confirm("⚠️ BABALA: Mabubura lahat ng reports at LITRATO sa Google Drive. Sigurado ka ba?")) return;
+            
+            const confirm2 = prompt("I-type ang salitang 'CLEAR' para makumpirma:");
+            if (confirm2 !== 'CLEAR') { alert("Kinansela."); return; }
+
+            alert("Binubura ang data at litrato... Maghintay.");
+            const result = await apiPost({ action: "clearAll" });
+            
+            if (result.result === "success") { 
+                alert("✅ " + result.message + " Handa na para sa bagong SY!");
+                location.reload(); 
+            } else alert("❌ Error: " + result.message);
+        }
+
         function saveSystemSettings() { localStorage.setItem('SCRIPT_URL', document.getElementById('setting-script-url').value); alert("Saved!"); }
         function openSignatureModal() { alert("Signature upload modal can be added here."); }
         function openAddUserModal() { alert("Add user modal can be added here."); }
@@ -1019,7 +1127,7 @@
         async function refreshARALMasterlist() {
             const c = document.getElementById('aral-masterlist-content'); c.innerHTML = '<p>Loading data...</p>';
             const approved = (await fetchReports()).filter(r => r.status === 'Approved');
-            window.cachedApprovedForPrint = approved; // Save for print
+            window.cachedApprovedForPrint = approved;
             const filterGrade = document.getElementById('aral-filter-grade').value;
             const filterSection = document.getElementById('aral-filter-section').value.toLowerCase();
             let cons = {};
@@ -1099,25 +1207,16 @@
                 const sC = localStorage.getItem('sig_coord'); const sH = localStorage.getItem('sig_head');
                 if (sC) { const i = w.document.getElementById('sig-img-coord'); if (i) { i.src = sC; i.style.height = '45px'; i.classList.remove('hidden'); } }
                 if (sH) { const i = w.document.getElementById('sig-img-head'); if (i) { i.src = sH; i.style.height = '45px'; i.classList.remove('hidden'); } }
-                setTimeout(() => { w.focus(); w.print(); }, 100);
+                setTimeout(() => { w.focus(); w.print(); }, 500);
             };
         }
 
         function generateClassSummary() {
             const approved = (window.cachedApprovedForPrint || []);
-            
-            // Hahatiin natin ang data base sa uri ng assessment (GST, CRLA, RMA, Phil-IRI Other)
-            const summary = {
-                'GST': {},
-                'CRLA': {},
-                'RMA': {},
-                'PHILIRI': {} // Para sa Pre-test, MOSY, Post-test
-            };
-
+            const summary = { 'GST': {}, 'CRLA': {}, 'RMA': {}, 'PHILIRI': {} };
             approved.forEach(r => {
                 const match = String(r.teacher).match(/Grade (.*?) \((.*?)\)/);
                 const grade = match ? match[1].trim() : 'Unknown';
-
                 for (const key in r.data) {
                     if (Array.isArray(r.data[key])) {
                         r.data[key].forEach(rec => {
@@ -1126,13 +1225,9 @@
                             else if (rec.type === 'CRLA') type = 'CRLA';
                             else if (rec.type === 'RMA') type = 'RMA';
                             else if (rec.type === 'Pre-test' || rec.type === 'MOSY' || rec.type === 'Post-test') type = 'PHILIRI';
-                            else return; // Skip kung walang match
-
+                            else return;
                             if (!summary[type][grade]) summary[type][grade] = { total: 0, frustration: 0, instructional: 0, independent: 0 };
-                            
                             summary[type][grade].total++;
-                            
-                            // Iba-iba ang criteria per type
                             if (type === 'RMA') {
                                 if (rec.level && (rec.level.includes('Low Proficient') || rec.level.includes('Non Proficient'))) summary[type][grade].frustration++;
                                 else if (rec.level && rec.level.includes('Developing')) summary[type][grade].instructional++;
@@ -1142,7 +1237,6 @@
                                 else if (rec.category && rec.category.includes('Developing')) summary[type][grade].instructional++;
                                 else summary[type][grade].independent++;
                             } else {
-                                // GST at PHIL-IRI
                                 if (rec.profile && rec.profile.includes('Frustration')) summary[type][grade].frustration++;
                                 else if (rec.profile && rec.profile.includes('Instructional')) summary[type][grade].instructional++;
                                 else summary[type][grade].independent++;
@@ -1151,25 +1245,18 @@
                     }
                 }
             });
-
             let html = "";
-
-            // Gumawa ng table para sa bawat uri
             const titles = { 'GST': 'GST (Reading)', 'CRLA': 'CRLA (Reading)', 'RMA': 'RMA (Math)', 'PHILIRI': 'PHIL-IRI (Reading)' };
-            
             for (const type in summary) {
-                if (Object.keys(summary[type]).length === 0) continue; // Skip kung walang data
-
+                if (Object.keys(summary[type]).length === 0) continue;
                 html += `<h5 style="margin-top:20px;">${titles[type]} Summary</h5>`;
                 html += `<table class="form1b-table"><thead><tr><th>Grade Level</th><th>Total Learners</th><th>Frustration / Low Emerging</th><th>Instructional / Developing</th><th>Independent / Grade Ready</th></tr></thead><tbody>`;
-                
                 for (const grade in summary[type]) {
                     const s = summary[type][grade];
                     html += `<tr><td><strong>Grade ${grade}</strong></td><td>${s.total}</td><td class="status-full">${s.frustration}</td><td class="status-light">${s.instructional}</td><td class="status-ready">${s.independent}</td></tr>`;
                 }
                 html += `</tbody></table>`;
             }
-
             return html;
         }
     </script>
