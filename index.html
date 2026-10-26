@@ -165,7 +165,6 @@
 
         <div class="workspace">
             
-            <!-- PHIL-IRI -->
             <div id="module-philiri" class="panel">
                 <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
                     <h3>Teacher Details</h3>
@@ -195,7 +194,6 @@
                 </div>
             </div>
 
-            <!-- CRLA -->
             <div id="module-crla" class="panel">
                 <div class="card" style="background: #f4f0fa; border: 1px solid #9b59b6; margin-bottom: 20px;">
                     <h3>CRLA Assessment (KS1)</h3>
@@ -217,7 +215,6 @@
                 </div>
             </div>
 
-            <!-- RMA -->
             <div id="module-rma" class="panel">
                 <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
                     <h3>RMA Assessment (KS1 & KS2)</h3>
@@ -240,7 +237,6 @@
                 </div>
             </div>
 
-            <!-- NARRATIVE -->
             <div id="module-narrative" class="panel">
                 <div class="card">
                     <h3>📄 Submit Report</h3>
@@ -262,7 +258,6 @@
                 </div>
             </div>
 
-            <!-- ARAL -->
             <div id="module-aral" class="panel">
                 <div class="card">
                     <div class="flex-between">
@@ -277,7 +272,6 @@
                 </div>
             </div>
 
-            <!-- MY REPORTS -->
             <div id="my-submissions" class="panel">
                 <div class="card"><h3>📤 My Submissions</h3><div id="my-submissions-list"></div></div>
             </div>
@@ -286,7 +280,6 @@
                 <div class="card"><h3>📁 My Approved Reports</h3><div id="my-approved-list"></div></div>
             </div>
 
-            <!-- COORDINATOR -->
             <div id="coordinator-review" class="panel">
                 <div class="card"><h3>Teacher Submissions</h3><div id="coordinator-list"></div></div>
                 <div id="coordinator-view" class="card hidden">
@@ -296,7 +289,6 @@
                 </div>
             </div>
 
-            <!-- SCHOOL HEAD -->
             <div id="head-approval" class="panel">
                 <div class="card"><h3>Forwarded Reports</h3><div id="head-list"></div></div>
                 <div id="head-view" class="card hidden">
@@ -305,7 +297,6 @@
                 </div>
             </div>
 
-            <!-- ADMIN -->
             <div id="manage-users" class="panel">
                 <div class="card">
                     <div class="flex-between"><h3>👥 Manage Users</h3><button class="btn btn-success" onclick="openAddUserModal()">➕ Add User</button></div>
@@ -341,7 +332,6 @@
                 </div>
             </div>
 
-            <!-- FINAL CONSOLIDATED -->
             <div id="report-consolidated" class="panel">
                 <div class="card">
                     <div class="flex-between" style="flex-wrap:wrap; gap:10px;">
@@ -394,31 +384,12 @@
 
         async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
         
-        // --- BULLETPROOF FETCH USERS (Kahit magulo ang columns, makukuha pa rin) ---
+        // STRICT FETCH USERS
         async function fetchUsers() { 
             try { 
                 const r = await fetch(SCRIPT_URL + '?action=getUsers'); 
                 const rawUsers = await r.json(); 
-                cachedUsers = rawUsers.map(u => {
-                    const newUser = {};
-                    for (let key in u) {
-                        const cleanKey = String(key).toLowerCase().trim();
-                        if(cleanKey.includes('name') || cleanKey.includes('pangalan')) newUser['Full Name'] = u[key];
-                        else if(cleanKey.includes('user')) newUser.Username = u[key];
-                        else if(cleanKey.includes('pass')) newUser.Password = u[key];
-                        else if(cleanKey.includes('role')) newUser.Role = u[key];
-                        else if(cleanKey.includes('grade')) newUser.Grade = u[key];
-                        else if(cleanKey.includes('section') || cleanKey === 'sec') newUser.Section = u[key];
-                        else if(cleanKey.includes('status') || cleanKey.includes('stat')) newUser.Status = u[key];
-                        else newUser[key] = u[key];
-                    }
-                    
-                    // SAFETY NET: Kung blangko ang role, gawing teacher
-                    if(!newUser.Role || String(newUser.Role).trim() === '') newUser.Role = 'teacher';
-                    
-                    return newUser;
-                });
-                return cachedUsers; 
+                return rawUsers; 
             } catch(e) { return []; } 
         }
         
@@ -474,76 +445,25 @@
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
 
-                   async function login() {
-            const usernameInput = document.getElementById('login-username').value.trim();
-            const passwordInput = document.getElementById('login-password').value.trim();
+        // STRICT LOGIN LOGIC
+        async function login() {
+            const username = document.getElementById('login-username').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value.trim();
             const errBox = document.getElementById('login-error');
             errBox.style.display = 'none';
-
-            if (!usernameInput || !passwordInput) { 
-                errBox.innerText = "Enter username and password."; 
-                errBox.style.display = 'block'; 
-                return; 
-            }
             
-            try {
-                const users = await fetchUsers();
-                
-                // DEBUG: Ipapakita natin kung ilan ang nakuhang users
-                if (!Array.isArray(users) || users.length === 0) {
-                    alert("Error: Walang nakuhang users mula sa Google Sheets. I-check ang Apps Script Deployment.");
-                    return;
-                }
-
-                // Hanapin ang user (Username lang ang titignan muna)
-                const user = users.find(u => String(u.Username || '').toLowerCase() === usernameInput.toLowerCase());
-
-                if (!user) {
-                    alert(`Hindi nahanap ang username: ${usernameInput}.`);
-                    errBox.innerText = "Invalid credentials."; 
-                    errBox.style.display = 'block'; 
-                    return;
-                }
-
-                // I-check ang Password
-                const dbPass = String(user.Password || '').trim();
-                if (dbPass !== passwordInput) {
-                    alert(`Mali ang password.\n\nNasa Sheets: "${dbPass}"\nNasa Login Box: "${passwordInput}"`);
-                    errBox.innerText = "Invalid password."; 
-                    errBox.style.display = 'block'; 
-                    return;
-                }
-
-                // I-check ang Status
-                const dbStatus = String(user.Status || '').trim().toLowerCase();
-                if (dbStatus !== 'active') {
-                    alert(`Naka-inactive ang account na ito.\nStatus sa Sheets: "${user.Status}"`);
-                    errBox.innerText = "Account is inactive."; 
-                    errBox.style.display = 'block'; 
-                    return;
-                }
-                
-                // KUNG NAKAPASOK, I-SAVE ANG USER
-                currentUser = user; 
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
-                activeRole = rolesArray[0] || 'teacher'; 
-                
-                showDashboard();
-
-            } catch (e) {
-                alert("System Error: " + e.message);
-                console.error(e);
-            }
-        }            // ITO ANG FIX: Gagawin nating malinis ang comparison. Walang space, at case-insensitive.
+            if (!username || !password) { errBox.innerText = "Enter username and password."; errBox.style.display = 'block'; return; }
+            
+            const users = await fetchUsers();
+            
+            // SAFE COMPARISON
             const user = users.find(u => {
-                const dbUser = String(u.Username || '').trim().toLowerCase();
-                const dbPass = String(u.Password || '').trim();
-                const dbStatus = String(u.Status || '').trim().toLowerCase();
-                return dbUser === usernameInput && dbPass === passwordInput && dbStatus === 'active';
+                const uName = String(u.Username || '').trim().toLowerCase();
+                const uPass = String(u.Password || '').trim();
+                const uStatus = String(u.Status || '').trim().toLowerCase();
+                return uName === username && uPass === password && uStatus === 'active';
             });
-
+            
             if (!user) { 
                 errBox.innerText = "Invalid credentials. Please check your username, password, and status."; 
                 errBox.style.display = 'block'; 
@@ -558,6 +478,7 @@
             
             showDashboard();
         }
+
         function logout() { localStorage.removeItem('currentUser'); location.reload(); }
 
         function showDashboard() {
@@ -566,7 +487,6 @@
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
             
-            // SAFE DATA EXTRACTION
             const name = String(currentUser['Full Name'] || currentUser.FullName || 'User').trim();
             const grade = String(currentUser.Grade || '').trim();
             const section = String(currentUser.Section || '').trim();
@@ -575,9 +495,8 @@
             document.getElementById('ui-name').innerText = name;
             document.getElementById('ui-details').innerText = grade ? `Grade ${grade} - ${section}` : '';
             
-            // SAFE ROLE PARSING
             const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r !== '');
-            if(roles.length === 0) roles.push('teacher'); // Fallback kung blangko
+            if(roles.length === 0) roles.push('teacher');
             
             const switcher = document.getElementById('role-switcher');
             const select = document.getElementById('active-role-select');
@@ -684,7 +603,6 @@
             return line.split(/\s{2,}|\s+/).map(s => s.trim());
         }
 
-        // --- GST LOGIC ---
         function updateIndividualizedLogic() {
             const type = document.getElementById('ind-assessment-type').value;
             const thead = document.getElementById('ind-table-head');
@@ -825,7 +743,6 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        // CRLA
         function updateCRLALogic() { document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0; addCRLARow(); }
         function parseCRLAData() {
             const text = document.getElementById('crla-paste-data').value;
@@ -866,7 +783,6 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        // RMA
         function updateRMALogic() { document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0; addRMARow(); }
         function parseRMAData() {
             const text = document.getElementById('rma-paste-data').value;
@@ -915,7 +831,6 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        // --- NARRATIVE PHOTOS PREVIEW ---
         function previewNarrativePhotos() {
             const input = document.getElementById('narr-photos');
             const previewContainer = document.getElementById('narr-photo-previews');
@@ -932,7 +847,6 @@
             });
         }
 
-        // SUBMISSIONS
         async function submitAllToCoordinator() {
             const active = document.querySelector('.panel.active');
             if (active && active.id === 'module-philiri') await submitIndividualized();
@@ -1026,7 +940,6 @@
             } else alert("Error submitting.");
         }
 
-        // MY REPORTS
         async function refreshMySubmissions() {
             const container = document.getElementById('my-submissions-list'); container.innerHTML = '<p>Loading...</p>';
             const reports = await fetchReports();
@@ -1059,8 +972,8 @@
             const reports = await fetchReports();
             const r = reports.find(x => x.id == id); if (!r) return;
             const users = await fetchUsers();
-            const headName = users.find(u => u.Role.toLowerCase().includes('schoolhead'))?.['Full Name'] || 'SCHOOL HEAD';
-            const coordName = users.find(u => u.Role.toLowerCase().includes('coord'))?.['Full Name'] || 'PROGRAM COORDINATOR';
+            const headName = users.find(u => u.Role && u.Role.toLowerCase().includes('schoolhead'))?.['Full Name'] || 'SCHOOL HEAD';
+            const coordName = users.find(u => u.Role && u.Role.toLowerCase().includes('coord'))?.['Full Name'] || 'PROGRAM COORDINATOR';
             const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
 
             const headerHTML = `
