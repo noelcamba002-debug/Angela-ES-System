@@ -479,7 +479,7 @@
 
         function logout() { localStorage.removeItem('currentUser'); location.reload(); }
 
-        function showDashboard() {
+        const name = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || 'User').trim(); {
             document.getElementById('login-screen').style.display = 'none';
             
             document.getElementById('sidebar').style.display = 'flex';
