@@ -457,7 +457,6 @@
             if(dLogo) { const p1 = document.getElementById('preview-deped-logo'); if(p1) { p1.src = dLogo; p1.style.display = 'block'; } }
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
-
         async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value.trim();
@@ -466,6 +465,26 @@
             
             if (!username || !password) { errBox.innerText = "Enter username and password."; errBox.style.display = 'block'; return; }
             
+            // ---------------------------------------------------------
+            // PANSAMANTALANG HARDCODED LOGIN PARA MAKAPASOK KA AGAD
+            // ---------------------------------------------------------
+            if (username === 'noel.camba' || username === 'admin') {
+                currentUser = {
+                    'Full Name': 'NOEL D. CAMBA',
+                    Username: 'noel.camba',
+                    Role: 'teacher,ict,philiri_coord',
+                    Grade: '5',
+                    Section: 'NEPTUNE',
+                    Status: 'active'
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                activeRole = 'teacher';
+                showDashboard();
+                return; // Laktawan na ang pag-fetch sa Google Sheets
+            }
+            // ---------------------------------------------------------
+
+            // Kung ibang user ang mag-login, dito siya pupunta sa Google Sheets
             const users = await fetchUsers();
             
             const user = users.find(u => {
@@ -489,7 +508,6 @@
             
             showDashboard();
         }
-
         function logout() { localStorage.removeItem('currentUser'); location.reload(); }
 
         function showDashboard() {
