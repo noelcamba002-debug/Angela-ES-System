@@ -711,11 +711,19 @@
                 displayStr = `${profile} (Gr. ${readingLevel})`;
             }
 
-            pc.innerText = displayStr; pc.className = "auto-calc"; 
-            if (profile === "Frustration") pc.classList.add("status-full");
-            else if (profile === "Instructional") pc.classList.add("status-light");
-            else pc.classList.add("status-ready");
-
+                       pc.innerText = displayStr; pc.className = "auto-calc"; 
+            
+            // BAGONG COLOR LOGIC PARA SA GRADE READY
+            if (displayStr.includes("Grade Ready")) {
+                pc.style.backgroundColor = "#cce5ff"; // Light Blue
+                pc.style.color = "#004085"; // Dark Blue text
+            } else {
+                pc.style.backgroundColor = ""; 
+                pc.style.color = "";
+                if (profile === "Frustration") pc.classList.add("status-full");
+                else if (profile === "Instructional") pc.classList.add("status-light");
+                else pc.classList.add("status-ready");
+            }
             aralCell.className = "auto-calc";
             if (isAral) { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); } 
             else { aralCell.innerText = ""; }
