@@ -7,34 +7,40 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
 
+        /* --- PRINT SETTINGS (A4 PORTRAIT) --- */
+        @page {
+            size: A4 portrait;
+            margin: 20mm;
+        }
+
         body {
             font-family: 'Open Sans', sans-serif;
             background-color: #f4f7f6;
             margin: 0;
-            padding: 20px 0; /* Bahagyang espasyo sa taas at baba */
+            padding: 0;
             color: #333;
             line-height: 1.6;
         }
 
-        /* --- PAGE LAYOUTS --- */
+        /* --- PAGE LAYOUTS (TULOY-TULOY AT PUNO) --- */
         .page {
             background-color: white;
-            max-width: 900px;
-            margin: 0 auto 20px auto; /* Siksikan ang pages, walang malaking space */
-            padding: 50px 80px; /* Sapat na padding sa loob */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Magaan na shadow */
+            max-width: 210mm; /* A4 Width */
+            margin: 0 auto 20px auto;
+            padding: 20mm;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             box-sizing: border-box;
+            position: relative;
         }
 
-        /* --- COVER PAGE SPECIFIC --- */
+        /* --- COVER PAGE (Kailangan may sapat na height para hindi magmukhang sagging) --- */
         .cover-page {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            height: 100vh; /* Ito lang ang may 100vh para puno ang cover */
-            margin-bottom: 20px;
+            min-height: 250mm; /* Sapat na height para sa A4 */
         }
 
         .header-section {
@@ -142,12 +148,12 @@
             letter-spacing: 1px;
         }
 
-        /* --- CONTENT PAGES SPECIFIC --- */
+        /* --- CONTENT PAGES SPECIFIC (TULOY-TULOY) --- */
         h2 {
             color: #113a6b;
             border-bottom: 2px solid #f1c40f;
             padding-bottom: 10px;
-            margin-top: 20px; /* Binawasan ang space sa taas */
+            margin-top: 0;
             font-family: 'Montserrat', sans-serif;
         }
 
@@ -160,11 +166,11 @@
         p, li {
             font-size: 15px;
             text-align: justify;
+            margin-bottom: 15px;
         }
 
         .preface-text {
             text-indent: 50px;
-            margin-bottom: 15px;
         }
 
         .signature-block {
@@ -173,6 +179,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            page-break-inside: avoid;
         }
 
         .signature-name {
@@ -199,17 +206,26 @@
             justify-content: space-between;
         }
 
-        /* --- PRINT SETTINGS --- */
+        /* --- PRINT BREAKS --- */
         @media print {
-            body { background-color: white; padding: 0; }
+            body { background-color: white; }
             .page { 
                 margin: 0; 
+                padding: 0;
                 box-shadow: none; 
-                padding: 20px; 
                 page-break-after: always; 
             }
-            .cover-page { height: auto; page-break-after: always; }
-            .page:last-child { page-break-after: auto; }
+            .cover-page { 
+                height: 100vh; 
+                page-break-after: always; 
+            }
+            .page:last-child { 
+                page-break-after: auto; 
+            }
+            /* Pigilan ang page break sa loob ng mga table o signature */
+            table, .signature-block {
+                page-break-inside: avoid;
+            }
         }
     </style>
 </head>
@@ -263,7 +279,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- PAGE 3: MESSAGE FROM THE DEVELOPER & ACKNOWLEDGMENT -->
+    <!-- PAGE 3: MESSAGE FROM THE DEVELOPER -->
     <!-- ============================================== -->
     <div class="page">
         <h2>Message from the Developer</h2>
@@ -280,31 +296,29 @@
             <p class="signature-name">NOEL D. CAMBA</p>
             <p class="signature-title">ICT Coordinator / System Developer</p>
         </div>
-
-        <div style="margin-top: 40px;">
-            <h2>Acknowledgment</h2>
-            <p>The developer would like to express heartfelt gratitude to the following individuals for their invaluable support and guidance in the development of this system:</p>
-            <ul>
-                <li><strong>RONELYN M. PRODIGO</strong> (School Head) - For the vision, leadership, and unending support for school innovation.</li>
-                <li><strong>The Teachers and Coordinators of Angela Elementary School</strong> - For their active participation during the pilot testing and their valuable feedback.</li>
-                <li><strong>The ICT Team and DepEd Personnel</strong> - For the technical guidance and alignment with educational standards.</li>
-            </ul>
-        </div>
     </div>
 
     <!-- ============================================== -->
-    <!-- PAGE 4: TABLE OF CONTENTS & DOCUMENT CONTROL -->
+    <!-- PAGE 4: ACKNOWLEDGMENT & TOC -->
     <!-- ============================================== -->
     <div class="page">
+        <h2>Acknowledgment</h2>
+        <p>The developer would like to express heartfelt gratitude to the following individuals for their invaluable support and guidance in the development of this system:</p>
+        <ul>
+            <li><strong>RONELYN M. PRODIGO</strong> (School Head) - For the vision, leadership, and unending support for school innovation.</li>
+            <li><strong>The Teachers and Coordinators of Angela Elementary School</strong> - For their active participation during the pilot testing and their valuable feedback.</li>
+            <li><strong>The ICT Team and DepEd Personnel</strong> - For the technical guidance and alignment with educational standards.</li>
+        </ul>
+
         <h2>Table of Contents</h2>
         <ul class="toc-list">
             <li><span>1. Getting Started</span> <span>Page 5</span></li>
             <li><span>2. Logging In and Role Switching</span> <span>Page 5</span></li>
             <li><span>3. Data Entry: PHIL-IRI (GST)</span> <span>Page 6</span></li>
             <li><span>4. Data Entry: CRLA and RMA</span> <span>Page 7</span></li>
-            <li><span>5. Submitting Narrative Reports & Photos</span> <span>Page 7</span></li>
+            <li><span>5. Submitting Narrative Reports</span> <span>Page 7</span></li>
             <li><span>6. Coordinator Review and Approval</span> <span>Page 8</span></li>
-            <li><span>7. School Head Final Approval & Printing</span> <span>Page 8</span></li>
+            <li><span>7. School Head Final Approval</span> <span>Page 8</span></li>
             <li><span>8. System Settings (ICT)</span> <span>Page 9</span></li>
             <li><span>9. Managing the ARAL Masterlist</span> <span>Page 10</span></li>
             <li><span>10. Printing Official Reports</span> <span>Page 11</span></li>
@@ -312,47 +326,31 @@
             <li><span>12. Data Privacy and Security</span> <span>Page 13</span></li>
             <li><span>13. Glossary of Terms</span> <span>Page 14</span></li>
         </ul>
-
-        <h3 style="margin-top: 30px; color: #113a6b; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Document Control</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px;">
-            <tr style="background-color: #f1f5f9; text-align: left;">
-                <th style="padding: 10px; border: 1px solid #ddd;">Version</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Description</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Author</th>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;">1.0</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">October 2026</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">Initial release of the AES Unified Reporting System Manual.</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">Noel D. Camba</td>
-            </tr>
-        </table>
     </div>
 
     <!-- ============================================== -->
-    <!-- PAGE 5: CHAPTERS 1 & 2 -->
+    <!-- PAGE 5: CHAPTERS 1 & 2 (DAGDAGAN NATIN NG CONTENT PARA PUNO) -->
     <!-- ============================================== -->
     <div class="page">
         <h2>1. Getting Started</h2>
-        <p>Welcome to the AES Unified Reporting System! This platform is designed to streamline the reporting of PHIL-IRI, CRLA, and RMA assessments, as well as Narrative Reports.</p>
+        <p>Welcome to the AES Unified Reporting System! This platform is designed to streamline the reporting of PHIL-IRI, CRLA, and RMA assessments, as well as Narrative Reports. It serves as a centralized hub for teachers, coordinators, and school heads to collaborate efficiently.</p>
         
         <h3>System Requirements</h3>
         <ul>
-            <li>Stable internet connection.</li>
-            <li>Updated web browser (Google Chrome, Microsoft Edge, or Mozilla Firefox).</li>
-            <li>Google Account (for narrative report photo uploads).</li>
+            <li><strong>Internet Connection:</strong> A stable internet connection is required to sync data with Google Sheets and Google Drive.</li>
+            <li><strong>Web Browser:</strong> An updated version of Google Chrome, Microsoft Edge, or Mozilla Firefox is recommended for optimal performance.</li>
+            <li><strong>Google Account:</strong> A valid Google Account is necessary for uploading activity photos in the Narrative Reports section.</li>
         </ul>
 
         <h2>2. Logging In and Role Switching</h2>
-        <p>To access the system:</p>
+        <p>To access the system, follow these steps:</p>
         <ol>
-            <li>Open the provided URL link.</li>
-            <li>Enter your assigned <strong>Username</strong> and <strong>Password</strong>.</li>
-            <li>Click the <strong>Login</strong> button.</li>
+            <li>Open the provided URL link in your web browser.</li>
+            <li>Enter your assigned <strong>Username</strong> and <strong>Password</strong> in the designated fields.</li>
+            <li>Click the <strong>🔐 Login</strong> button to access your dashboard.</li>
         </ol>
-        <p><em>Note: If you hold multiple roles (e.g., Teacher and ICT Coordinator), you can switch between them using the dropdown menu located in the sidebar beneath your name.</em></p>
-
+        <p><em>Note: If you hold multiple roles (e.g., Teacher and ICT Coordinator), you can switch between them using the dropdown menu located in the sidebar beneath your name. This allows you to access different modules without needing to log out.</em></p>
+        
         <h3>Understanding the Interface</h3>
         <p>Once logged in, you will see the following main interface components:</p>
         <ul>
@@ -367,13 +365,13 @@
     <!-- ============================================== -->
     <div class="page">
         <h2>3. Data Entry: PHIL-IRI (GST)</h2>
-        <p>The system features an automated parsing tool for the PHIL-IRI Group Screening Test (GST).</p>
+        <p>The system features an automated parsing tool for the PHIL-IRI Group Screening Test (GST). This eliminates the need for manual encoding and computation, saving you hours of work.</p>
         <ol>
-            <li>Go to the <strong>PHIL-IRI (KS2)</strong> module.</li>
-            <li>Select the Language and Assessment Type.</li>
-            <li>Copy your data from Excel/Sheets (Format: <code>Name, Score</code>).</li>
-            <li>Paste it into the text box and click <strong>🔍 Parse Data</strong>.</li>
-            <li>The system will automatically calculate the Profile and suggest interventions.</li>
+            <li>Go to the <strong>PHIL-IRI (KS2)</strong> module in the sidebar.</li>
+            <li>Select the <strong>Language</strong> (English or Filipino) and <strong>Assessment Type</strong> (GST, Pre-test, MOSY, Post-test).</li>
+            <li>Copy your data from Excel or Google Sheets. The format should be <code>Name, Score</code> (e.g., Juan Dela Cruz, 15).</li>
+            <li>Paste it into the text box and click the <strong>🔍 Parse Data</strong> button.</li>
+            <li>The system will automatically calculate the Profile and suggest interventions for each learner.</li>
         </ol>
         <p><strong>Color Coding Guide:</strong></p>
         <ul>
@@ -382,6 +380,7 @@
             <li><span style="background-color: #fff3cd; padding: 2px 5px; border-radius: 3px;">Yellow</span>: Instructional (For Remediation).</li>
             <li><span style="background-color: #f8d7da; padding: 2px 5px; border-radius: 3px;">Red</span>: Frustration (For Remediation).</li>
         </ul>
+        <p>Once satisfied with the data, click <strong>🚀 Submit All Data</strong> at the top right corner. This will send the report to your Program Coordinator for review.</p>
     </div>
 
     <!-- ============================================== -->
@@ -389,10 +388,17 @@
     <!-- ============================================== -->
     <div class="page">
         <h2>4. Data Entry: CRLA and RMA</h2>
-        <p>Similar to PHIL-IRI, you can paste data for the CRLA (Comprehensive Rapid Literacy Assessment) and RMA (Rapid Mathematics Assessment). Ensure you paste the data in the correct format indicated in the respective modules.</p>
+        <p>Similar to PHIL-IRI, you can paste data for the CRLA (Comprehensive Rapid Literacy Assessment) and RMA (Rapid Mathematics Assessment). Ensure you paste the data in the correct format indicated in the respective modules. The system will automatically assign ARAL tags to students who fall below the proficiency threshold.</p>
         
         <h2>5. Submitting Narrative Reports & Photos</h2>
-        <p>For activity reports, accomplishments, or project proposals, navigate to the <strong>Narrative Reports</strong> tab. Fill in the title, content, and your position. You may also upload activity photos, which are securely stored in the school's Google Drive.</p>
+        <p>For activity reports, accomplishments, or project proposals, navigate to the <strong>Narrative Reports</strong> tab. Fill in the required fields:</p>
+        <ul>
+            <li><strong>Report Type:</strong> Select from Narrative, Accomplishment, Activity Report, or Project Proposal.</li>
+            <li><strong>Subject/Program:</strong> Choose the relevant subject or program.</li>
+            <li><strong>Position/Title:</strong> Input your designation (e.g., Class Adviser, Coordinator).</li>
+            <li><strong>Title & Content:</strong> Provide a descriptive title and the full text of your report.</li>
+        </ul>
+        <p>You may also upload activity photos by clicking the <strong>Choose Files</strong> button. These photos are securely stored in the school's Google Drive and are automatically linked to your report.</p>
     </div>
 
     <!-- ============================================== -->
@@ -400,10 +406,14 @@
     <!-- ============================================== -->
     <div class="page">
         <h2>6. Coordinator Review and Approval</h2>
-        <p>Program Coordinators can view pending submissions in the <strong>Teacher Submissions</strong> tab. They can either return the report to the teacher with a comment or approve and forward it to the School Head.</p>
+        <p>Program Coordinators can view pending submissions in the <strong>Teacher Submissions</strong> tab. For each report, coordinators have two options:</p>
+        <ul>
+            <li><strong>↩️ Return:</strong> If the report contains errors or needs improvement, it can be returned to the teacher with a comment explaining the necessary corrections.</li>
+            <li><strong>✅ Approve:</strong> If the report is correct, it is forwarded to the School Head for final approval.</li>
+        </ul>
 
         <h2>7. School Head Final Approval & Printing</h2>
-        <p>The School Head can view forwarded reports and give final approval. Once approved, the report is locked and ready for printing with official DepEd letterheads and e-signatures.</p>
+        <p>The School Head can view forwarded reports in the <strong>Forwarded Reports</strong> tab. Once reviewed, the School Head can give final approval by clicking <strong>🏁 Approve & Print</strong>. At this stage, the report is locked, and the teacher can no longer edit it. The report is now ready for printing with the official DepEd letterhead and e-signatures.</p>
     </div>
 
     <!-- ============================================== -->
@@ -411,11 +421,11 @@
     <!-- ============================================== -->
     <div class="page">
         <h2>8. System Settings (ICT)</h2>
-        <p>The ICT Coordinator has access to System Settings. Here, you can:</p>
+        <p>The ICT Coordinator has exclusive access to the System Settings module. This section allows for the maintenance and customization of the system:</p>
         <ul>
-            <li><strong>Upload Logos:</strong> Set the DepEd and School logos for the official reports.</li>
-            <li><strong>Change Script URL:</strong> Update the backend Google Apps Script link if necessary.</li>
-            <li><strong>Clear All Submissions:</strong> Wipe the database and Google Drive photos at the end of the school year to prepare the system for a fresh start.</li>
+            <li><strong>Google Apps Script URL:</strong> Update the backend link if the Google Sheets database is transferred or re-deployed.</li>
+            <li><strong>School & DepEd Logos:</strong> Upload the official logos used for the reports. The system automatically resizes the images to ensure they fit perfectly without taking up too much storage.</li>
+            <li><strong>Clear All Submissions & Photos:</strong> A "Danger Zone" feature that permanently deletes all reports from the database and all uploaded photos from Google Drive. This is used at the end of the school year to prepare the system for a fresh start.</li>
         </ul>
     </div>
 
@@ -514,12 +524,11 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- PAGE 14: GLOSSARY -->
+    <!-- PAGE 14: GLOSSARY & BACK PAGE -->
     <!-- ============================================== -->
-    <div class="page">
-        <h2>13. Glossary of Terms</h2>
-        <p>Familiarize yourself with these common acronyms used in the system:</p>
-        <ul style="line-height: 2;">
+    <div class="page" style="display: flex; flex-direction: column; justify-content: center; text-align: center; min-height: 250mm;">
+        <h2 style="border-bottom: none; text-align: left;">13. Glossary of Terms</h2>
+        <ul style="text-align: left; line-height: 2;">
             <li><strong>PHIL-IRI:</strong> Philippine Informal Reading Inventory (Used for Grades 3-6).</li>
             <li><strong>GST:</strong> Group Screening Test (Initial phase of PHIL-IRI).</li>
             <li><strong>CRLA:</strong> Comprehensive Rapid Literacy Assessment (Used for Grades 1-3 / Kinder).</li>
@@ -529,23 +538,20 @@
             <li><strong>Remediation:</strong> Targeted interventions for students struggling with reading or math.</li>
             <li><strong>E-Signature:</strong> Digital signature used for official report approvals.</li>
         </ul>
-    </div>
 
-    <!-- ============================================== -->
-    <!-- PAGE 15: BACK PAGE -->
-    <!-- ============================================== -->
-    <div class="page" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100vh;">
-        <h2 style="border: none; font-size: 30px;">ANGELA ELEMENTARY SCHOOL</h2>
-        <p style="font-size: 18px; margin-top: 10px;">San Mariano I District</p>
-        <p style="font-size: 18px;">Schools Division Office of Isabela</p>
-        <p style="font-size: 18px; margin-bottom: 50px;">Region 02-Cagayan Valley</p>
-        
-        <div style="background-color: #113a6b; color: white; padding: 20px 40px; border-radius: 8px;">
-            <h3 style="margin: 0; color: white;">For Technical Support</h3>
-            <p style="margin: 5px 0 0 0;">Please contact the School ICT Coordinator.</p>
+        <div style="margin-top: auto; padding-top: 50px;">
+            <h2 style="border: none; font-size: 30px;">ANGELA ELEMENTARY SCHOOL</h2>
+            <p style="font-size: 18px; margin-top: 10px;">San Mariano I District</p>
+            <p style="font-size: 18px;">Schools Division Office of Isabela</p>
+            <p style="font-size: 18px; margin-bottom: 50px;">Region 02-Cagayan Valley</p>
+            
+            <div style="background-color: #113a6b; color: white; padding: 20px 40px; border-radius: 8px; display: inline-block;">
+                <h3 style="margin: 0; color: white;">For Technical Support</h3>
+                <p style="margin: 5px 0 0 0;">Please contact the School ICT Coordinator.</p>
+            </div>
+            
+            <p style="margin-top: 60px; font-size: 14px; color: #888;">© 2026 AES Unified Reporting System. All Rights Reserved.</p>
         </div>
-        
-        <p style="margin-top: 60px; font-size: 14px; color: #888;">© 2026 AES Unified Reporting System. All Rights Reserved.</p>
     </div>
 
     <!-- Script para lumabas ang mga logo mula sa System Settings -->
