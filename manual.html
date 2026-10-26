@@ -15,9 +15,9 @@
 
         body {
             font-family: 'Open Sans', sans-serif;
-            background-color: #f4f7f6;
+            background-color: #e2e8f0; /* Mas maitim na background para kitang-kita ang pages */
             margin: 0;
-            padding: 0;
+            padding: 20px 0;
             color: #333;
             line-height: 1.6;
         }
@@ -26,21 +26,21 @@
         .page {
             background-color: white;
             max-width: 210mm; /* A4 Width */
-            margin: 0 auto 20px auto;
+            margin: 0 auto 10px auto; /* Siksik na margin para magkadikit */
             padding: 20mm;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             box-sizing: border-box;
             position: relative;
         }
 
-        /* --- COVER PAGE (Kailangan may sapat na height para hindi magmukhang sagging) --- */
+        /* --- COVER PAGE SPECIFIC --- */
         .cover-page {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            min-height: 250mm; /* Sapat na height para sa A4 */
+            min-height: 250mm; /* Sapat na height para sa A4 cover */
         }
 
         .header-section {
@@ -148,7 +148,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- CONTENT PAGES SPECIFIC (TULOY-TULOY) --- */
+        /* --- CONTENT PAGES SPECIFIC --- */
         h2 {
             color: #113a6b;
             border-bottom: 2px solid #f1c40f;
@@ -166,7 +166,7 @@
         p, li {
             font-size: 15px;
             text-align: justify;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .preface-text {
@@ -208,7 +208,10 @@
 
         /* --- PRINT BREAKS --- */
         @media print {
-            body { background-color: white; }
+            body { 
+                background-color: white; 
+                padding: 0;
+            }
             .page { 
                 margin: 0; 
                 padding: 0;
@@ -222,7 +225,6 @@
             .page:last-child { 
                 page-break-after: auto; 
             }
-            /* Pigilan ang page break sa loob ng mga table o signature */
             table, .signature-block {
                 page-break-inside: avoid;
             }
@@ -279,7 +281,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- PAGE 3: MESSAGE FROM THE DEVELOPER -->
+    <!-- PAGE 3: MESSAGE FROM THE DEVELOPER & ACKNOWLEDGMENT -->
     <!-- ============================================== -->
     <div class="page">
         <h2>Message from the Developer</h2>
@@ -296,29 +298,31 @@
             <p class="signature-name">NOEL D. CAMBA</p>
             <p class="signature-title">ICT Coordinator / System Developer</p>
         </div>
+
+        <div style="margin-top: 40px;">
+            <h2>Acknowledgment</h2>
+            <p>The developer would like to express heartfelt gratitude to the following individuals for their invaluable support and guidance in the development of this system:</p>
+            <ul>
+                <li><strong>RONELYN M. PRODIGO</strong> (School Head) - For the vision, leadership, and unending support for school innovation.</li>
+                <li><strong>The Teachers and Coordinators of Angela Elementary School</strong> - For their active participation during the pilot testing and their valuable feedback.</li>
+                <li><strong>The ICT Team and DepEd Personnel</strong> - For the technical guidance and alignment with educational standards.</li>
+            </ul>
+        </div>
     </div>
 
     <!-- ============================================== -->
-    <!-- PAGE 4: ACKNOWLEDGMENT & TOC -->
+    <!-- PAGE 4: TABLE OF CONTENTS & DOCUMENT CONTROL -->
     <!-- ============================================== -->
     <div class="page">
-        <h2>Acknowledgment</h2>
-        <p>The developer would like to express heartfelt gratitude to the following individuals for their invaluable support and guidance in the development of this system:</p>
-        <ul>
-            <li><strong>RONELYN M. PRODIGO</strong> (School Head) - For the vision, leadership, and unending support for school innovation.</li>
-            <li><strong>The Teachers and Coordinators of Angela Elementary School</strong> - For their active participation during the pilot testing and their valuable feedback.</li>
-            <li><strong>The ICT Team and DepEd Personnel</strong> - For the technical guidance and alignment with educational standards.</li>
-        </ul>
-
         <h2>Table of Contents</h2>
         <ul class="toc-list">
             <li><span>1. Getting Started</span> <span>Page 5</span></li>
             <li><span>2. Logging In and Role Switching</span> <span>Page 5</span></li>
             <li><span>3. Data Entry: PHIL-IRI (GST)</span> <span>Page 6</span></li>
             <li><span>4. Data Entry: CRLA and RMA</span> <span>Page 7</span></li>
-            <li><span>5. Submitting Narrative Reports</span> <span>Page 7</span></li>
+            <li><span>5. Submitting Narrative Reports & Photos</span> <span>Page 7</span></li>
             <li><span>6. Coordinator Review and Approval</span> <span>Page 8</span></li>
-            <li><span>7. School Head Final Approval</span> <span>Page 8</span></li>
+            <li><span>7. School Head Final Approval & Printing</span> <span>Page 8</span></li>
             <li><span>8. System Settings (ICT)</span> <span>Page 9</span></li>
             <li><span>9. Managing the ARAL Masterlist</span> <span>Page 10</span></li>
             <li><span>10. Printing Official Reports</span> <span>Page 11</span></li>
@@ -326,10 +330,26 @@
             <li><span>12. Data Privacy and Security</span> <span>Page 13</span></li>
             <li><span>13. Glossary of Terms</span> <span>Page 14</span></li>
         </ul>
+
+        <h3 style="margin-top: 30px; color: #113a6b; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Document Control</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px;">
+            <tr style="background-color: #f1f5f9; text-align: left;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Version</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Description</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Author</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">1.0</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">October 2026</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Initial release of the AES Unified Reporting System Manual.</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Noel D. Camba</td>
+            </tr>
+        </table>
     </div>
 
     <!-- ============================================== -->
-    <!-- PAGE 5: CHAPTERS 1 & 2 (DAGDAGAN NATIN NG CONTENT PARA PUNO) -->
+    <!-- PAGE 5: CHAPTERS 1 & 2 -->
     <!-- ============================================== -->
     <div class="page">
         <h2>1. Getting Started</h2>
