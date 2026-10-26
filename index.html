@@ -464,13 +464,9 @@
             currentUser = user; 
             localStorage.setItem('currentUser', JSON.stringify(user));
             
-            // FIX: Auto-detect role (kahit walang space sa "teacher,ict")
-            let rawRole = String(user.Role).toLowerCase();
-            if (rawRole.includes('teacher')) activeRole = 'teacher';
-            else if (rawRole.includes('schoolhead')) activeRole = 'schoolhead';
-            else if (rawRole.includes('ict')) activeRole = 'ict';
-            else if (rawRole.includes('coord')) activeRole = 'coordinator';
-            else activeRole = 'teacher'; // Default
+            // I-set ang unang role bilang default (e.g., teacher)
+            let rolesArray = String(user.Role).split(',').map(r => r.trim().toLowerCase());
+            activeRole = rolesArray[0] || 'teacher'; 
             
             showDashboard();
         }
@@ -480,18 +476,42 @@
         function showDashboard() {
             document.getElementById('login-screen').style.display = 'none';
             
-            // FIX: I-force display ang sidebar at main content
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
             
-            const name = currentUser['Full Name'] || currentUser.FullName || '';
+            // INAYOS NA PAGKUHA NG DATA MULA SA GOOGLE SHEETS
+            const name = currentUser['Full Name'] || currentUser.FullName || 'Teacher Name';
+            const grade = currentUser.Grade || '';
+            const section = currentUser.Section || '';
             
             document.getElementById('ui-name').innerText = name;
-            document.getElementById('ui-details').innerText = (currentUser.Grade && currentUser.Grade !== '-') ? `Grade ${currentUser.Grade} - ${currentUser.Section}` : '';
+            
+            // Kung ang section ay may "teacher," ibig sabihin nag-shift ang columns sa sheets. 
+            // Ito ay temporary fix para hindi magulo ang display.
+            let displayGrade = grade;
+            let displaySection = section;
+            if(section.includes('teacher') || section.includes('ict')) {
+                displayGrade = grade; 
+                displaySection = "Section"; 
+            }
+            
+            document.getElementById('ui-details').innerText = displayGrade ? `Grade ${displayGrade} - ${displaySection}` : '';
+            
+            // IBALIK ANG DROPDOWN SELECTOR PARA SA MULTI-ROLE
+            const roles = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
+            const switcher = document.getElementById('role-switcher');
+            const select = document.getElementById('active-role-select');
+            
+            if (roles.length > 1) {
+                switcher.classList.remove('hidden');
+                select.innerHTML = roles.map(r => `<option value="${r}" ${r === activeRole ? 'selected' : ''}>${r.replace(/_/g,' ').toUpperCase()}</option>`).join('');
+            } else { 
+                switcher.classList.add('hidden'); 
+            }
             
             // I-set ang Role Badge
             const roleBadge = document.getElementById('ui-role');
-            roleBadge.innerText = activeRole.toUpperCase();
+            roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
             roleBadge.className = 'role-badge ' + activeRole;
             
             // Itago lahat ng menu
@@ -503,7 +523,7 @@
             // Ipakita ang tamang menu base sa role
             let menuId = '';
             if (activeRole === 'teacher') menuId = 'menu-teacher';
-            else if (activeRole === 'coordinator') menuId = 'menu-coordinator';
+            else if (activeRole.includes('coord')) menuId = 'menu-coordinator';
             else if (activeRole === 'schoolhead') menuId = 'menu-schoolhead';
             else if (activeRole === 'ict') menuId = 'menu-ict';
             
@@ -512,15 +532,14 @@
                 if(menuEl) menuEl.classList.remove('hidden');
             }
             
-            // Setup para sa Teacher
+            // Setup para sa Teacher (Dito natin nilalagay ang tamang Grade at Section)
             if (activeRole === 'teacher') {
-                document.getElementById('teacher-grade').value = currentUser.Grade || '';
-                document.getElementById('teacher-section').value = currentUser.Section || '';
+                document.getElementById('teacher-grade').value = displayGrade;
+                document.getElementById('teacher-section').value = displaySection;
                 document.getElementById('teacher-name').value = name;
                 document.getElementById('btn-submit').style.display = 'inline-flex';
                 document.getElementById('btn-signature').style.display = 'inline-flex';
                 
-                // AUTO-OPEN ANG PHIL-IRI PANEL
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('module-philiri').classList.add('active');
                 document.getElementById('page-title').innerText = "PHIL-IRI (KS2)";
@@ -530,7 +549,7 @@
                 updateRMALogic();
             } 
             // Setup para sa Coordinator
-            else if (activeRole === 'coordinator') {
+            else if (activeRole.includes('coord')) {
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('coordinator-review').classList.add('active');
                 document.getElementById('page-title').innerText = "Teacher Submissions";
@@ -552,17 +571,16 @@
             }
         }
 
+        function switchActiveRole(newRole) { activeRole = newRole; showDashboard(); }
+        
         window.addEventListener('DOMContentLoaded', async () => { 
             loadLogos(); 
             const saved = localStorage.getItem('currentUser'); 
             if (saved) { 
                 try { 
                     currentUser = JSON.parse(saved); 
-                    let rawRole = String(currentUser.Role).toLowerCase();
-                    if (rawRole.includes('teacher')) activeRole = 'teacher';
-                    else if (rawRole.includes('schoolhead')) activeRole = 'schoolhead';
-                    else if (rawRole.includes('ict')) activeRole = 'ict';
-                    else activeRole = 'teacher';
+                    let rolesArray = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
+                    activeRole = rolesArray[0] || 'teacher'; 
                     showDashboard(); 
                 } catch(e) {} 
             } 
