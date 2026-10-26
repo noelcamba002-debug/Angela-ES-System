@@ -711,15 +711,16 @@
                 displayStr = `${profile} (Gr. ${readingLevel})`;
             }
 
-                       pc.innerText = displayStr; pc.className = "auto-calc"; 
+                pc.innerText = displayStr; pc.className = "auto-calc"; 
             
-            // BAGONG COLOR LOGIC PARA SA GRADE READY
+            // BAGONG COLOR LOGIC PARA SA GRADE READY (NAKA-OVERRIDE)
             if (displayStr.includes("Grade Ready")) {
-                pc.style.backgroundColor = "#cce5ff"; // Light Blue
-                pc.style.color = "#004085"; // Dark Blue text
+                pc.style.setProperty('background-color', '#cce5ff', 'important'); // Light Blue
+                pc.style.setProperty('color', '#004085', 'important'); // Dark Blue text
             } else {
-                pc.style.backgroundColor = ""; 
-                pc.style.color = "";
+                // Ibabalik natin sa dating kulay (Red/Yellow/Green) kung Remediation
+                pc.style.removeProperty('background-color'); 
+                pc.style.removeProperty('color');
                 if (profile === "Frustration") pc.classList.add("status-full");
                 else if (profile === "Instructional") pc.classList.add("status-light");
                 else pc.classList.add("status-ready");
