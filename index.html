@@ -466,7 +466,8 @@
                 errBox.style.display = 'block'; 
                 return; 
             }
-            
+              // ITO YUNG BAGONG LINYA NA IDADAGDAG MO
+            user['Full Name'] = user['Full Name'] || user.FullName || user.Username;
             currentUser = user; 
             localStorage.setItem('currentUser', JSON.stringify(user));
             
