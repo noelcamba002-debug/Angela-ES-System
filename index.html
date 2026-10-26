@@ -394,7 +394,7 @@
 
         async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
         
-        // --- INAYOS NA FETCH USERS PARA HINDI UMASA SA COLUMN ORDER ---
+        // --- BULLETPROOF FETCH USERS (Kahit magulo ang columns, makukuha pa rin) ---
         async function fetchUsers() { 
             try { 
                 const r = await fetch(SCRIPT_URL + '?action=getUsers'); 
@@ -403,15 +403,19 @@
                     const newUser = {};
                     for (let key in u) {
                         const cleanKey = String(key).toLowerCase().trim();
-                        if(cleanKey === 'full name' || cleanKey === 'fullname' || cleanKey === 'pangalan') newUser['Full Name'] = u[key];
-                        else if(cleanKey === 'username' || cleanKey === 'user') newUser.Username = u[key];
-                        else if(cleanKey === 'password' || cleanKey === 'pass') newUser.Password = u[key];
-                        else if(cleanKey === 'role' || cleanKey === 'roles') newUser.Role = u[key];
-                        else if(cleanKey === 'grade' || cleanKey === 'grade level') newUser.Grade = u[key];
-                        else if(cleanKey === 'section' || cleanKey === 'sec') newUser.Section = u[key];
-                        else if(cleanKey === 'status' || cleanKey === 'stat') newUser.Status = u[key];
+                        if(cleanKey.includes('name') || cleanKey.includes('pangalan')) newUser['Full Name'] = u[key];
+                        else if(cleanKey.includes('user')) newUser.Username = u[key];
+                        else if(cleanKey.includes('pass')) newUser.Password = u[key];
+                        else if(cleanKey.includes('role')) newUser.Role = u[key];
+                        else if(cleanKey.includes('grade')) newUser.Grade = u[key];
+                        else if(cleanKey.includes('section') || cleanKey === 'sec') newUser.Section = u[key];
+                        else if(cleanKey.includes('status') || cleanKey.includes('stat')) newUser.Status = u[key];
                         else newUser[key] = u[key];
                     }
+                    
+                    // SAFETY NET: Kung blangko ang role, gawing teacher
+                    if(!newUser.Role || String(newUser.Role).trim() === '') newUser.Role = 'teacher';
+                    
                     return newUser;
                 });
                 return cachedUsers; 
@@ -498,7 +502,7 @@
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
             
-            // SAFE DATA EXTRACTION (Walang mababangga)
+            // SAFE DATA EXTRACTION
             const name = String(currentUser['Full Name'] || currentUser.FullName || 'User').trim();
             const grade = String(currentUser.Grade || '').trim();
             const section = String(currentUser.Section || '').trim();
