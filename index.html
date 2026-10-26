@@ -474,9 +474,9 @@
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
 
-             async function login() {
-            const usernameInput = document.getElementById('login-username').value.trim().toLowerCase();
-            const passwordInput = document.getElementById('login-password').value.trim(); // .trim() para alisin ang space
+                   async function login() {
+            const usernameInput = document.getElementById('login-username').value.trim();
+            const passwordInput = document.getElementById('login-password').value.trim();
             const errBox = document.getElementById('login-error');
             errBox.style.display = 'none';
 
@@ -486,9 +486,57 @@
                 return; 
             }
             
-            const users = await fetchUsers();
-            
-            // ITO ANG FIX: Gagawin nating malinis ang comparison. Walang space, at case-insensitive.
+            try {
+                const users = await fetchUsers();
+                
+                // DEBUG: Ipapakita natin kung ilan ang nakuhang users
+                if (!Array.isArray(users) || users.length === 0) {
+                    alert("Error: Walang nakuhang users mula sa Google Sheets. I-check ang Apps Script Deployment.");
+                    return;
+                }
+
+                // Hanapin ang user (Username lang ang titignan muna)
+                const user = users.find(u => String(u.Username || '').toLowerCase() === usernameInput.toLowerCase());
+
+                if (!user) {
+                    alert(`Hindi nahanap ang username: ${usernameInput}.`);
+                    errBox.innerText = "Invalid credentials."; 
+                    errBox.style.display = 'block'; 
+                    return;
+                }
+
+                // I-check ang Password
+                const dbPass = String(user.Password || '').trim();
+                if (dbPass !== passwordInput) {
+                    alert(`Mali ang password.\n\nNasa Sheets: "${dbPass}"\nNasa Login Box: "${passwordInput}"`);
+                    errBox.innerText = "Invalid password."; 
+                    errBox.style.display = 'block'; 
+                    return;
+                }
+
+                // I-check ang Status
+                const dbStatus = String(user.Status || '').trim().toLowerCase();
+                if (dbStatus !== 'active') {
+                    alert(`Naka-inactive ang account na ito.\nStatus sa Sheets: "${user.Status}"`);
+                    errBox.innerText = "Account is inactive."; 
+                    errBox.style.display = 'block'; 
+                    return;
+                }
+                
+                // KUNG NAKAPASOK, I-SAVE ANG USER
+                currentUser = user; 
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
+                activeRole = rolesArray[0] || 'teacher'; 
+                
+                showDashboard();
+
+            } catch (e) {
+                alert("System Error: " + e.message);
+                console.error(e);
+            }
+        }            // ITO ANG FIX: Gagawin nating malinis ang comparison. Walang space, at case-insensitive.
             const user = users.find(u => {
                 const dbUser = String(u.Username || '').trim().toLowerCase();
                 const dbPass = String(u.Password || '').trim();
