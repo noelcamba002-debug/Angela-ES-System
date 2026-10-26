@@ -386,7 +386,7 @@
         
         async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
 
-        async function login() {
+            async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value.trim();
             const errBox = document.getElementById('login-error');
@@ -396,6 +396,7 @@
             
             const users = await fetchUsers();
             
+            // Dito natin hahanapin ang user sa Google Sheets
             const user = users.find(u => {
                 const uName = String(u.Username || '').trim().toLowerCase();
                 const uPass = String(u.Password || '').trim();
@@ -409,6 +410,9 @@
                 return; 
             }
             
+            // I-set ang Full Name para lumabas nang tama
+            user['Full Name'] = user['Full Name'] || user.FullName || user.Username;
+            
             currentUser = user; 
             localStorage.setItem('currentUser', JSON.stringify(user));
             
@@ -417,7 +421,6 @@
             
             showDashboard();
         }
-
         function logout() { localStorage.removeItem('currentUser'); location.reload(); }
 
         function showDashboard() {
