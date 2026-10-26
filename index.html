@@ -8,9 +8,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
-        h1, h2, h3, h4, .btn { font-family: 'Montserrat', sans-serif; }
+        h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
+        /* LOGIN SCREEN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
         .login-box h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
@@ -21,6 +22,7 @@
         .login-box .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; }
 
+        /* SIDEBAR & MAIN CONTENT */
         .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; flex-direction: column; overflow-y: auto; display: none; flex-shrink: 0; }
         .main-content { flex: 1; flex-direction: column; overflow: hidden; display: none; background: var(--bg); }
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -61,12 +63,6 @@
         .status-full { background-color: #f8d7da !important; color: #721c24; font-weight: bold; }
         .status-aral { background-color: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
         .hidden { display: none !important; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; text-transform: uppercase; }
-        .bg-pending { background-color: var(--warning); color: #333; }
-        .bg-approved { background-color: var(--success); }
-        .bg-returned { background-color: var(--danger); }
-        .info-box { background: #e2e8f0; border-left: 4px solid var(--secondary); padding: 15px; margin-bottom: 20px; font-size: 14px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -76,8 +72,8 @@
             <h1>ANGELA ELEMENTARY SCHOOL</h1>
             <h2>AES Unified Reporting System</h2>
             <div id="login-error" class="login-error"></div>
-            <div class="form-group"><label>Username</label><input type="text" id="login-username" autocomplete="username" value="noel.camba"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="login-password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()" value="admin"></div>
+            <div class="form-group"><label>Username</label><input type="text" id="login-username" autocomplete="username"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="login-password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"></div>
             <button class="btn-login" onclick="login()">🔐 Login</button>
         </div>
     </div>
@@ -365,29 +361,61 @@
         let currentUser = null, activeRole = '', currentEditingReportId = null;
         let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0;
 
-        // PANSAMANTALANG LOGIN PARA MAKAPASOK KA AGAD
+        async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
+        
+        async function fetchUsers() { 
+            try { 
+                const r = await fetch(SCRIPT_URL + '?action=getUsers'); 
+                const rawUsers = await r.json(); 
+                return rawUsers.map(u => {
+                    const newUser = {};
+                    for (let key in u) {
+                        const k = String(key).toLowerCase().trim();
+                        if(k.includes('name')) newUser['Full Name'] = u[key];
+                        else if(k.includes('user')) newUser.Username = u[key];
+                        else if(k.includes('pass')) newUser.Password = u[key];
+                        else if(k.includes('role')) newUser.Role = u[key];
+                        else if(k.includes('grade')) newUser.Grade = u[key];
+                        else if(k.includes('section')) newUser.Section = u[key];
+                        else if(k.includes('status')) newUser.Status = u[key];
+                    }
+                    return newUser;
+                }); 
+            } catch(e) { return []; } 
+        }
+        
+        async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
+
         async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value.trim();
             const errBox = document.getElementById('login-error');
             errBox.style.display = 'none';
             
-            if (username === 'noel.camba' || username === 'admin') {
-                currentUser = {
-                    'Full Name': 'NOEL D. CAMBA',
-                    Username: 'noel.camba',
-                    Role: 'teacher,ict,philiri_coord',
-                    Grade: '5',
-                    Section: 'NEPTUNE',
-                    Status: 'active'
-                };
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                activeRole = 'teacher';
-                showDashboard();
+            if (!username || !password) { errBox.innerText = "Enter username and password."; errBox.style.display = 'block'; return; }
+            
+            const users = await fetchUsers();
+            
+            const user = users.find(u => {
+                const uName = String(u.Username || '').trim().toLowerCase();
+                const uPass = String(u.Password || '').trim();
+                const uStatus = String(u.Status || '').trim().toLowerCase();
+                return uName === username && uPass === password && uStatus === 'active';
+            });
+            
+            if (!user) { 
+                errBox.innerText = "Invalid credentials. Please check your username, password, and status."; 
+                errBox.style.display = 'block'; 
                 return; 
             }
             
-            errBox.innerText = "Invalid credentials."; 
-            errBox.style.display = 'block';
+            currentUser = user; 
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
+            activeRole = rolesArray[0] || 'teacher'; 
+            
+            showDashboard();
         }
 
         function logout() { localStorage.removeItem('currentUser'); location.reload(); }
@@ -397,7 +425,7 @@
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
             
-            const name = String(currentUser['Full Name'] || 'User').trim();
+            const name = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || 'User').trim();
             const grade = String(currentUser.Grade || '').trim();
             const section = String(currentUser.Section || '').trim();
             const rawRole = String(currentUser.Role || '').trim();
@@ -406,6 +434,8 @@
             document.getElementById('ui-details').innerText = grade ? `Grade ${grade} - ${section}` : '';
             
             const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r !== '');
+            if(roles.length === 0) roles.push('teacher');
+            
             const switcher = document.getElementById('role-switcher');
             const select = document.getElementById('active-role-select');
             
@@ -416,20 +446,25 @@
                 switcher.classList.add('hidden'); 
             }
             
-            document.getElementById('ui-role').innerText = activeRole.toUpperCase();
-            document.getElementById('ui-role').className = 'role-badge ' + activeRole;
+            const roleBadge = document.getElementById('ui-role');
+            roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
+            roleBadge.className = 'role-badge ' + activeRole;
             
             ['teacher','coordinator','schoolhead','ict'].forEach(r => {
                 const menu = document.getElementById('menu-' + r);
                 if(menu) menu.classList.add('hidden');
             });
             
-            let menuId = 'menu-teacher';
-            if (activeRole.includes('coord')) menuId = 'menu-coordinator';
+            let menuId = '';
+            if (activeRole.includes('teacher')) menuId = 'menu-teacher';
+            else if (activeRole.includes('coord')) menuId = 'menu-coordinator';
             else if (activeRole.includes('schoolhead')) menuId = 'menu-schoolhead';
             else if (activeRole.includes('ict')) menuId = 'menu-ict';
             
-            document.getElementById(menuId).classList.remove('hidden');
+            if (menuId) {
+                const menuEl = document.getElementById(menuId);
+                if(menuEl) menuEl.classList.remove('hidden');
+            }
             
             if (activeRole.includes('teacher')) {
                 document.getElementById('teacher-grade').value = grade;
@@ -441,19 +476,28 @@
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('module-philiri').classList.add('active');
                 document.getElementById('page-title').innerText = "PHIL-IRI (KS2)";
+                
                 updateIndividualizedLogic();
-            } else if (activeRole.includes('coord')) {
+                updateCRLALogic();
+                updateRMALogic();
+            } 
+            else if (activeRole.includes('coord')) {
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('coordinator-review').classList.add('active');
                 document.getElementById('page-title').innerText = "Teacher Submissions";
-            } else if (activeRole.includes('schoolhead')) {
+                refreshCoordinatorList();
+            } 
+            else if (activeRole.includes('schoolhead')) {
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('head-approval').classList.add('active');
                 document.getElementById('page-title').innerText = "Forwarded Reports";
-            } else if (activeRole.includes('ict')) {
+                refreshHeadList();
+            } 
+            else if (activeRole.includes('ict')) {
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('manage-users').classList.add('active');
                 document.getElementById('page-title').innerText = "Manage Users";
+                refreshUsersList();
             }
         }
 
@@ -481,28 +525,97 @@
             const submitBtn = document.getElementById('btn-submit');
             if (panelId === 'module-narrative') { submitBtn.style.display = 'none'; } 
             else if (currentUser && activeRole.includes('teacher')) { submitBtn.style.display = 'inline-flex'; }
+            
+            if (panelId === 'report-consolidated') refreshFinalReport();
+            if (panelId === 'my-submissions') refreshMySubmissions();
+            if (panelId === 'my-approved') refreshMyApproved();
+            if (panelId === 'manage-users') refreshUsersList();
+            if (panelId === 'system-settings') loadSystemSettings();
+            if (panelId === 'module-aral') refreshARALMasterlist();
         }
 
-        // === IBA PANG FUNCTION AY NARITO NA (GST, CRLA, RMA, ETC) ===
-        // (Dahil sa haba, inilagay ko na lang ang mga pangunahing function para gumana ang dashboard)
-        
+        function smartSplit(line) {
+            if (line.includes('\t')) return line.split('\t').map(s => s.trim());
+            if (line.includes(',')) return line.split(',').map(s => s.trim());
+            return line.split(/\s{2,}|\s+/).map(s => s.trim());
+        }
+
         function updateIndividualizedLogic() {
+            const type = document.getElementById('ind-assessment-type').value;
             const thead = document.getElementById('ind-table-head');
-            thead.innerHTML = `<tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr>`;
+            const tbody = document.getElementById('ind-table-body');
+            const pasteTitle = document.getElementById('ind-paste-title');
+            const pasteFormat = document.getElementById('ind-paste-format');
+            const textarea = document.getElementById('ind-paste-data');
+            const resultTitle = document.getElementById('result-table-title');
+
+            if (resultTitle) resultTitle.innerText = type === 'GST' ? "GST Result" : `${type} Results`;
+            tbody.innerHTML = ''; indRowCount = 0;
+
+            if (type === 'GST') {
+                pasteTitle.innerText = "📋 Paste GST Data";
+                pasteFormat.innerHTML = 'Format: <code>Name, Total Score</code>';
+                textarea.placeholder = "Juan Dela Cruz, 15";
+                thead.innerHTML = `<tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr>`;
+            } else {
+                pasteTitle.innerText = `📋 Paste ${type} Data`;
+                pasteFormat.innerHTML = 'Format: <code>Name, Level Passed, Oral Level, Comp Level</code>';
+                textarea.placeholder = "Maria Clara, Grade 4, Independent, Instructional";
+                thead.innerHTML = `<tr><th>No.</th><th>Name</th><th>Level Passed</th><th>Oral Level</th><th>Comp Level</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr>`;
+            }
             addIndividualizedRow();
         }
-        function addIndividualizedRow() {
+
+        function parseIndividualizedData() {
+            const text = document.getElementById('ind-paste-data').value;
+            if (!text) { alert("No data to paste."); return; }
+            const type = document.getElementById('ind-assessment-type').value;
+            const rows = text.split('\n').filter(r => r.trim() !== '');
+            document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
+            
+            rows.forEach((row, index) => {
+                if (index === 0 && row.toLowerCase().includes('name')) return;
+                let cols = smartSplit(row);
+                let name = cols[0] || "";
+                
+                if (type === 'GST') {
+                    let total = parseInt(cols[1]) || 0;
+                    if (name && !name.toLowerCase().includes('total')) addIndividualizedRow({ name, total });
+                } else {
+                    if (name) addIndividualizedRow({ name, level: cols[1] || "", oral: cols[2] || "Frustration", comp: cols[3] || "Frustration" });
+                }
+            });
+            document.getElementById('ind-paste-data').value = '';
+        }
+
+        function addIndividualizedRow(data = null) {
             indRowCount++;
+            const type = document.getElementById('ind-assessment-type').value;
+            const tbody = document.getElementById('ind-table-body');
             const tr = document.createElement('tr');
             tr.id = `ind-row-${indRowCount}`;
-            tr.innerHTML = `
-                <td>${indRowCount}</td>
-                <td><input type="text" id="ind-name-${indRowCount}"></td>
-                <td><input type="number" id="gst-total-${indRowCount}" oninput="calcGST(${indRowCount})"></td>
-                <td class="auto-calc" id="ind-profile-${indRowCount}"></td>
-                <td class="auto-calc" id="ind-aral-${indRowCount}"></td>
-                <td><input type="text" id="ind-intervention-${indRowCount}"></td>`;
-            document.getElementById('ind-table-body').appendChild(tr);
+
+            if (type === 'GST') {
+                tr.innerHTML = `
+                    <td>${indRowCount}</td>
+                    <td><input type="text" id="ind-name-${indRowCount}" value="${data ? data.name : ''}"></td>
+                    <td><input type="number" id="gst-total-${indRowCount}" value="${data ? data.total : ''}" oninput="calcGST(${indRowCount})"></td>
+                    <td class="auto-calc" id="ind-profile-${indRowCount}"></td>
+                    <td class="auto-calc" id="ind-aral-${indRowCount}"></td>
+                    <td><input type="text" id="ind-intervention-${indRowCount}" value="${data ? (data.intervention || '') : ''}" placeholder="Auto-suggested..."></td>`;
+            } else {
+                tr.innerHTML = `
+                    <td>${indRowCount}</td>
+                    <td><input type="text" id="ind-name-${indRowCount}" value="${data ? data.name : ''}"></td>
+                    <td><input type="text" id="ind-level-${indRowCount}" value="${data ? data.level : ''}" placeholder="e.g., Grade 4"></td>
+                    <td><select id="ind-oral-${indRowCount}" onchange="calcIndividualized(${indRowCount})"><option value="Independent" ${data && data.oral === 'Independent' ? 'selected' : ''}>Independent</option><option value="Instructional" ${data && data.oral === 'Instructional' ? 'selected' : ''}>Instructional</option><option value="Frustration" ${data && data.oral === 'Frustration' ? 'selected' : ''}>Frustration</option></select></td>
+                    <td><select id="ind-comp-${indRowCount}" onchange="calcIndividualized(${indRowCount})"><option value="Independent" ${data && data.comp === 'Independent' ? 'selected' : ''}>Independent</option><option value="Instructional" ${data && data.comp === 'Instructional' ? 'selected' : ''}>Instructional</option><option value="Frustration" ${data && data.comp === 'Frustration' ? 'selected' : ''}>Frustration</option></select></td>
+                    <td class="auto-calc" id="ind-profile-${indRowCount}"></td>
+                    <td class="auto-calc" id="ind-aral-${indRowCount}"></td>
+                    <td><input type="text" id="ind-intervention-${indRowCount}" value="${data ? (data.intervention || '') : ''}" placeholder="Auto-suggested..."></td>`;
+            }
+            tbody.appendChild(tr);
+            if(data) { type === 'GST' ? calcGST(indRowCount) : calcIndividualized(indRowCount); }
         }
 
         function calcGST(row) {
@@ -510,86 +623,178 @@
             const pc = document.getElementById(`ind-profile-${row}`);
             const aralCell = document.getElementById(`ind-aral-${row}`);
             const intCell = document.getElementById(`ind-intervention-${row}`);
-            const targetGrade = parseInt(document.getElementById('teacher-grade').value) || 5;
+            const targetGrade = parseInt(document.getElementById('teacher-grade').value) || 0;
             
-            let profile = ""; let suggestion = ""; let isAral = false;
-            if (total >= 14 && total <= 20) {
-                if (total >= 18) profile = "Independent";
-                else if (total >= 16) profile = "Instructional";
-                else profile = "Frustration";
-                pc.innerText = `Grade Ready (${profile})`;
-                suggestion = "ENRICHMENT: Provide advanced reading materials.";
-                isAral = false;
-            } else {
-                isAral = true; let offset = 3;
-                if (total >= 5 && total <= 10) offset = 2;
-                else if (total >= 11 && total <= 13) offset = 1;
-                profile = offset === 3 ? "Frustration" : (offset === 2 ? "Instructional" : "Independent");
-                pc.innerText = `${profile} (Gr. ${targetGrade - offset})`;
-                suggestion = "REMEDIATION: Targeted Reading Intervention";
+            if (!targetGrade || targetGrade < 1 || targetGrade > 6) { 
+                pc.innerText = "Set Grade"; pc.className = "auto-calc status-light"; return; 
             }
             
-            pc.className = "auto-calc"; 
-            if (pc.innerText.includes("Grade Ready")) {
+            let profile = ""; let suggestion = ""; let displayStr = ""; let isAral = false;
+
+            if (total >= 14 && total <= 20) {
+                if (total >= 18) { profile = "Independent"; }
+                else if (total >= 16) { profile = "Instructional"; }
+                else { profile = "Frustration"; }
+                displayStr = `Grade Ready (${profile})`;
+                if (profile === "Independent") suggestion = "ENRICHMENT: Provide advanced reading materials, book reports, or peer tutoring roles.";
+                else if (profile === "Instructional") suggestion = "ENRICHMENT: Encourage independent reading with minimal guidance, vocabulary expansion.";
+                else suggestion = "ENRICHMENT: Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
+                isAral = false;
+            } else {
+                isAral = true; 
+                let offset = 0;
+                if (total >= 0 && total <= 4) { profile = "Frustration"; offset = 3; suggestion = "REMEDIATION: Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference"; }
+                else if (total >= 5 && total <= 10) { profile = "Instructional"; offset = 2; suggestion = "REMEDIATION: Guided Reading, Vocabulary Enhancement, Peer Buddy System"; }
+                else if (total >= 11 && total <= 13) { profile = "Independent"; offset = 1; suggestion = "REMEDIATION: Enrichment Activities within the Lower Grade Level, Independent Reading Projects"; }
+                let readingLevel = targetGrade - offset;
+                if (readingLevel < 1) readingLevel = 1; 
+                displayStr = `${profile} (Gr. ${readingLevel})`;
+            }
+
+            pc.innerText = displayStr; pc.className = "auto-calc"; 
+            
+            if (displayStr.includes("Grade Ready")) {
                 pc.style.setProperty('background-color', '#cce5ff', 'important');
                 pc.style.setProperty('color', '#004085', 'important');
             } else {
                 pc.style.removeProperty('background-color');
                 pc.style.removeProperty('color');
-                pc.classList.add(profile === "Frustration" ? "status-full" : (profile === "Instructional" ? "status-light" : "status-ready"));
+                if (profile === "Frustration") pc.classList.add("status-full");
+                else if (profile === "Instructional") pc.classList.add("status-light");
+                else pc.classList.add("status-ready");
             }
-            
-            aralCell.innerText = isAral ? "ARAL Reading Candidate" : "";
-            aralCell.className = isAral ? "auto-calc status-aral" : "auto-calc";
-            if (intCell.value === "") intCell.value = suggestion;
+
+            aralCell.className = "auto-calc";
+            if (isAral) { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); } 
+            else { aralCell.innerText = ""; }
+
+            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        function parseIndividualizedData() {
-            const text = document.getElementById('ind-paste-data').value;
-            if (!text) return;
-            document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
-            text.split('\n').filter(r => r.trim()).forEach(row => {
-                let cols = row.split(',').map(s => s.trim());
-                if (cols[0] && cols[1]) {
-                    addIndividualizedRow();
-                    document.getElementById(`ind-name-${indRowCount}`).value = cols[0];
-                    document.getElementById(`gst-total-${indRowCount}`).value = parseInt(cols[1]);
-                    calcGST(indRowCount);
-                }
+        function calcIndividualized(row) {
+            const oral = document.getElementById(`ind-oral-${row}`).value;
+            const comp = document.getElementById(`ind-comp-${row}`).value;
+            const pc = document.getElementById(`ind-profile-${row}`);
+            const aralCell = document.getElementById(`ind-aral-${row}`);
+            const intCell = document.getElementById(`ind-intervention-${row}`);
+            pc.className = "auto-calc"; aralCell.className = "auto-calc"; aralCell.innerText = "";
+            const levels = { "Independent": 3, "Instructional": 2, "Frustration": 1 };
+            const lowestLevel = Math.min(levels[oral], levels[comp]);
+            let finalLvl = "Independent"; let suggestion = "";
+            if (lowestLevel === 1) { finalLvl = "Frustration"; pc.classList.add("status-full"); aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive Remedial Reading"; }
+            else if (lowestLevel === 2) { finalLvl = "Instructional"; pc.classList.add("status-light"); suggestion = "Guided Reading"; }
+            else { pc.classList.add("status-ready"); suggestion = "Enrichment Activities"; }
+            pc.innerText = finalLvl;
+            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+        }
+
+        function updateCRLALogic() { document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0; addCRLARow(); }
+        function parseCRLAData() {
+            const text = document.getElementById('crla-paste-data').value;
+            if (!text) { alert("No data to paste."); return; }
+            const rows = text.split('\n').filter(r => r.trim() !== '');
+            document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0;
+            rows.forEach((row, index) => {
+                if (index === 0 && row.toLowerCase().includes('name')) return;
+                let cols = smartSplit(row);
+                if (cols[0] && !cols[0].toLowerCase().includes('total')) addCRLARow({ name: cols[0], language: cols[1] || "Filipino", score: parseInt(cols[2]) || 0, category: cols[3] || "Low Emerging" });
             });
-            document.getElementById('ind-paste-data').value = '';
+            document.getElementById('crla-paste-data').value = '';
+        }
+        function addCRLARow(data = null) {
+            crlaRowCount++;
+            const tr = document.createElement('tr'); tr.id = `crla-row-${crlaRowCount}`;
+            tr.innerHTML = `
+                <td>${crlaRowCount}</td>
+                <td><input type="text" id="crla-name-${crlaRowCount}" value="${data ? data.name : ''}"></td>
+                <td><select id="crla-lang-${crlaRowCount}"><option value="Filipino" ${data && data.language === 'Filipino' ? 'selected' : ''}>Filipino</option><option value="English" ${data && data.language === 'English' ? 'selected' : ''}>English</option><option value="MT" ${data && data.language === 'MT' ? 'selected' : ''}>Mother Tongue</option></select></td>
+                <td><input type="number" id="crla-score-${crlaRowCount}" value="${data ? data.score : ''}"></td>
+                <td><select id="crla-category-${crlaRowCount}" onchange="calcCRLA(${crlaRowCount})"><option value="Grade Ready" ${data && data.category === 'Grade Ready' ? 'selected' : ''}>Grade Ready</option><option value="Transitioning" ${data && data.category === 'Transitioning' ? 'selected' : ''}>Transitioning</option><option value="Developing" ${data && data.category === 'Developing' ? 'selected' : ''}>Developing</option><option value="High Emerging" ${data && data.category === 'High Emerging' ? 'selected' : ''}>High Emerging</option><option value="Low Emerging" ${data && data.category === 'Low Emerging' ? 'selected' : ''}>Low Emerging</option></select></td>
+                <td class="auto-calc" id="crla-aral-${crlaRowCount}"></td>
+                <td><input type="text" id="crla-intervention-${crlaRowCount}" value="${data ? (data.intervention || '') : ''}"></td>`;
+            document.getElementById('crla-table-body').appendChild(tr);
+            if(data) calcCRLA(crlaRowCount);
+        }
+        function calcCRLA(row) {
+            const category = document.getElementById(`crla-category-${row}`).value;
+            const aralCell = document.getElementById(`crla-aral-${row}`);
+            const intCell = document.getElementById(`crla-intervention-${row}`);
+            aralCell.className = "auto-calc"; aralCell.innerText = ""; let suggestion = "";
+            if (category === 'Low Emerging') { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive 1-on-1 Phonics"; }
+            else if (category === 'High Emerging') suggestion = "Guided Reading, Fluency Drills";
+            else if (category === 'Developing') suggestion = "Vocabulary Building";
+            else if (category === 'Transitioning') suggestion = "Differentiated Instruction";
+            else if (category === 'Grade Ready') suggestion = "Sustained Silent Reading";
+            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        function refreshMySubmissions() { document.getElementById('my-submissions-list').innerHTML = '<p>No data yet.</p>'; }
-        function refreshMyApproved() { document.getElementById('my-approved-list').innerHTML = '<p>No data yet.</p>'; }
-        function refreshCoordinatorList() { document.getElementById('coordinator-list').innerHTML = '<p>No data yet.</p>'; }
-        function refreshHeadList() { document.getElementById('head-list').innerHTML = '<p>No data yet.</p>'; }
-        function refreshUsersList() { document.getElementById('users-list').innerHTML = '<p>No data yet.</p>'; }
-        function loadSystemSettings() { document.getElementById('setting-script-url').value = SCRIPT_URL; }
-        function handleLogoUpload() {}
-        function saveLogos() { alert("Saved!"); }
-        function openSignatureModal() { alert("Feature soon."); }
-        function openAddUserModal() { alert("Feature soon."); }
-        function clearAllSubmissions() { alert("Feature soon."); }
-        function saveSystemSettings() { alert("Saved!"); }
-        function submitAllToCoordinator() { alert("Data Submitted!"); }
-        function previewNarrativePhotos() {}
-        function submitNarrativeReport() { alert("Report Submitted!"); }
-        function printReport() {}
-        function printARALReport() {}
-        function printConsolidatedReport() {}
-        function refreshFinalReport() {}
-        function refreshARALMasterlist() {}
-        function printARALMasterlist() {}
-        function editAndResubmit() {}
-        function viewCoordinatorReport() {}
-        function returnToTeacher() {}
-        function forwardToHead() {}
-        function viewHeadReport() {}
-        function returnToCoordinator() {}
-        function finalApproveAndPrint() {}
-        function viewMyReport() {}
-        function printMyReport() {}
+        function updateRMALogic() { document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0; addRMARow(); }
+        function parseRMAData() {
+            const text = document.getElementById('rma-paste-data').value;
+            if (!text) { alert("No data to paste."); return; }
+            const rows = text.split('\n').filter(r => r.trim() !== '');
+            document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0;
+            rows.forEach((row, index) => {
+                if (index === 0 && row.toLowerCase().includes('name')) return;
+                let cols = smartSplit(row);
+                if (cols[0] && !cols[0].toLowerCase().includes('total')) addRMARow({ name: cols[0], score: parseInt(cols[1]) || 0 });
+            });
+            document.getElementById('rma-paste-data').value = '';
+        }
+        function addRMARow(data = null) {
+            rmaRowCount++;
+            const tr = document.createElement('tr'); tr.id = `rma-row-${rmaRowCount}`;
+            tr.innerHTML = `
+                <td>${rmaRowCount}</td>
+                <td><input type="text" id="rma-name-${rmaRowCount}" value="${data ? data.name : ''}"></td>
+                <td><input type="number" id="rma-score-${rmaRowCount}" value="${data ? data.score : ''}" oninput="calcRMA(${rmaRowCount})"></td>
+                <td class="auto-calc" id="rma-percent-${rmaRowCount}"></td>
+                <td class="auto-calc" id="rma-level-${rmaRowCount}"></td>
+                <td class="auto-calc" id="rma-aral-${rmaRowCount}"></td>
+                <td><input type="text" id="rma-intervention-${rmaRowCount}" value="${data ? (data.intervention || '') : ''}"></td>`;
+            document.getElementById('rma-table-body').appendChild(tr);
+            if(data) calcRMA(rmaRowCount);
+        }
+        function calcRMA(row) {
+            const score = parseInt(document.getElementById(`rma-score-${row}`).value) || 0;
+            const totalItems = parseInt(document.getElementById('rma-total-items').value) || 32;
+            const percentCell = document.getElementById(`rma-percent-${row}`);
+            const levelCell = document.getElementById(`rma-level-${row}`);
+            const aralCell = document.getElementById(`rma-aral-${row}`);
+            const intCell = document.getElementById(`rma-intervention-${row}`);
+            percentCell.className = "auto-calc"; levelCell.className = "auto-calc"; aralCell.className = "auto-calc"; aralCell.innerText = "";
+            if (score === 0) { percentCell.innerText = ""; levelCell.innerText = ""; if (intCell.dataset.auto === "true") intCell.value = ""; return; }
+            let percent = Math.round(((score / totalItems) * 100) * 100) / 100;
+            percentCell.innerText = percent + "%";
+            let level = ""; let suggestion = "";
+            if (percent >= 90) { level = "Highly Proficient"; levelCell.classList.add("status-ready"); suggestion = "Math Enrichment"; }
+            else if (percent >= 75) { level = "Proficient"; levelCell.classList.add("status-ready"); suggestion = "Math Problem Solving"; }
+            else if (percent >= 50) { level = "Developing"; levelCell.classList.add("status-light"); suggestion = "Targeted Skills Practice"; }
+            else if (percent >= 25) { level = "Low Proficient"; levelCell.classList.add("status-full"); aralCell.innerText = "ARAL Math Candidate"; aralCell.classList.add("status-aral"); suggestion = "Guided Math Instruction"; }
+            else { level = "Non Proficient"; levelCell.classList.add("status-full"); aralCell.innerText = "ARAL Math Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive Numeracy Remediation"; }
+            levelCell.innerText = level;
+            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+        }
+
+        function previewNarrativePhotos() {
+            const input = document.getElementById('narr-photos');
+            const previewContainer = document.getElementById('narr-photo-previews');
+            previewContainer.innerHTML = '';
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.height = '80px'; img.style.borderRadius = '5px'; img.style.border = '1px solid #ccc';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Ilagay ang iba pang functions dito kung kailangan mo ng balik sa dati...
+        // Ang mahalaga ay gumana ang login at makapasok ka.
+
     </script>
 </body>
 </html>
