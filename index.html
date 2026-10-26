@@ -474,26 +474,42 @@
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
 
-        async function login() {
-            const username = document.getElementById('login-username').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value;
+             async function login() {
+            const usernameInput = document.getElementById('login-username').value.trim().toLowerCase();
+            const passwordInput = document.getElementById('login-password').value.trim(); // .trim() para alisin ang space
             const errBox = document.getElementById('login-error');
             errBox.style.display = 'none';
-            if (!username || !password) { errBox.innerText = "Enter username and password."; errBox.style.display = 'block'; return; }
+
+            if (!usernameInput || !passwordInput) { 
+                errBox.innerText = "Enter username and password."; 
+                errBox.style.display = 'block'; 
+                return; 
+            }
             
             const users = await fetchUsers();
-            const user = users.find(u => String(u.Username).toLowerCase() === username && String(u.Password) === password && String(u.Status).toLowerCase() === 'active');
-            if (!user) { errBox.innerText = "Invalid credentials."; errBox.style.display = 'block'; return; }
+            
+            // ITO ANG FIX: Gagawin nating malinis ang comparison. Walang space, at case-insensitive.
+            const user = users.find(u => {
+                const dbUser = String(u.Username || '').trim().toLowerCase();
+                const dbPass = String(u.Password || '').trim();
+                const dbStatus = String(u.Status || '').trim().toLowerCase();
+                return dbUser === usernameInput && dbPass === passwordInput && dbStatus === 'active';
+            });
+
+            if (!user) { 
+                errBox.innerText = "Invalid credentials. Please check your username, password, and status."; 
+                errBox.style.display = 'block'; 
+                return; 
+            }
             
             currentUser = user; 
             localStorage.setItem('currentUser', JSON.stringify(user));
             
-            let rolesArray = String(user.Role).split(',').map(r => r.trim().toLowerCase());
+            let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
             activeRole = rolesArray[0] || 'teacher'; 
             
             showDashboard();
         }
-
         function logout() { localStorage.removeItem('currentUser'); location.reload(); }
 
         function showDashboard() {
