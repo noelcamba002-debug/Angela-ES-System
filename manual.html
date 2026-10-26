@@ -7,168 +7,221 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
 
-        /* I-NORESEAT NATIN ANG LAHAT NG CSS PARA HINDI MAAPEKTUHAN NG SYSTEM */
-        * {
-            box-sizing: border-box !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
         body {
-            font-family: 'Open Sans', sans-serif !important;
-            background-color: #f4f7f6 !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            min-height: 100vh !important;
-            text-align: center !important;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
         }
 
-        .cover-container {
-            width: 100% !important;
-            max-width: 900px !important;
-            background-color: white !important;
-            padding: 60px 40px !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important; /* Ito ang magce-center sa lahat */
+        /* --- PAGE LAYOUTS --- */
+        .page {
+            background-color: white;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 60px 80px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            min-height: 100vh;
+            box-sizing: border-box;
+            position: relative;
         }
 
-        /* --- HEADER SECTION (LOGOS) --- */
+        /* --- COVER PAGE SPECIFIC --- */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
         .header-section {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            width: 100% !important;
-            margin-bottom: 20px !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         .logo {
-            width: 100px !important;
-            height: 100px !important;
-            object-fit: contain !important;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
         }
 
         .header-text {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-            flex-grow: 1 !important;
-            padding: 0 20px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            padding: 0 20px;
         }
 
         .header-text p {
-            margin: 2px 0 !important;
-            font-size: 14px !important;
-            color: #555 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 1px !important;
+            margin: 2px 0;
+            font-size: 14px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .header-text h1 {
-            margin: 5px 0 !important;
-            font-family: 'Montserrat', sans-serif !important;
-            font-size: 24px !important;
-            color: #113a6b !important;
-            font-weight: 700 !important;
+            margin: 5px 0;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            color: #113a6b;
+            font-weight: 700;
         }
 
-        /* --- DIVIDER LINE --- */
         .divider {
-            height: 4px !important;
-            background-color: #f1c40f !important; /* Yellow/Gold */
-            width: 100% !important;
-            margin: 20px 0 40px 0 !important;
-            border-radius: 2px !important;
+            height: 4px;
+            background-color: #f1c40f;
+            width: 100%;
+            margin: 20px 0 40px 0;
+            border-radius: 2px;
         }
 
-        /* --- MAIN TITLE --- */
         .main-title {
-            font-family: 'Montserrat', sans-serif !important;
-            font-size: 50px !important;
-            font-weight: 800 !important;
-            color: #113a6b !important;
-            margin: 0 !important;
-            letter-spacing: 5px !important;
-            text-align: center !important;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 50px;
+            font-weight: 800;
+            color: #113a6b;
+            margin: 0;
+            letter-spacing: 5px;
         }
 
         .sub-title {
-            font-family: 'Montserrat', sans-serif !important;
-            font-size: 28px !important;
-            font-weight: 700 !important;
-            color: #2a5a9b !important;
-            margin-top: 10px !important;
-            margin-bottom: 30px !important;
-            text-align: center !important;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2a5a9b;
+            margin-top: 10px;
+            margin-bottom: 30px;
         }
 
         .description {
-            font-family: 'Open Sans', sans-serif !important;
-            font-size: 16px !important;
-            font-style: italic !important;
-            color: #666 !important;
-            margin-bottom: 60px !important;
-            text-align: center !important;
+            font-size: 16px;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 60px;
         }
 
-        /* --- FOOTER SECTION --- */
         .footer-section {
-            margin-top: 50px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .school-name {
-            font-family: 'Montserrat', sans-serif !important;
-            font-size: 24px !important;
-            font-weight: 700 !important;
-            color: #113a6b !important;
-            margin: 0 !important;
-            text-align: center !important;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #113a6b;
+            margin: 0;
         }
 
         .district-name {
-            font-family: 'Open Sans', sans-serif !important;
-            font-size: 16px !important;
-            color: #666 !important;
-            margin-top: 5px !important;
-            margin-bottom: 40px !important;
-            text-align: center !important;
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 40px;
         }
 
         .developer-badge {
-            display: inline-block !important;
-            border: 2px solid #113a6b !important;
-            border-radius: 30px !important;
-            padding: 10px 30px !important;
-            font-family: 'Montserrat', sans-serif !important;
-            font-size: 14px !important;
-            font-weight: 600 !important;
-            color: #113a6b !important;
-            letter-spacing: 1px !important;
+            display: inline-block;
+            border: 2px solid #113a6b;
+            border-radius: 30px;
+            padding: 10px 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #113a6b;
+            letter-spacing: 1px;
         }
 
+        /* --- CONTENT PAGES SPECIFIC --- */
+        h2 {
+            color: #113a6b;
+            border-bottom: 2px solid #f1c40f;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        h3 {
+            color: #2a5a9b;
+            margin-top: 25px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        p, li {
+            font-size: 15px;
+            text-align: justify;
+        }
+
+        .preface-text {
+            text-indent: 50px;
+            margin-bottom: 15px;
+        }
+
+        .signature-block {
+            margin-top: 60px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .signature-name {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 0;
+            text-transform: uppercase;
+        }
+
+        .signature-title {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .toc-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 15px;
+            border-bottom: 1px dotted #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- PRINT SETTINGS --- */
         @media print {
-            body { background-color: white !important; }
-            .cover-container { box-shadow: none !important; padding: 0 !important; }
+            body { background-color: white; }
+            .page { 
+                margin: 0; 
+                box-shadow: none; 
+                padding: 0; 
+                min-height: auto;
+                page-break-after: always; 
+            }
+            .page:last-child { page-break-after: auto; }
         }
     </style>
 </head>
 <body>
 
-    <div class="cover-container">
-        
-        <!-- HEADER: MGA LOGO AT DEPED TEXT -->
+    <!-- ============================================== -->
+    <!-- PAGE 1: COVER PAGE -->
+    <!-- ============================================== -->
+    <div class="page cover-page">
         <div class="header-section">
-            <!-- DepEd Logo (Kaliwa) -->
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Department_of_Education_%28DepEd%29.svg/1200px-Department_of_Education_%28DepEd%29.svg.png" alt="DepEd Logo" class="logo" id="logo-deped">
             
-            <!-- Text sa Gitna -->
             <div class="header-text">
                 <p>Republic of the Philippines</p>
                 <h1>Department of Education</h1>
@@ -176,33 +229,326 @@
                 <p>Schools Division Office of Isabela</p>
             </div>
 
-            <!-- School Logo (Kanan) -->
             <img src="https://via.placeholder.com/150" alt="School Logo" class="logo" id="logo-school" style="border-radius: 20px;">
         </div>
 
-        <!-- DILAW NA LINYA -->
         <div class="divider"></div>
 
-        <!-- MGA TITULO -->
         <h1 class="main-title">USER MANUAL</h1>
-        <h2 class="sub-title">AES Unified Reporting System</h2>
+        <h2 class="sub-title" style="border: none;">AES Unified Reporting System</h2>
         <p class="description">A Comprehensive Guide for Teachers, Coordinators, and School Heads</p>
 
-        <!-- DILAW NA LINYA -->
         <div class="divider"></div>
 
-        <!-- FOOTER INFO -->
         <div class="footer-section">
             <h3 class="school-name">ANGELA ELEMENTARY SCHOOL</h3>
             <p class="district-name">San Mariano I District</p>
-            
-            <div class="developer-badge">
-                DEVELOPED BY: NOEL D. CAMBA
-            </div>
+            <div class="developer-badge">DEVELOPED BY: NOEL D. CAMBA</div>
         </div>
-
     </div>
 
+    <!-- ============================================== -->
+    <!-- PAGE 2: FOREWORD -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>Foreword</h2>
+        <p class="preface-text">In the rapidly evolving landscape of basic education, the integration of technology into administrative and instructional processes has become not just an advantage, but a necessity. The Department of Education continues to champion innovations that streamline the workload of our educators, allowing them to focus on what truly matters: the learners.</p>
+        <p class="preface-text">The <strong>AES Unified Reporting System</strong> is a testament to this vision. Born out of the need to simplify the consolidation of reading and numeracy assessments (such as PHIL-IRI, CRLA, and RMA), this system automates data processing, ensures accuracy, and provides real-time insights for data-driven decision-making.</p>
+        <p class="preface-text">This manual serves as a comprehensive guide for our teachers, coordinators, and school heads in navigating the system. May this innovation empower our educators to work smarter and serve our learners better.</p>
+        
+        <div class="signature-block">
+            <p class="signature-name">RONELYN M. PRODIGO</p>
+            <p class="signature-title">School Head / Lead Proponent</p>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 3: MESSAGE FROM THE DEVELOPER & ACKNOWLEDGMENT -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>Message from the Developer</h2>
+        
+        <p class="preface-text">Warm greetings to all the teachers, coordinators, and school heads of Angela Elementary School!</p>
+        
+        <p class="preface-text">Developing the <strong>AES Unified Reporting System</strong> was not just a technical task for me; it was a mission to make the work of our beloved teachers lighter and more efficient. I understand how heavy the burden of managing assessment data using manual Excel files can be. This became my inspiration to create a solution that automates processes, reduces human error, and gives you more time to focus on our learners.</p>
+        
+        <p class="preface-text">The goal of this system is to elevate our school to a higher level of digital transformation, in line with the objectives of the Department of Education. Every line of code and every feature included here was carefully crafted to ensure it is easy to use and does not add stress to your daily tasks.</p>
+        
+        <p class="preface-text">I hope this system serves as a valuable tool in shaping a brighter future for our students. Thank you for your trust and support.</p>
+        
+        <div class="signature-block">
+            <p class="signature-name">NOEL D. CAMBA</p>
+            <p class="signature-title">ICT Coordinator / System Developer</p>
+        </div>
+
+        <div style="margin-top: 60px;">
+            <h2>Acknowledgment</h2>
+            <p>The developer would like to express heartfelt gratitude to the following individuals for their invaluable support and guidance in the development of this system:</p>
+            <ul>
+                <li><strong>RONELYN M. PRODIGO</strong> (School Head) - For the vision, leadership, and unending support for school innovation.</li>
+                <li><strong>The Teachers and Coordinators of Angela Elementary School</strong> - For their active participation during the pilot testing and their valuable feedback.</li>
+                <li><strong>The ICT Team and DepEd Personnel</strong> - For the technical guidance and alignment with educational standards.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 4: TABLE OF CONTENTS & DOCUMENT CONTROL -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>Table of Contents</h2>
+        <ul class="toc-list">
+            <li><span>1. Getting Started</span> <span>Page 5</span></li>
+            <li><span>2. Logging In and Role Switching</span> <span>Page 5</span></li>
+            <li><span>3. Data Entry: PHIL-IRI (GST)</span> <span>Page 6</span></li>
+            <li><span>4. Data Entry: CRLA and RMA</span> <span>Page 7</span></li>
+            <li><span>5. Submitting Narrative Reports & Photos</span> <span>Page 7</span></li>
+            <li><span>6. Coordinator Review and Approval</span> <span>Page 8</span></li>
+            <li><span>7. School Head Final Approval & Printing</span> <span>Page 8</span></li>
+            <li><span>8. System Settings (ICT)</span> <span>Page 9</span></li>
+            <li><span>9. Managing the ARAL Masterlist</span> <span>Page 10</span></li>
+            <li><span>10. Printing Official Reports</span> <span>Page 11</span></li>
+            <li><span>11. Troubleshooting & FAQs</span> <span>Page 12</span></li>
+            <li><span>12. Data Privacy and Security</span> <span>Page 13</span></li>
+            <li><span>13. Glossary of Terms</span> <span>Page 14</span></li>
+        </ul>
+
+        <h3 style="margin-top: 50px; color: #113a6b; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Document Control</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px;">
+            <tr style="background-color: #f1f5f9; text-align: left;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Version</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Description</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Author</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">1.0</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">October 2026</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Initial release of the AES Unified Reporting System Manual.</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Noel D. Camba</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 5: CHAPTERS 1 & 2 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>1. Getting Started</h2>
+        <p>Welcome to the AES Unified Reporting System! This platform is designed to streamline the reporting of PHIL-IRI, CRLA, and RMA assessments, as well as Narrative Reports.</p>
+        
+        <h3>System Requirements</h3>
+        <ul>
+            <li>Stable internet connection.</li>
+            <li>Updated web browser (Google Chrome, Microsoft Edge, or Mozilla Firefox).</li>
+            <li>Google Account (for narrative report photo uploads).</li>
+        </ul>
+
+        <h2>2. Logging In and Role Switching</h2>
+        <p>To access the system:</p>
+        <ol>
+            <li>Open the provided URL link.</li>
+            <li>Enter your assigned <strong>Username</strong> and <strong>Password</strong>.</li>
+            <li>Click the <strong>Login</strong> button.</li>
+        </ol>
+        <p><em>Note: If you hold multiple roles (e.g., Teacher and ICT Coordinator), you can switch between them using the dropdown menu located in the sidebar beneath your name.</em></p>
+
+        <h3>Understanding the Interface</h3>
+        <p>Once logged in, you will see the following main interface components:</p>
+        <ul>
+            <li><strong>Sidebar (Left):</strong> Contains your profile, role switcher, and the navigation menu for all modules (Data Entry, My Reports, System Settings).</li>
+            <li><strong>Top Bar:</strong> Contains the title of your current page and quick action buttons such as <em>Submit All Data</em> or <em>E-Signatures</em>.</li>
+            <li><strong>Workspace (Center):</strong> The main area where you input data, view tables, and generate reports.</li>
+        </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 6: CHAPTER 3 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>3. Data Entry: PHIL-IRI (GST)</h2>
+        <p>The system features an automated parsing tool for the PHIL-IRI Group Screening Test (GST).</p>
+        <ol>
+            <li>Go to the <strong>PHIL-IRI (KS2)</strong> module.</li>
+            <li>Select the Language and Assessment Type.</li>
+            <li>Copy your data from Excel/Sheets (Format: <code>Name, Score</code>).</li>
+            <li>Paste it into the text box and click <strong>🔍 Parse Data</strong>.</li>
+            <li>The system will automatically calculate the Profile and suggest interventions.</li>
+        </ol>
+        <p><strong>Color Coding Guide:</strong></p>
+        <ul>
+            <li><span style="background-color: #cce5ff; padding: 2px 5px; border-radius: 3px;">Light Blue</span>: Grade Ready (For Enrichment).</li>
+            <li><span style="background-color: #d4edda; padding: 2px 5px; border-radius: 3px;">Green</span>: Independent (For Remediation).</li>
+            <li><span style="background-color: #fff3cd; padding: 2px 5px; border-radius: 3px;">Yellow</span>: Instructional (For Remediation).</li>
+            <li><span style="background-color: #f8d7da; padding: 2px 5px; border-radius: 3px;">Red</span>: Frustration (For Remediation).</li>
+        </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 7: CHAPTERS 4 & 5 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>4. Data Entry: CRLA and RMA</h2>
+        <p>Similar to PHIL-IRI, you can paste data for the CRLA (Comprehensive Rapid Literacy Assessment) and RMA (Rapid Mathematics Assessment). Ensure you paste the data in the correct format indicated in the respective modules.</p>
+        
+        <h2>5. Submitting Narrative Reports & Photos</h2>
+        <p>For activity reports, accomplishments, or project proposals, navigate to the <strong>Narrative Reports</strong> tab. Fill in the title, content, and your position. You may also upload activity photos, which are securely stored in the school's Google Drive.</p>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 8: CHAPTERS 6 & 7 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>6. Coordinator Review and Approval</h2>
+        <p>Program Coordinators can view pending submissions in the <strong>Teacher Submissions</strong> tab. They can either return the report to the teacher with a comment or approve and forward it to the School Head.</p>
+
+        <h2>7. School Head Final Approval & Printing</h2>
+        <p>The School Head can view forwarded reports and give final approval. Once approved, the report is locked and ready for printing with official DepEd letterheads and e-signatures.</p>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 9: CHAPTER 8 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>8. System Settings (ICT)</h2>
+        <p>The ICT Coordinator has access to System Settings. Here, you can:</p>
+        <ul>
+            <li><strong>Upload Logos:</strong> Set the DepEd and School logos for the official reports.</li>
+            <li><strong>Change Script URL:</strong> Update the backend Google Apps Script link if necessary.</li>
+            <li><strong>Clear All Submissions:</strong> Wipe the database and Google Drive photos at the end of the school year to prepare the system for a fresh start.</li>
+        </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 10: CHAPTER 9 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>9. Managing the ARAL Masterlist</h2>
+        <p>The <strong>ARAL Masterlist</strong> is an automated feature of the system that collects all learners requiring remediation in Reading and Math based on their assessment results.</p>
+        
+        <h3>How to view the ARAL Masterlist:</h3>
+        <ol>
+            <li>Go to the <strong>🌟 ARAL Masterlist</strong> menu.</li>
+            <li>You can filter the list by <strong>Grade Level</strong> or <strong>Section</strong>.</li>
+            <li>You will see two tables: <strong>ARAL Reading Candidates</strong> (from PHIL-IRI and CRLA) and <strong>ARAL Math Candidates</strong> (from RMA).</li>
+            <li>The list includes their <em>Profile/Level</em> and <em>Suggested Intervention</em> to guide the teacher.</li>
+        </ol>
+        <div style="background: #fff8e6; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
+            <strong>Note:</strong> Learners with a "Grade Ready" status are not included here as they are for Enrichment, not Remediation.
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 11: CHAPTER 10 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>10. Printing Official Reports</h2>
+        <p>The system has a built-in <strong>Print-Ready Format</strong> with DepEd letterheads and e-signatures. It is set to A4 Landscape paper size.</p>
+        
+        <h3>How to print a Report:</h3>
+        <ol>
+            <li>Go to <strong>My Approved Reports</strong> (for Teachers) or <strong>Final School Report</strong> (for School Head).</li>
+            <li>Click the <strong>👁️ View</strong> button to see the report.</li>
+            <li>Click the <strong>🖨️ Print</strong> button.</li>
+            <li>A new tab will open containing the formal document. Click Print (or press <strong>Ctrl + P</strong>).</li>
+        </ol>
+
+        <h3>Important Printing Reminders:</h3>
+        <ul>
+            <li>Ensure the printer is set to <strong>Landscape</strong> orientation.</li>
+            <li>Enable <strong>"Background Graphics"</strong> in your browser's print settings so the colors (Red, Yellow, Green, Blue) will appear in the table.</li>
+            <li>Logos and e-signatures automatically appear if they have been uploaded in the System Settings.</li>
+        </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 12: CHAPTER 11 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>11. Troubleshooting & FAQs</h2>
+        <p>Here are some common issues and how to resolve them:</p>
+
+        <h3>1. "Invalid credentials" when logging in.</h3>
+        <ul>
+            <li><strong>Solution:</strong> Check your username and password in Google Sheets. Ensure there are no extra spaces at the end of the password. The Status column must also be exactly <code>active</code>.</li>
+        </ul>
+
+        <h3>2. Logos are not appearing on the Report.</h3>
+        <ul>
+            <li><strong>Solution:</strong> Go to <strong>System Settings</strong> (if you are ICT) and re-upload the DepEd and School Logos. Click "Save Logos".</li>
+        </ul>
+
+        <h3>3. The ARAL Tag is not showing even with a low score.</h3>
+        <ul>
+            <li><strong>Solution:</strong> Make sure the correct <strong>Grade Level</strong> is entered in the Teacher Details. If "Kinder" is entered, it will not compute the ARAL Tag for GST because the formula is only for Grades 1 to 6. Use CRLA for Kinder.</li>
+        </ul>
+
+        <h3>4. The system is slow or not saving.</h3>
+        <ul>
+            <li><strong>Solution:</strong> Check your internet connection. If uploading multiple photos, wait a few seconds as the images are being sent directly to Google Drive.</li>
+        </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 13: CHAPTER 12 -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>12. Data Privacy and Security</h2>
+        <p>In accordance with the <strong>Data Privacy Act of 2012 (RA 10173)</strong>, this system implements strict security measures for learner data.</p>
+        
+        <ul>
+            <li><strong>Secure Storage:</strong> All assessment data is saved in Google Sheets owned by the school (not publicly accessible).</li>
+            <li><strong>Photo Storage:</strong> Activity photos are saved in a private folder on Google Drive (AES_Narrative_Photos).</li>
+            <li><strong>Access Control:</strong> Only authorized personnel (Teachers, Coordinators, School Head) with valid accounts can access the system.</li>
+        </ul>
+
+        <div style="background: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; margin: 20px 0; color: #721c24;">
+            <strong>Important Reminder:</strong> Do not share your username and password with anyone. Always log out after using the system, especially when using a public or shared computer.
+        </div>
+
+        <div class="signature-block">
+            <br><br><br>
+            <p class="signature-name">NOEL D. CAMBA</p>
+            <p class="signature-title">ICT Coordinator / System Developer</p>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 14: GLOSSARY -->
+    <!-- ============================================== -->
+    <div class="page">
+        <h2>13. Glossary of Terms</h2>
+        <p>Familiarize yourself with these common acronyms used in the system:</p>
+        <ul style="line-height: 2;">
+            <li><strong>PHIL-IRI:</strong> Philippine Informal Reading Inventory (Used for Grades 3-6).</li>
+            <li><strong>GST:</strong> Group Screening Test (Initial phase of PHIL-IRI).</li>
+            <li><strong>CRLA:</strong> Comprehensive Rapid Literacy Assessment (Used for Grades 1-3 / Kinder).</li>
+            <li><strong>RMA:</strong> Rapid Mathematics Assessment.</li>
+            <li><strong>ARAL:</strong> Academic Recovery and Accessible Learning (Intervention program).</li>
+            <li><strong>Enrichment:</strong> Activities for students who are "Grade Ready" or Independent readers.</li>
+            <li><strong>Remediation:</strong> Targeted interventions for students struggling with reading or math.</li>
+            <li><strong>E-Signature:</strong> Digital signature used for official report approvals.</li>
+        </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE 15: BACK PAGE -->
+    <!-- ============================================== -->
+    <div class="page" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        <h2 style="border: none; font-size: 30px;">ANGELA ELEMENTARY SCHOOL</h2>
+        <p style="font-size: 18px; margin-top: 10px;">San Mariano I District</p>
+        <p style="font-size: 18px;">Schools Division Office of Isabela</p>
+        <p style="font-size: 18px; margin-bottom: 50px;">Region 02-Cagayan Valley</p>
+        
+        <div style="background-color: #113a6b; color: white; padding: 20px 40px; border-radius: 8px;">
+            <h3 style="margin: 0; color: white;">For Technical Support</h3>
+            <p style="margin: 5px 0 0 0;">Please contact the School ICT Coordinator.</p>
+        </div>
+        
+        <p style="margin-top: 60px; font-size: 14px; color: #888;">© 2026 AES Unified Reporting System. All Rights Reserved.</p>
+    </div>
+
+    <!-- Script para lumabas ang mga logo mula sa System Settings -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const depedLogo = localStorage.getItem('depedLogo');
