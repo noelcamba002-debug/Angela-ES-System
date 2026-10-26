@@ -12,7 +12,6 @@
         h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* LOGIN SCREEN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
         .login-box h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
@@ -23,11 +22,8 @@
         .login-box .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; }
 
-        /* SIDEBAR & MAIN CONTENT FIX */
         .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; flex-direction: column; overflow-y: auto; display: none; flex-shrink: 0; }
-        .sidebar.active { display: flex; }
         .main-content { flex: 1; flex-direction: column; overflow: hidden; display: none; background: var(--bg); }
-        .main-content.active { display: flex; }
 
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .sidebar-header h2 { font-size: 18px; margin-bottom: 5px; }
@@ -397,7 +393,31 @@
         let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0, isEditMode = false, cachedUsers = [];
 
         async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
-        async function fetchUsers() { try { const r = await fetch(SCRIPT_URL + '?action=getUsers'); cachedUsers = await r.json(); return cachedUsers; } catch(e) { return []; } }
+        
+        // --- INAYOS NA FETCH USERS PARA HINDI UMASA SA COLUMN ORDER ---
+        async function fetchUsers() { 
+            try { 
+                const r = await fetch(SCRIPT_URL + '?action=getUsers'); 
+                const rawUsers = await r.json(); 
+                cachedUsers = rawUsers.map(u => {
+                    const newUser = {};
+                    for (let key in u) {
+                        const cleanKey = String(key).toLowerCase().trim();
+                        if(cleanKey === 'full name' || cleanKey === 'fullname' || cleanKey === 'pangalan') newUser['Full Name'] = u[key];
+                        else if(cleanKey === 'username' || cleanKey === 'user') newUser.Username = u[key];
+                        else if(cleanKey === 'password' || cleanKey === 'pass') newUser.Password = u[key];
+                        else if(cleanKey === 'role' || cleanKey === 'roles') newUser.Role = u[key];
+                        else if(cleanKey === 'grade' || cleanKey === 'grade level') newUser.Grade = u[key];
+                        else if(cleanKey === 'section' || cleanKey === 'sec') newUser.Section = u[key];
+                        else if(cleanKey === 'status' || cleanKey === 'stat') newUser.Status = u[key];
+                        else newUser[key] = u[key];
+                    }
+                    return newUser;
+                });
+                return cachedUsers; 
+            } catch(e) { return []; } 
+        }
+        
         async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
 
         function loadLogos() { 
@@ -464,7 +484,6 @@
             currentUser = user; 
             localStorage.setItem('currentUser', JSON.stringify(user));
             
-            // I-set ang unang role bilang default (e.g., teacher)
             let rolesArray = String(user.Role).split(',').map(r => r.trim().toLowerCase());
             activeRole = rolesArray[0] || 'teacher'; 
             
@@ -479,25 +498,19 @@
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
             
-            // INAYOS NA PAGKUHA NG DATA MULA SA GOOGLE SHEETS
-            const name = currentUser['Full Name'] || currentUser.FullName || 'Teacher Name';
-            const grade = currentUser.Grade || '';
-            const section = currentUser.Section || '';
+            // SAFE DATA EXTRACTION (Walang mababangga)
+            const name = String(currentUser['Full Name'] || currentUser.FullName || 'User').trim();
+            const grade = String(currentUser.Grade || '').trim();
+            const section = String(currentUser.Section || '').trim();
+            const rawRole = String(currentUser.Role || '').trim();
             
             document.getElementById('ui-name').innerText = name;
+            document.getElementById('ui-details').innerText = grade ? `Grade ${grade} - ${section}` : '';
             
-            // Kung ang section ay may "teacher," ibig sabihin nag-shift ang columns sa sheets. 
-            let displayGrade = grade;
-            let displaySection = section;
-            if(section.includes('teacher') || section.includes('ict')) {
-                displayGrade = grade; 
-                displaySection = "Section"; 
-            }
+            // SAFE ROLE PARSING
+            const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r !== '');
+            if(roles.length === 0) roles.push('teacher'); // Fallback kung blangko
             
-            document.getElementById('ui-details').innerText = displayGrade ? `Grade ${displayGrade} - ${displaySection}` : '';
-            
-            // IBALIK ANG DROPDOWN SELECTOR PARA SA MULTI-ROLE
-            const roles = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
             const switcher = document.getElementById('role-switcher');
             const select = document.getElementById('active-role-select');
             
@@ -508,33 +521,29 @@
                 switcher.classList.add('hidden'); 
             }
             
-            // I-set ang Role Badge
             const roleBadge = document.getElementById('ui-role');
             roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
             roleBadge.className = 'role-badge ' + activeRole;
             
-            // Itago lahat ng menu
             ['teacher','coordinator','schoolhead','ict'].forEach(r => {
                 const menu = document.getElementById('menu-' + r);
                 if(menu) menu.classList.add('hidden');
             });
             
-            // Ipakita ang tamang menu base sa role
             let menuId = '';
-            if (activeRole === 'teacher') menuId = 'menu-teacher';
+            if (activeRole.includes('teacher')) menuId = 'menu-teacher';
             else if (activeRole.includes('coord')) menuId = 'menu-coordinator';
-            else if (activeRole === 'schoolhead') menuId = 'menu-schoolhead';
-            else if (activeRole === 'ict') menuId = 'menu-ict';
+            else if (activeRole.includes('schoolhead')) menuId = 'menu-schoolhead';
+            else if (activeRole.includes('ict')) menuId = 'menu-ict';
             
             if (menuId) {
                 const menuEl = document.getElementById(menuId);
                 if(menuEl) menuEl.classList.remove('hidden');
             }
             
-            // Setup para sa Teacher (Dito natin nilalagay ang tamang Grade at Section)
-            if (activeRole === 'teacher') {
-                document.getElementById('teacher-grade').value = displayGrade;
-                document.getElementById('teacher-section').value = displaySection;
+            if (activeRole.includes('teacher')) {
+                document.getElementById('teacher-grade').value = grade;
+                document.getElementById('teacher-section').value = section;
                 document.getElementById('teacher-name').value = name;
                 document.getElementById('btn-submit').style.display = 'inline-flex';
                 document.getElementById('btn-signature').style.display = 'inline-flex';
@@ -547,22 +556,19 @@
                 updateCRLALogic();
                 updateRMALogic();
             } 
-            // Setup para sa Coordinator
             else if (activeRole.includes('coord')) {
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('coordinator-review').classList.add('active');
                 document.getElementById('page-title').innerText = "Teacher Submissions";
                 refreshCoordinatorList();
             } 
-            // Setup para sa School Head
-            else if (activeRole === 'schoolhead') {
+            else if (activeRole.includes('schoolhead')) {
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('head-approval').classList.add('active');
                 document.getElementById('page-title').innerText = "Forwarded Reports";
                 refreshHeadList();
             } 
-            // Setup para sa ICT
-            else if (activeRole === 'ict') {
+            else if (activeRole.includes('ict')) {
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('manage-users').classList.add('active');
                 document.getElementById('page-title').innerText = "Manage Users";
@@ -578,7 +584,7 @@
             if (saved) { 
                 try { 
                     currentUser = JSON.parse(saved); 
-                    let rolesArray = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
+                    let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
                     activeRole = rolesArray[0] || 'teacher'; 
                     showDashboard(); 
                 } catch(e) {} 
@@ -594,7 +600,7 @@
             
             const submitBtn = document.getElementById('btn-submit');
             if (panelId === 'module-narrative') { submitBtn.style.display = 'none'; } 
-            else if (currentUser && activeRole === 'teacher') { submitBtn.style.display = 'inline-flex'; }
+            else if (currentUser && activeRole.includes('teacher')) { submitBtn.style.display = 'inline-flex'; }
             
             if (panelId === 'report-consolidated') refreshFinalReport();
             if (panelId === 'my-submissions') refreshMySubmissions();
