@@ -7,140 +7,155 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
 
+        /* I-NORESEAT NATIN ANG LAHAT NG CSS PARA HINDI MAAPEKTUHAN NG SYSTEM */
+        * {
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
         body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            font-family: 'Open Sans', sans-serif !important;
+            background-color: #f4f7f6 !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            min-height: 100vh !important;
+            text-align: center !important;
         }
 
         .cover-container {
-            width: 100%;
-            max-width: 900px;
-            background-color: white;
-            padding: 60px 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center; 
-            position: relative;
+            width: 100% !important;
+            max-width: 900px !important;
+            background-color: white !important;
+            padding: 60px 40px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important; /* Ito ang magce-center sa lahat */
         }
 
-        /* --- HEADER SECTION --- */
+        /* --- HEADER SECTION (LOGOS) --- */
         .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 20px;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin-bottom: 20px !important;
         }
 
         .logo {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
+            width: 100px !important;
+            height: 100px !important;
+            object-fit: contain !important;
         }
 
         .header-text {
-            text-align: center;
-            flex-grow: 1;
-            padding: 0 20px;
-            /* ITO ANG FIX PARA MAGING PERPEKTONG CENTER ANG TEXT */
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            flex-grow: 1 !important;
+            padding: 0 20px !important;
         }
 
         .header-text p {
-            margin: 2px 0;
-            font-size: 14px;
-            color: #555;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin: 2px 0 !important;
+            font-size: 14px !important;
+            color: #555 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
         }
 
         .header-text h1 {
-            margin: 5px 0;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 24px;
-            color: #113a6b;
-            font-weight: 700;
+            margin: 5px 0 !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 24px !important;
+            color: #113a6b !important;
+            font-weight: 700 !important;
         }
 
         /* --- DIVIDER LINE --- */
         .divider {
-            height: 4px;
-            background-color: #f1c40f; 
-            width: 100%;
-            margin: 20px 0 40px 0;
-            border-radius: 2px;
+            height: 4px !important;
+            background-color: #f1c40f !important; /* Yellow/Gold */
+            width: 100% !important;
+            margin: 20px 0 40px 0 !important;
+            border-radius: 2px !important;
         }
 
         /* --- MAIN TITLE --- */
         .main-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 50px;
-            font-weight: 800;
-            color: #113a6b;
-            margin: 0;
-            letter-spacing: 5px;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 50px !important;
+            font-weight: 800 !important;
+            color: #113a6b !important;
+            margin: 0 !important;
+            letter-spacing: 5px !important;
+            text-align: center !important;
         }
 
         .sub-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: #2a5a9b;
-            margin-top: 10px;
-            margin-bottom: 30px;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 28px !important;
+            font-weight: 700 !important;
+            color: #2a5a9b !important;
+            margin-top: 10px !important;
+            margin-bottom: 30px !important;
+            text-align: center !important;
         }
 
         .description {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 16px;
-            font-style: italic;
-            color: #666;
-            margin-bottom: 60px;
+            font-family: 'Open Sans', sans-serif !important;
+            font-size: 16px !important;
+            font-style: italic !important;
+            color: #666 !important;
+            margin-bottom: 60px !important;
+            text-align: center !important;
         }
 
         /* --- FOOTER SECTION --- */
         .footer-section {
-            margin-top: 50px;
+            margin-top: 50px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
         }
 
         .school-name {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: #113a6b;
-            margin: 0;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 24px !important;
+            font-weight: 700 !important;
+            color: #113a6b !important;
+            margin: 0 !important;
+            text-align: center !important;
         }
 
         .district-name {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 16px;
-            color: #666;
-            margin-top: 5px;
-            margin-bottom: 40px;
+            font-family: 'Open Sans', sans-serif !important;
+            font-size: 16px !important;
+            color: #666 !important;
+            margin-top: 5px !important;
+            margin-bottom: 40px !important;
+            text-align: center !important;
         }
 
         .developer-badge {
-            display: inline-block;
-            border: 2px solid #113a6b;
-            border-radius: 30px;
-            padding: 10px 30px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: #113a6b;
-            letter-spacing: 1px;
+            display: inline-block !important;
+            border: 2px solid #113a6b !important;
+            border-radius: 30px !important;
+            padding: 10px 30px !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #113a6b !important;
+            letter-spacing: 1px !important;
         }
 
         @media print {
-            body { background-color: white; }
-            .cover-container { box-shadow: none; padding: 0; }
+            body { background-color: white !important; }
+            .cover-container { box-shadow: none !important; padding: 0 !important; }
         }
     </style>
 </head>
@@ -153,7 +168,7 @@
             <!-- DepEd Logo (Kaliwa) -->
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Department_of_Education_%28DepEd%29.svg/1200px-Department_of_Education_%28DepEd%29.svg.png" alt="DepEd Logo" class="logo" id="logo-deped">
             
-            <!-- Text sa Gitna (Naka-center na lahat) -->
+            <!-- Text sa Gitna -->
             <div class="header-text">
                 <p>Republic of the Philippines</p>
                 <h1>Department of Education</h1>
@@ -189,7 +204,6 @@
     </div>
 
     <script>
-        // Kinukuha ang logo na naka-save sa system settings
         document.addEventListener('DOMContentLoaded', () => {
             const depedLogo = localStorage.getItem('depedLogo');
             const schoolLogo = localStorage.getItem('schoolLogo');
