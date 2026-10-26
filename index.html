@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AES Unified Reporting System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
@@ -383,12 +384,27 @@
 
         async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
         
-        // STRICT FETCH USERS
+        // INAYOS NA FETCH USERS (BULLETPROOF)
         async function fetchUsers() { 
             try { 
                 const r = await fetch(SCRIPT_URL + '?action=getUsers'); 
                 const rawUsers = await r.json(); 
-                return rawUsers; 
+                cachedUsers = rawUsers.map(u => {
+                    const newUser = {};
+                    for (let key in u) {
+                        const cleanKey = String(key).toLowerCase().trim();
+                        if(cleanKey.includes('name') || cleanKey.includes('pangalan')) newUser['Full Name'] = u[key];
+                        else if(cleanKey.includes('user')) newUser.Username = u[key];
+                        else if(cleanKey.includes('pass')) newUser.Password = u[key];
+                        else if(cleanKey.includes('role')) newUser.Role = u[key];
+                        else if(cleanKey.includes('grade')) newUser.Grade = u[key];
+                        else if(cleanKey.includes('section') || cleanKey === 'sec') newUser.Section = u[key];
+                        else if(cleanKey.includes('status') || cleanKey.includes('stat')) newUser.Status = u[key];
+                        else newUser[key] = u[key];
+                    }
+                    return newUser;
+                });
+                return cachedUsers; 
             } catch(e) { return []; } 
         }
         
@@ -466,8 +482,10 @@
                 errBox.style.display = 'block'; 
                 return; 
             }
-              // ITO YUNG BAGONG LINYA NA IDADAGDAG MO
-            user['Full Name'] = user['Full Name'] || user.FullName || user.Username;
+
+            // ITO ANG FIX PARA LUMABAS ANG TOTOONG PANGALAN
+            user['Full Name'] = user['Full Name'] || user.FullName || user.Name || user.Username;
+            
             currentUser = user; 
             localStorage.setItem('currentUser', JSON.stringify(user));
             
@@ -479,13 +497,13 @@
 
         function logout() { localStorage.removeItem('currentUser'); location.reload(); }
 
-        const name = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || 'User').trim(); {
+        function showDashboard() {
             document.getElementById('login-screen').style.display = 'none';
             
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
             
-            const name = String(currentUser['Full Name'] || currentUser.FullName || 'User').trim();
+            const name = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || 'User').trim();
             const grade = String(currentUser.Grade || '').trim();
             const section = String(currentUser.Section || '').trim();
             const rawRole = String(currentUser.Role || '').trim();
@@ -712,20 +730,19 @@
                 displayStr = `${profile} (Gr. ${readingLevel})`;
             }
 
-                pc.innerText = displayStr; pc.className = "auto-calc"; 
+            pc.innerText = displayStr; pc.className = "auto-calc"; 
             
-            // BAGONG COLOR LOGIC PARA SA GRADE READY (NAKA-OVERRIDE)
             if (displayStr.includes("Grade Ready")) {
-                pc.style.setProperty('background-color', '#cce5ff', 'important'); // Light Blue
-                pc.style.setProperty('color', '#004085', 'important'); // Dark Blue text
+                pc.style.setProperty('background-color', '#cce5ff', 'important');
+                pc.style.setProperty('color', '#004085', 'important');
             } else {
-                // Ibabalik natin sa dating kulay (Red/Yellow/Green) kung Remediation
-                pc.style.removeProperty('background-color'); 
+                pc.style.removeProperty('background-color');
                 pc.style.removeProperty('color');
                 if (profile === "Frustration") pc.classList.add("status-full");
                 else if (profile === "Instructional") pc.classList.add("status-light");
                 else pc.classList.add("status-ready");
             }
+
             aralCell.className = "auto-calc";
             if (isAral) { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); } 
             else { aralCell.innerText = ""; }
