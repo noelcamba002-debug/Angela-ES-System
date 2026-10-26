@@ -252,7 +252,6 @@
                     </div>
                     <div class="form-row"><div class="form-group"><label>Title</label><input type="text" id="narr-title"></div></div>
                     
-                    <!-- BAGONG DAGDAG: PHOTO UPLOAD -->
                     <div class="form-group" style="margin-bottom:15px;">
                         <label>Upload Activity Photos (Optional)</label>
                         <input type="file" id="narr-photos" accept="image/*" multiple onchange="previewNarrativePhotos()" style="padding: 10px; border: 1px dashed #ccc; width: 100%;">
@@ -321,7 +320,6 @@
                     <div class="form-group"><label>Google Apps Script URL</label><input type="text" id="setting-script-url"></div>
                     <button class="btn btn-primary" onclick="saveSystemSettings()">💾 Save</button>
                     
-                    <!-- BAGONG DAGDAG: LOGO UPLOAD -->
                     <h3 style="margin-top:30px;">🖼️ School & DepEd Logos</h3>
                     <div class="form-row">
                         <div class="form-group">
@@ -374,7 +372,6 @@
         </div>
     </main>
 
-    <!-- MGA MODALS -->
     <div id="official-report-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
         <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
             <button class="btn btn-danger hidden-print" onclick="document.getElementById('official-report-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
@@ -391,7 +388,6 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
         let SCRIPT_URL = localStorage.getItem('SCRIPT_URL') || "https://script.google.com/macros/s/AKfycbyiq2jKzahhDLDSL9cqGJw99gl-WcZTcLNUqkRsDyKf5Yk5QUZpLf9k8b084L0XXrt6uQ/exec";
         let currentUser = null, activeRole = '', currentEditingReportId = null;
@@ -401,7 +397,6 @@
         async function fetchUsers() { try { const r = await fetch(SCRIPT_URL + '?action=getUsers'); cachedUsers = await r.json(); return cachedUsers; } catch(e) { return []; } }
         async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
 
-        // LOGO HANDLER FUNCTIONS
         function loadLogos() { 
             const depedLogo = localStorage.getItem('depedLogo'); 
             const schoolLogo = localStorage.getItem('schoolLogo');
@@ -452,7 +447,6 @@
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
 
-        // LOGIN LOGIC
         async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value;
@@ -463,7 +457,14 @@
             const user = users.find(u => String(u.Username).toLowerCase() === username && String(u.Password) === password && String(u.Status).toLowerCase() === 'active');
             if (!user) { errBox.innerText = "Invalid credentials."; errBox.style.display = 'block'; return; }
             currentUser = user; localStorage.setItem('currentUser', JSON.stringify(user));
-            activeRole = String(user.Role).split(',').map(r => r.trim().toLowerCase())[0]; 
+            
+            // FIX: Auto-detect role
+            const roles = String(user.Role).split(',').map(r => r.trim().toLowerCase());
+            if (roles.includes('teacher')) activeRole = 'teacher';
+            else if (roles.includes('schoolhead')) activeRole = 'schoolhead';
+            else if (roles.includes('ict')) activeRole = 'ict';
+            else activeRole = roles[0]; 
+            
             showDashboard();
         }
 
@@ -473,19 +474,24 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
+            
             const name = currentUser['Full Name'] || currentUser.FullName || '';
             const roles = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
+            
             document.getElementById('ui-name').innerText = name;
             document.getElementById('ui-details').innerText = (currentUser.Grade && currentUser.Grade !== '-') ? `Grade ${currentUser.Grade} - ${currentUser.Section}` : '';
+            
             const switcher = document.getElementById('role-switcher');
             const select = document.getElementById('active-role-select');
             if (roles.length > 1) {
                 switcher.classList.remove('hidden');
                 select.innerHTML = roles.map(r => `<option value="${r}" ${r === activeRole ? 'selected' : ''}>${r.replace(/_/g,' ').toUpperCase()}</option>`).join('');
             } else { switcher.classList.add('hidden'); }
+            
             const roleBadge = document.getElementById('ui-role');
             roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
             roleBadge.className = 'role-badge ' + activeRole;
+            
             ['teacher','coordinator','schoolhead','ict'].forEach(r => document.getElementById('menu-' + r).classList.add('hidden'));
             document.getElementById('btn-submit').style.display = 'none';
             document.getElementById('btn-signature').style.display = 'none';
@@ -503,6 +509,8 @@
                 document.getElementById('teacher-name').value = name;
                 document.getElementById('btn-submit').style.display = 'inline-flex';
                 document.getElementById('btn-signature').style.display = 'inline-flex';
+                
+                // AUTO-OPEN PHIL-IRI PANEL
                 switchPanel('module-philiri', document.querySelector('#menu-teacher .nav-item'));
                 updateIndividualizedLogic();
                 updateCRLALogic();
@@ -520,7 +528,20 @@
         }
 
         function switchActiveRole(newRole) { activeRole = newRole; showDashboard(); }
-        window.addEventListener('DOMContentLoaded', async () => { loadLogos(); const saved = localStorage.getItem('currentUser'); if (saved) { try { currentUser = JSON.parse(saved); activeRole = String(currentUser.Role).split(',')[0].trim().toLowerCase(); showDashboard(); } catch(e) {} } });
+        
+        window.addEventListener('DOMContentLoaded', async () => { 
+            loadLogos(); 
+            const saved = localStorage.getItem('currentUser'); 
+            if (saved) { 
+                try { 
+                    currentUser = JSON.parse(saved); 
+                    const roles = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
+                    if (roles.includes('teacher')) activeRole = 'teacher';
+                    else activeRole = roles[0];
+                    showDashboard(); 
+                } catch(e) {} 
+            } 
+        });
 
         function switchPanel(panelId, btnElement) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -1104,10 +1125,8 @@
         }
         async function toggleUser(u, s) { await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); refreshUsersList(); }
         
-        // BAGONG CLEAR ALL FUNCTION NA MAY DOUBLE CONFIRMATION
         async function clearAllSubmissions() { 
             if(!confirm("⚠️ BABALA: Mabubura lahat ng reports at LITRATO sa Google Drive. Sigurado ka ba?")) return;
-            
             const confirm2 = prompt("I-type ang salitang 'CLEAR' para makumpirma:");
             if (confirm2 !== 'CLEAR') { alert("Kinansela."); return; }
 
