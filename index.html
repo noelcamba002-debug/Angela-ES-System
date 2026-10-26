@@ -11,6 +11,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
         h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+        
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
         .login-box h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
@@ -21,70 +22,46 @@
         .login-box .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; }
 
-        .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; display: flex; flex-direction: column; overflow-y: auto; display: none; }
+        .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; flex-direction: column; overflow-y: auto; display: none; flex-shrink: 0; }
+        .main-content { flex: 1; flex-direction: column; overflow: hidden; display: none; background: var(--bg); }
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-header h2 { font-size: 18px; margin-bottom: 5px; }
-        .sidebar-header p { font-size: 12px; color: #b0c4de; }
         .user-info { padding: 12px; background: rgba(0,0,0,0.2); text-align: center; font-size: 12px; }
-        .user-info strong { display: block; font-size: 14px; margin-bottom: 3px; }
-        .user-info .role-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-top: 5px; background: var(--info); }
-        .nav-group { padding: 15px 20px 5px 20px; font-size: 11px; color: #88b4e7; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
-        .nav-item { display: block; padding: 12px 20px; color: white; text-decoration: none; font-size: 14px; cursor: pointer; transition: 0.2s; border-left: 4px solid transparent; }
+        .user-info strong { display: block; font-size: 14px; }
+        .role-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-top: 5px; background: var(--info); }
+        .nav-group { padding: 15px 20px 5px 20px; font-size: 11px; color: #88b4e7; text-transform: uppercase; font-weight: bold; }
+        .nav-item { display: block; padding: 12px 20px; color: white; text-decoration: none; font-size: 14px; cursor: pointer; border-left: 4px solid transparent; }
         .nav-item:hover, .nav-item.active { background: var(--secondary); border-left: 4px solid white; }
         
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; display: none; background: var(--bg); }
-        .top-bar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; }
+        .top-bar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .top-bar h1 { font-size: 18px; color: var(--primary); }
         .workspace { flex: 1; overflow-y: auto; padding: 30px; }
-        .panel { display: none; animation: fadeIn 0.4s ease; }
+        .panel { display: none; }
         .panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        
         .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .card h3 { margin-bottom: 20px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 18px; }
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
         .form-group { flex: 1; min-width: 150px; display: flex; flex-direction: column; }
         .form-group label { font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit;}
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .form-group input, .form-group select, .form-group textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
         .btn-primary { background: var(--secondary); color: white; }
-        .btn-primary:hover { background: var(--primary); }
         .btn-success { background: var(--success); color: white; }
         .btn-warning { background: var(--warning); color: #333; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
 
-        .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; text-align: center; margin-top: 20px; margin-bottom: 30px; }
+        .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; margin-top: 20px; }
         .form1b-table th, .form1b-table td, .data-table th, .data-table td { border: 1px solid #000; padding: 8px; }
         .form1b-table th, .data-table th { background: #e0e0e0; font-weight: bold; }
-        .form1b-table input[type="number"], .form1b-table input[type="text"] { width: 100%; padding: 6px; text-align: center; border: 1px solid #ccc; }
-        .form1b-table select { width: 100%; padding: 6px; border: 1px solid #ccc; font-size: 13px; }
+        .form1b-table input[type="number"], .form1b-table input[type="text"] { width: 100%; padding: 6px; text-align: center; }
         .form1b-table .auto-calc { background: #f9f9f9; font-weight: bold; }
         
         .status-ready { background-color: #d4edda !important; color: #155724; font-weight: bold; }
         .status-light { background-color: #fff3cd !important; color: #856404; font-weight: bold; }
         .status-full { background-color: #f8d7da !important; color: #721c24; font-weight: bold; }
         .status-aral { background-color: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
-
-        .info-box { background: #e2e8f0; border-left: 4px solid var(--secondary); padding: 15px; margin-bottom: 20px; font-size: 14px; border-radius: 4px;}
         .hidden { display: none !important; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; text-transform: uppercase; display: inline-block;}
-        .bg-pending { background-color: var(--warning); color: #333; }
-        .bg-review { background-color: var(--info); }
-        .bg-approved { background-color: var(--success); }
-        .bg-returned { background-color: var(--danger); }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10005; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: white; padding: 30px; border-radius: 8px; width: 500px; max-width: 100%; max-height: 90vh; overflow-y: auto; }
-
-        @media print {
-            body { display: block !important; overflow: visible !important; height: auto !important; background: white !important; }
-            .hidden-print { display: none !important; }
-            @page { margin: 15mm; }
-            .form1b-table { font-size: 11px; }
-            .form1b-table th, .form1b-table td { padding: 5px; }
-        }
     </style>
 </head>
 <body>
@@ -150,8 +127,8 @@
         <div style="margin-top: auto; padding: 20px; font-size: 10px; text-align: center; color: #88b4e7;">
             <p style="margin-bottom: 5px;">Lead Proponent: <strong>RONELYN M. PRODIGO</strong></p>
             <p style="margin-bottom: 15px;">Developed by: <strong>NOEL D. CAMBA</strong></p>
-            <a class="nav-item" href="manual.html" style="background: rgba(255,255,255,0.1); margin-bottom: 10px; border-radius: 5px;">📖 User Manual</a>
-            <a class="nav-item" style="background: rgba(255,0,0,0.2); text-align: center; border-radius: 5px; color: white;" onclick="logout()">🚪 Logout</a>
+            <a class="nav-item" href="manual.html" target="_blank" style="background: rgba(255,255,255,0.1); margin-bottom: 10px; border-radius: 5px;">📖 User Manual</a>
+            <a class="nav-item" style="background: rgba(255,0,0,0.2); border-radius: 5px;" onclick="logout()">🚪 Logout</a>
         </div>
     </aside>
 
@@ -165,14 +142,14 @@
         </div>
 
         <div class="workspace">
-            <!-- PHIL-IRI -->
+            
             <div id="module-philiri" class="panel">
                 <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
                     <h3>Teacher Details</h3>
                     <div class="form-row">
                         <div class="form-group"><label>Grade Level</label><input type="text" id="teacher-grade" placeholder="Enter Grade"></div>
                         <div class="form-group"><label>Section</label><input type="text" id="teacher-section" placeholder="Enter Section"></div>
-                        <div class="form-group"><label>Teacher Name</label><input type="text" id="teacher-name" readonly></div>
+                        <div class="form-group"><label>Teacher Name</label><input type="text" id="teacher-name"></div>
                     </div>
                 </div>
                 <div class="card" style="background: #fff8e6; border: 1px solid var(--warning); margin-bottom: 20px;">
@@ -195,7 +172,6 @@
                 </div>
             </div>
 
-            <!-- CRLA -->
             <div id="module-crla" class="panel">
                 <div class="card" style="background: #f4f0fa; border: 1px solid #9b59b6; margin-bottom: 20px;">
                     <h3>CRLA Assessment (KS1)</h3>
@@ -217,7 +193,6 @@
                 </div>
             </div>
 
-            <!-- RMA -->
             <div id="module-rma" class="panel">
                 <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
                     <h3>RMA Assessment (KS1 & KS2)</h3>
@@ -240,7 +215,6 @@
                 </div>
             </div>
 
-            <!-- NARRATIVE -->
             <div id="module-narrative" class="panel">
                 <div class="card">
                     <h3>📄 Submit Report</h3>
@@ -255,7 +229,6 @@
                 </div>
             </div>
 
-            <!-- ARAL -->
             <div id="module-aral" class="panel">
                 <div class="card">
                     <div class="flex-between">
@@ -270,7 +243,6 @@
                 </div>
             </div>
 
-            <!-- MY REPORTS -->
             <div id="my-submissions" class="panel">
                 <div class="card"><h3>📤 My Submissions</h3><div id="my-submissions-list"></div></div>
             </div>
@@ -279,7 +251,6 @@
                 <div class="card"><h3>📁 My Approved Reports</h3><div id="my-approved-list"></div></div>
             </div>
 
-            <!-- COORDINATOR -->
             <div id="coordinator-review" class="panel">
                 <div class="card"><h3>Teacher Submissions</h3><div id="coordinator-list"></div></div>
                 <div id="coordinator-view" class="card hidden">
@@ -289,7 +260,6 @@
                 </div>
             </div>
 
-            <!-- SCHOOL HEAD -->
             <div id="head-approval" class="panel">
                 <div class="card"><h3>Forwarded Reports</h3><div id="head-list"></div></div>
                 <div id="head-view" class="card hidden">
@@ -298,7 +268,6 @@
                 </div>
             </div>
 
-            <!-- ADMIN -->
             <div id="manage-users" class="panel">
                 <div class="card">
                     <div class="flex-between"><h3>👥 Manage Users</h3><button class="btn btn-success" onclick="openAddUserModal()">➕ Add User</button></div>
@@ -311,13 +280,29 @@
                     <h3>🔧 System Settings</h3>
                     <div class="form-group"><label>Google Apps Script URL</label><input type="text" id="setting-script-url"></div>
                     <button class="btn btn-primary" onclick="saveSystemSettings()">💾 Save</button>
+                    
+                    <h3 style="margin-top:30px;">🖼️ School & DepEd Logos</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>DepEd Logo (Left)</label>
+                            <input type="file" id="upload-deped-logo" accept="image/*" onchange="handleLogoUpload(event, 'depedLogo')">
+                            <img id="preview-deped-logo" style="height: 50px; margin-top: 10px; display: none;">
+                        </div>
+                        <div class="form-group">
+                            <label>School Logo (Right)</label>
+                            <input type="file" id="upload-school-logo" accept="image/*" onchange="handleLogoUpload(event, 'schoolLogo')">
+                            <img id="preview-school-logo" style="height: 50px; margin-top: 10px; display: none;">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveLogos()">💾 Save Logos</button>
+
                     <h3 style="margin-top:30px;">📊 Stats</h3><div id="system-stats"></div>
+                    
                     <h3 style="margin-top:30px; color: var(--danger);">⚠️ Danger Zone</h3>
-                    <button class="btn btn-danger" onclick="clearAllSubmissions()">🗑️ CLEAR ALL SUBMISSIONS</button>
+                    <button class="btn btn-danger" onclick="clearAllSubmissions()">🗑️ CLEAR ALL SUBMISSIONS & PHOTOS</button>
                 </div>
             </div>
 
-            <!-- FINAL CONSOLIDATED -->
             <div id="report-consolidated" class="panel">
                 <div class="card">
                     <div class="flex-between" style="flex-wrap:wrap; gap:10px;">
@@ -366,25 +351,99 @@
     <script>
         let SCRIPT_URL = localStorage.getItem('SCRIPT_URL') || "https://script.google.com/macros/s/AKfycbyiq2jKzahhDLDSL9cqGJw99gl-WcZTcLNUqkRsDyKf5Yk5QUZpLf9k8b084L0XXrt6uQ/exec";
         let currentUser = null, activeRole = '', currentEditingReportId = null;
-        let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0, isEditMode = false, cachedUsers = [];
+        let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0;
 
         async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
-        async function fetchUsers() { try { const r = await fetch(SCRIPT_URL + '?action=getUsers'); cachedUsers = await r.json(); return cachedUsers; } catch(e) { return []; } }
+        
+        async function fetchUsers() { 
+            try { 
+                const r = await fetch(SCRIPT_URL + '?action=getUsers'); 
+                const rawUsers = await r.json(); 
+                return rawUsers; 
+            } catch(e) { return []; } 
+        }
+        
         async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
 
-        function loadLogos() { const depedLogo = localStorage.getItem('depedLogo'); if (depedLogo) { const img = document.getElementById('login-deped-logo'); if(img) { img.src = depedLogo; img.style.display = 'block'; } } }
-        
+        function loadLogos() { 
+            const depedLogo = localStorage.getItem('depedLogo'); 
+            const schoolLogo = localStorage.getItem('schoolLogo');
+            if (depedLogo) { const img = document.getElementById('login-deped-logo'); if(img) { img.src = depedLogo; img.style.display = 'block'; } }
+            if (schoolLogo) { const img2 = document.getElementById('login-school-logo'); if(img2) { img2.src = schoolLogo; img2.style.display = 'block'; } }
+        }
+
+        function handleLogoUpload(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 200; const MAX_HEIGHT = 200;
+                    let width = img.width; let height = img.height;
+                    if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+                    else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const resizedBase64 = canvas.toDataURL('image/png');
+                    window.tempLogoData = window.tempLogoData || {};
+                    window.tempLogoData[type] = resizedBase64;
+                    const previewId = type === 'depedLogo' ? 'preview-deped-logo' : 'preview-school-logo';
+                    const previewImg = document.getElementById(previewId);
+                    if(previewImg) { previewImg.src = resizedBase64; previewImg.style.display = 'block'; }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveLogos() {
+            if (window.tempLogoData) {
+                if (window.tempLogoData.depedLogo) localStorage.setItem('depedLogo', window.tempLogoData.depedLogo);
+                if (window.tempLogoData.schoolLogo) localStorage.setItem('schoolLogo', window.tempLogoData.schoolLogo);
+                alert("Logos saved successfully!");
+                loadSystemSettings(); 
+            } else { alert("Walang bagong logo na in-upload."); }
+        }
+
+        function loadSystemSettings() { 
+            document.getElementById('setting-script-url').value = SCRIPT_URL; 
+            const dLogo = localStorage.getItem('depedLogo'); const sLogo = localStorage.getItem('schoolLogo');
+            if(dLogo) { const p1 = document.getElementById('preview-deped-logo'); if(p1) { p1.src = dLogo; p1.style.display = 'block'; } }
+            if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
+        }
+
         async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value;
+            const password = document.getElementById('login-password').value.trim();
             const errBox = document.getElementById('login-error');
             errBox.style.display = 'none';
+            
             if (!username || !password) { errBox.innerText = "Enter username and password."; errBox.style.display = 'block'; return; }
+            
             const users = await fetchUsers();
-            const user = users.find(u => String(u.Username).toLowerCase() === username && String(u.Password) === password && String(u.Status).toLowerCase() === 'active');
-            if (!user) { errBox.innerText = "Invalid credentials."; errBox.style.display = 'block'; return; }
-            currentUser = user; localStorage.setItem('currentUser', JSON.stringify(user));
-            activeRole = String(user.Role).split(',').map(r => r.trim().toLowerCase())[0]; 
+            
+            const user = users.find(u => {
+                const uName = String(u.Username || '').trim().toLowerCase();
+                const uPass = String(u.Password || '').trim();
+                const uStatus = String(u.Status || '').trim().toLowerCase();
+                return uName === username && uPass === password && uStatus === 'active';
+            });
+            
+            if (!user) { 
+                errBox.innerText = "Invalid credentials. Please check your username, password, and status."; 
+                errBox.style.display = 'block'; 
+                return; 
+            }
+            
+            currentUser = user; 
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
+            activeRole = rolesArray[0] || 'teacher'; 
+            
             showDashboard();
         }
 
@@ -394,54 +453,105 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
-            const name = currentUser['Full Name'] || currentUser.FullName || '';
-            const roles = String(currentUser.Role).split(',').map(r => r.trim().toLowerCase());
+            
+            // HAKBANG 1: Kunin ang TOTOONG pangalan. Kapag wala, Username ang gamitin.
+            const name = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || currentUser.Username).trim();
+            const grade = String(currentUser.Grade || '').trim();
+            const section = String(currentUser.Section || '').trim();
+            const rawRole = String(currentUser.Role || '').trim();
+            
             document.getElementById('ui-name').innerText = name;
-            document.getElementById('ui-details').innerText = (currentUser.Grade && currentUser.Grade !== '-') ? `Grade ${currentUser.Grade} - ${currentUser.Section}` : '';
+            document.getElementById('ui-details').innerText = grade ? `Grade ${grade} - ${section}` : '';
+            
+            const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r !== '');
+            if(roles.length === 0) roles.push('teacher');
+            
             const switcher = document.getElementById('role-switcher');
             const select = document.getElementById('active-role-select');
+            
             if (roles.length > 1) {
                 switcher.classList.remove('hidden');
                 select.innerHTML = roles.map(r => `<option value="${r}" ${r === activeRole ? 'selected' : ''}>${r.replace(/_/g,' ').toUpperCase()}</option>`).join('');
-            } else { switcher.classList.add('hidden'); }
+            } else { 
+                switcher.classList.add('hidden'); 
+            }
+            
             const roleBadge = document.getElementById('ui-role');
             roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
             roleBadge.className = 'role-badge ' + activeRole;
-            ['teacher','coordinator','schoolhead','ict'].forEach(r => document.getElementById('menu-' + r).classList.add('hidden'));
-            document.getElementById('btn-submit').style.display = 'none';
-            document.getElementById('btn-signature').style.display = 'none';
+            
+            ['teacher','coordinator','schoolhead','ict'].forEach(r => {
+                const menu = document.getElementById('menu-' + r);
+                if(menu) menu.classList.add('hidden');
+            });
             
             let menuId = '';
-            if (activeRole === 'teacher') menuId = 'menu-teacher';
+            if (activeRole.includes('teacher')) menuId = 'menu-teacher';
             else if (activeRole.includes('coord')) menuId = 'menu-coordinator';
-            else if (activeRole === 'schoolhead') menuId = 'menu-schoolhead';
-            else if (activeRole === 'ict') menuId = 'menu-ict';
-            if (menuId) document.getElementById(menuId).classList.remove('hidden');
+            else if (activeRole.includes('schoolhead')) menuId = 'menu-schoolhead';
+            else if (activeRole.includes('ict')) menuId = 'menu-ict';
             
-            if (activeRole === 'teacher') {
-                document.getElementById('teacher-grade').value = currentUser.Grade || '';
-                document.getElementById('teacher-section').value = currentUser.Section || '';
-                document.getElementById('teacher-name').value = name;
+            if (menuId) {
+                const menuEl = document.getElementById(menuId);
+                if(menuEl) menuEl.classList.remove('hidden');
+            }
+            
+            if (activeRole.includes('teacher')) {
+                // HAKBANG 2: Gawing EDITABLE ang Grade, Section, at Name
+                document.getElementById('teacher-grade').removeAttribute('readonly');
+                document.getElementById('teacher-section').removeAttribute('readonly');
+                document.getElementById('teacher-name').removeAttribute('readonly');
+                
+                // HAKBANG 3: I-fill up ang mga detalye
+                document.getElementById('teacher-grade').value = grade;
+                document.getElementById('teacher-section').value = section;
+                document.getElementById('teacher-name').value = name; // Totoong pangalan na ang lalabas dito
+                
                 document.getElementById('btn-submit').style.display = 'inline-flex';
                 document.getElementById('btn-signature').style.display = 'inline-flex';
-                switchPanel('module-philiri', document.querySelector('#menu-teacher .nav-item'));
+                
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('module-philiri').classList.add('active');
+                document.getElementById('page-title').innerText = "PHIL-IRI (KS2)";
+                
                 updateIndividualizedLogic();
                 updateCRLALogic();
                 updateRMALogic();
-            } else if (activeRole.includes('coord')) {
-                switchPanel('coordinator-review', document.querySelector('#menu-coordinator .nav-item'));
+            } 
+            else if (activeRole.includes('coord')) {
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('coordinator-review').classList.add('active');
+                document.getElementById('page-title').innerText = "Teacher Submissions";
                 refreshCoordinatorList();
-            } else if (activeRole === 'schoolhead') {
-                switchPanel('head-approval', document.querySelector('#menu-schoolhead .nav-item'));
+            } 
+            else if (activeRole.includes('schoolhead')) {
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('head-approval').classList.add('active');
+                document.getElementById('page-title').innerText = "Forwarded Reports";
                 refreshHeadList();
-            } else if (activeRole === 'ict') {
-                switchPanel('manage-users', document.querySelector('#menu-ict .nav-item'));
+            } 
+            else if (activeRole.includes('ict')) {
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('manage-users').classList.add('active');
+                document.getElementById('page-title').innerText = "Manage Users";
                 refreshUsersList();
             }
         }
 
         function switchActiveRole(newRole) { activeRole = newRole; showDashboard(); }
-        window.addEventListener('DOMContentLoaded', async () => { loadLogos(); const saved = localStorage.getItem('currentUser'); if (saved) { try { currentUser = JSON.parse(saved); activeRole = String(currentUser.Role).split(',')[0].trim().toLowerCase(); showDashboard(); } catch(e) {} } });
+        
+        window.addEventListener('DOMContentLoaded', async () => { 
+            loadLogos(); 
+            const saved = localStorage.getItem('currentUser'); 
+            if (saved) { 
+                try { 
+                    currentUser = JSON.parse(saved); 
+                    let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
+                    activeRole = rolesArray[0] || 'teacher'; 
+                    showDashboard(); 
+                } catch(e) {} 
+            } 
+        });
 
         function switchPanel(panelId, btnElement) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -452,7 +562,7 @@
             
             const submitBtn = document.getElementById('btn-submit');
             if (panelId === 'module-narrative') { submitBtn.style.display = 'none'; } 
-            else if (currentUser && activeRole === 'teacher') { submitBtn.style.display = 'inline-flex'; }
+            else if (currentUser && activeRole.includes('teacher')) { submitBtn.style.display = 'inline-flex'; }
             
             if (panelId === 'report-consolidated') refreshFinalReport();
             if (panelId === 'my-submissions') refreshMySubmissions();
@@ -468,7 +578,6 @@
             return line.split(/\s{2,}|\s+/).map(s => s.trim());
         }
 
-        // --- GST LOGIC ---
         function updateIndividualizedLogic() {
             const type = document.getElementById('ind-assessment-type').value;
             const thead = document.getElementById('ind-table-head');
@@ -555,79 +664,49 @@
             const targetGrade = parseInt(document.getElementById('teacher-grade').value) || 0;
             
             if (!targetGrade || targetGrade < 1 || targetGrade > 6) { 
-                pc.innerText = "Set Grade"; 
-                pc.className = "auto-calc status-light"; 
-                return; 
+                pc.innerText = "Set Grade"; pc.className = "auto-calc status-light"; return; 
             }
             
-            let profile = ""; 
-            let suggestion = ""; 
-            let displayStr = "";
-            let isAral = false;
+            let profile = ""; let suggestion = ""; let displayStr = ""; let isAral = false;
 
-            // --- LOGIC 1: GRADE READY (14-20) -> ENRICHMENT ---
             if (total >= 14 && total <= 20) {
                 if (total >= 18) { profile = "Independent"; }
                 else if (total >= 16) { profile = "Instructional"; }
                 else { profile = "Frustration"; }
-                
                 displayStr = `Grade Ready (${profile})`;
-                
-                if (profile === "Independent") {
-                    suggestion = "ENRICHMENT: Provide advanced reading materials, book reports, or peer tutoring roles.";
-                } else if (profile === "Instructional") {
-                    suggestion = "ENRICHMENT: Encourage independent reading with minimal guidance, vocabulary expansion.";
-                } else {
-                    suggestion = "ENRICHMENT: Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
-                }
+                if (profile === "Independent") suggestion = "ENRICHMENT: Provide advanced reading materials, book reports, or peer tutoring roles.";
+                else if (profile === "Instructional") suggestion = "ENRICHMENT: Encourage independent reading with minimal guidance, vocabulary expansion.";
+                else suggestion = "ENRICHMENT: Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
                 isAral = false;
-
-            // --- LOGIC 2: DOWNGRADE (0-13) -> REMEDIATION ---
             } else {
-                isAral = true; // LAHAT NG 0-13 AY ARAL
-
+                isAral = true; 
                 let offset = 0;
-                if (total >= 0 && total <= 4) { 
-                    profile = "Frustration"; 
-                    offset = 3; 
-                    suggestion = "REMEDIATION: Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference";
-                }
-                else if (total >= 5 && total <= 10) { 
-                    profile = "Instructional"; 
-                    offset = 2; 
-                    suggestion = "REMEDIATION: Guided Reading, Vocabulary Enhancement, Peer Buddy System";
-                }
-                else if (total >= 11 && total <= 13) { 
-                    profile = "Independent"; 
-                    offset = 1; 
-                    suggestion = "REMEDIATION: Enrichment Activities within the Lower Grade Level, Independent Reading Projects";
-                }
-
+                if (total >= 0 && total <= 4) { profile = "Frustration"; offset = 3; suggestion = "REMEDIATION: Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference"; }
+                else if (total >= 5 && total <= 10) { profile = "Instructional"; offset = 2; suggestion = "REMEDIATION: Guided Reading, Vocabulary Enhancement, Peer Buddy System"; }
+                else if (total >= 11 && total <= 13) { profile = "Independent"; offset = 1; suggestion = "REMEDIATION: Enrichment Activities within the Lower Grade Level, Independent Reading Projects"; }
                 let readingLevel = targetGrade - offset;
                 if (readingLevel < 1) readingLevel = 1; 
-
                 displayStr = `${profile} (Gr. ${readingLevel})`;
             }
 
-            pc.innerText = displayStr;
-            pc.className = "auto-calc"; 
-
-            if (profile === "Frustration") pc.classList.add("status-full");
-            else if (profile === "Instructional") pc.classList.add("status-light");
-            else pc.classList.add("status-ready");
+            pc.innerText = displayStr; pc.className = "auto-calc"; 
+            
+            if (displayStr.includes("Grade Ready")) {
+                pc.style.setProperty('background-color', '#cce5ff', 'important');
+                pc.style.setProperty('color', '#004085', 'important');
+            } else {
+                pc.style.removeProperty('background-color');
+                pc.style.removeProperty('color');
+                if (profile === "Frustration") pc.classList.add("status-full");
+                else if (profile === "Instructional") pc.classList.add("status-light");
+                else pc.classList.add("status-ready");
+            }
 
             aralCell.className = "auto-calc";
-            if (isAral) {
-                aralCell.innerText = "ARAL Reading Candidate";
-                aralCell.classList.add("status-aral");
-            } else {
-                aralCell.innerText = "";
-            }
+            if (isAral) { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); } 
+            else { aralCell.innerText = ""; }
 
-            if (intCell.value === "" || intCell.dataset.auto === "true") { 
-                intCell.value = suggestion; 
-                intCell.dataset.auto = "true"; 
-            }
+            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
         function calcIndividualized(row) {
@@ -647,7 +726,6 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        // CRLA
         function updateCRLALogic() { document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0; addCRLARow(); }
         function parseCRLAData() {
             const text = document.getElementById('crla-paste-data').value;
@@ -688,7 +766,6 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        // RMA
         function updateRMALogic() { document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0; addRMARow(); }
         function parseRMAData() {
             const text = document.getElementById('rma-paste-data').value;
@@ -908,7 +985,6 @@
                 html += `<h4 style="margin-top:20px; margin-bottom:10px; color:#333;">Grade Level: <span style="color:#113a6b;">${gradeLevelStr}</span></h4>`;
             }
 
-            // GST TABLE
             if (gstData.length) {
                 html += `<h5 style="margin-top:25px; color:var(--primary);">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
                 gstData.forEach((l, i) => { 
@@ -916,7 +992,6 @@
                     if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
                     else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
 
-                    // Dito natin ilalabas ang buong l.profile (e.g. "Frustration (Gr. 2)")
                     html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
                 });
                 html += `</tbody></table>`;
@@ -1106,12 +1181,11 @@
         function generateClassSummary() {
             const approved = (window.cachedApprovedForPrint || []);
             
-            // Hahatiin natin ang data base sa uri ng assessment (GST, CRLA, RMA, Phil-IRI Other)
             const summary = {
                 'GST': {},
                 'CRLA': {},
                 'RMA': {},
-                'PHILIRI': {} // Para sa Pre-test, MOSY, Post-test
+                'PHILIRI': {} 
             };
 
             approved.forEach(r => {
@@ -1126,13 +1200,12 @@
                             else if (rec.type === 'CRLA') type = 'CRLA';
                             else if (rec.type === 'RMA') type = 'RMA';
                             else if (rec.type === 'Pre-test' || rec.type === 'MOSY' || rec.type === 'Post-test') type = 'PHILIRI';
-                            else return; // Skip kung walang match
+                            else return; 
 
                             if (!summary[type][grade]) summary[type][grade] = { total: 0, frustration: 0, instructional: 0, independent: 0 };
                             
                             summary[type][grade].total++;
                             
-                            // Iba-iba ang criteria per type
                             if (type === 'RMA') {
                                 if (rec.level && (rec.level.includes('Low Proficient') || rec.level.includes('Non Proficient'))) summary[type][grade].frustration++;
                                 else if (rec.level && rec.level.includes('Developing')) summary[type][grade].instructional++;
@@ -1142,7 +1215,6 @@
                                 else if (rec.category && rec.category.includes('Developing')) summary[type][grade].instructional++;
                                 else summary[type][grade].independent++;
                             } else {
-                                // GST at PHIL-IRI
                                 if (rec.profile && rec.profile.includes('Frustration')) summary[type][grade].frustration++;
                                 else if (rec.profile && rec.profile.includes('Instructional')) summary[type][grade].instructional++;
                                 else summary[type][grade].independent++;
@@ -1154,11 +1226,10 @@
 
             let html = "";
 
-            // Gumawa ng table para sa bawat uri
             const titles = { 'GST': 'GST (Reading)', 'CRLA': 'CRLA (Reading)', 'RMA': 'RMA (Math)', 'PHILIRI': 'PHIL-IRI (Reading)' };
             
             for (const type in summary) {
-                if (Object.keys(summary[type]).length === 0) continue; // Skip kung walang data
+                if (Object.keys(summary[type]).length === 0) continue; 
 
                 html += `<h5 style="margin-top:20px;">${titles[type]} Summary</h5>`;
                 html += `<table class="form1b-table"><thead><tr><th>Grade Level</th><th>Total Learners</th><th>Frustration / Low Emerging</th><th>Instructional / Developing</th><th>Independent / Grade Ready</th></tr></thead><tbody>`;
