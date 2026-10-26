@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AES Unified Reporting System</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
-        h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
+        h1, h2, h3, h4, .btn { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
+        /* LOGIN SCREEN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
         .login-box h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
@@ -22,68 +22,46 @@
         .login-box .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; }
 
+        /* MAIN LAYOUT */
         .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; flex-direction: column; overflow-y: auto; display: none; flex-shrink: 0; }
         .main-content { flex: 1; flex-direction: column; overflow: hidden; display: none; background: var(--bg); }
-
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-header h2 { font-size: 18px; margin-bottom: 5px; }
-        .sidebar-header p { font-size: 12px; color: #b0c4de; }
         .user-info { padding: 12px; background: rgba(0,0,0,0.2); text-align: center; font-size: 12px; }
-        .user-info strong { display: block; font-size: 14px; margin-bottom: 3px; }
-        .user-info .role-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-top: 5px; background: var(--info); }
-        .nav-group { padding: 15px 20px 5px 20px; font-size: 11px; color: #88b4e7; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
-        .nav-item { display: block; padding: 12px 20px; color: white; text-decoration: none; font-size: 14px; cursor: pointer; transition: 0.2s; border-left: 4px solid transparent; }
+        .user-info strong { display: block; font-size: 14px; }
+        .role-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-top: 5px; background: var(--info); }
+        .nav-group { padding: 15px 20px 5px 20px; font-size: 11px; color: #88b4e7; text-transform: uppercase; font-weight: bold; }
+        .nav-item { display: block; padding: 12px 20px; color: white; text-decoration: none; font-size: 14px; cursor: pointer; border-left: 4px solid transparent; }
         .nav-item:hover, .nav-item.active { background: var(--secondary); border-left: 4px solid white; }
         
-        .top-bar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; }
+        .top-bar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .top-bar h1 { font-size: 18px; color: var(--primary); }
         .workspace { flex: 1; overflow-y: auto; padding: 30px; }
-        .panel { display: none; animation: fadeIn 0.4s ease; }
+        .panel { display: none; }
         .panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        
         .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .card h3 { margin-bottom: 20px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 18px; }
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
         .form-group { flex: 1; min-width: 150px; display: flex; flex-direction: column; }
         .form-group label { font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit;}
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .form-group input, .form-group select, .form-group textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
         .btn-primary { background: var(--secondary); color: white; }
-        .btn-primary:hover { background: var(--primary); }
         .btn-success { background: var(--success); color: white; }
         .btn-warning { background: var(--warning); color: #333; }
         .btn-danger { background: var(--danger); color: white; }
-        .btn-sm { padding: 6px 12px; font-size: 12px; }
-
-        .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; text-align: center; margin-top: 20px; margin-bottom: 30px; }
+        
+        .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; margin-top: 20px; }
         .form1b-table th, .form1b-table td, .data-table th, .data-table td { border: 1px solid #000; padding: 8px; }
         .form1b-table th, .data-table th { background: #e0e0e0; font-weight: bold; }
-        .form1b-table input[type="number"], .form1b-table input[type="text"] { width: 100%; padding: 6px; text-align: center; border: 1px solid #ccc; }
-        .form1b-table select { width: 100%; padding: 6px; border: 1px solid #ccc; font-size: 13px; }
+        .form1b-table input[type="number"], .form1b-table input[type="text"] { width: 100%; padding: 6px; text-align: center; }
         .form1b-table .auto-calc { background: #f9f9f9; font-weight: bold; }
         
         .status-ready { background-color: #d4edda !important; color: #155724; font-weight: bold; }
         .status-light { background-color: #fff3cd !important; color: #856404; font-weight: bold; }
         .status-full { background-color: #f8d7da !important; color: #721c24; font-weight: bold; }
         .status-aral { background-color: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
-
-        .info-box { background: #e2e8f0; border-left: 4px solid var(--secondary); padding: 15px; margin-bottom: 20px; font-size: 14px; border-radius: 4px;}
         .hidden { display: none !important; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; text-transform: uppercase; display: inline-block;}
-        .bg-pending { background-color: var(--warning); color: #333; }
-        .bg-review { background-color: var(--info); }
-        .bg-approved { background-color: var(--success); }
-        .bg-returned { background-color: var(--danger); }
-
-        @media print {
-            body { display: block !important; overflow: visible !important; height: auto !important; background: white !important; }
-            .hidden-print { display: none !important; }
-            @page { margin: 15mm; }
-            .form1b-table { font-size: 11px; }
-            .form1b-table th, .form1b-table td { padding: 5px; }
-        }
     </style>
 </head>
 <body>
@@ -103,7 +81,7 @@
         <div class="sidebar-header"><h2>Angela ES</h2><p>Unified Reporting System</p></div>
         <div class="user-info" id="user-info-display">
             <strong id="ui-name">Loading...</strong><span id="ui-details"></span><span id="ui-role" class="role-badge"></span>
-            <div id="role-switcher" class="hidden" style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2);">
+            <div id="role-switcher" class="hidden" style="margin-top:10px;">
                 <select id="active-role-select" onchange="switchActiveRole(this.value)" style="width:100%; padding:5px; font-size:12px;"></select>
             </div>
         </div>
@@ -147,10 +125,8 @@
         </div>
         
         <div style="margin-top: auto; padding: 20px; font-size: 10px; text-align: center; color: #88b4e7;">
-            <p style="margin-bottom: 5px;">Lead Proponent: <strong>RONELYN M. PRODIGO</strong></p>
-            <p style="margin-bottom: 15px;">Developed by: <strong>NOEL D. CAMBA</strong></p>
-            <a class="nav-item" href="manual.html" style="background: rgba(255,255,255,0.1); margin-bottom: 10px; border-radius: 5px;">📖 User Manual</a>
-            <a class="nav-item" style="background: rgba(255,0,0,0.2); text-align: center; border-radius: 5px; color: white;" onclick="logout()">🚪 Logout</a>
+            <a class="nav-item" href="manual.html" target="_blank" style="background: rgba(255,255,255,0.1); margin-bottom: 10px; border-radius: 5px;">📖 User Manual</a>
+            <a class="nav-item" style="background: rgba(255,0,0,0.2); border-radius: 5px;" onclick="logout()">🚪 Logout</a>
         </div>
     </aside>
 
@@ -380,31 +356,28 @@
     <script>
         let SCRIPT_URL = localStorage.getItem('SCRIPT_URL') || "https://script.google.com/macros/s/AKfycbyiq2jKzahhDLDSL9cqGJw99gl-WcZTcLNUqkRsDyKf5Yk5QUZpLf9k8b084L0XXrt6uQ/exec";
         let currentUser = null, activeRole = '', currentEditingReportId = null;
-        let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0, isEditMode = false, cachedUsers = [];
+        let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0;
 
         async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
         
-        // INAYOS NA FETCH USERS (BULLETPROOF)
         async function fetchUsers() { 
             try { 
                 const r = await fetch(SCRIPT_URL + '?action=getUsers'); 
                 const rawUsers = await r.json(); 
-                cachedUsers = rawUsers.map(u => {
+                return rawUsers.map(u => {
                     const newUser = {};
                     for (let key in u) {
-                        const cleanKey = String(key).toLowerCase().trim();
-                        if(cleanKey.includes('name') || cleanKey.includes('pangalan')) newUser['Full Name'] = u[key];
-                        else if(cleanKey.includes('user')) newUser.Username = u[key];
-                        else if(cleanKey.includes('pass')) newUser.Password = u[key];
-                        else if(cleanKey.includes('role')) newUser.Role = u[key];
-                        else if(cleanKey.includes('grade')) newUser.Grade = u[key];
-                        else if(cleanKey.includes('section') || cleanKey === 'sec') newUser.Section = u[key];
-                        else if(cleanKey.includes('status') || cleanKey.includes('stat')) newUser.Status = u[key];
-                        else newUser[key] = u[key];
+                        const k = String(key).toLowerCase().trim();
+                        if(k.includes('name')) newUser['Full Name'] = u[key];
+                        else if(k.includes('user')) newUser.Username = u[key];
+                        else if(k.includes('pass')) newUser.Password = u[key];
+                        else if(k.includes('role')) newUser.Role = u[key];
+                        else if(k.includes('grade')) newUser.Grade = u[key];
+                        else if(k.includes('section')) newUser.Section = u[key];
+                        else if(k.includes('status')) newUser.Status = u[key];
                     }
                     return newUser;
-                });
-                return cachedUsers; 
+                }); 
             } catch(e) { return []; } 
         }
         
@@ -483,7 +456,7 @@
                 return; 
             }
 
-            // ITO ANG FIX PARA LUMABAS ANG TOTOONG PANGALAN
+            // Dito natin kinukuha ang totoong pangalan
             user['Full Name'] = user['Full Name'] || user.FullName || user.Name || user.Username;
             
             currentUser = user; 
@@ -499,7 +472,6 @@
 
         function showDashboard() {
             document.getElementById('login-screen').style.display = 'none';
-            
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'flex';
             
@@ -613,6 +585,7 @@
             if (panelId === 'module-aral') refreshARALMasterlist();
         }
 
+        // DITO ANG FIX PARA SA COLOR CODING
         function smartSplit(line) {
             if (line.includes('\t')) return line.split('\t').map(s => s.trim());
             if (line.includes(',')) return line.split(',').map(s => s.trim());
