@@ -433,11 +433,9 @@
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
 
-        async function login() {
-            const username = document.getElementById('login-username').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value.trim();
-            const errBox = document.getElementById('login-error');
-            errBox.style.display = 'none';
+        const user = users.find(u => {
+    return String(u.Username || '').toLowerCase() === username;
+});
             
             if (!username || !password) { errBox.innerText = "Enter username and password."; errBox.style.display = 'block'; return; }
             
