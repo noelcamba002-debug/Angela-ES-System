@@ -560,52 +560,112 @@ function logout() {
 function showDashboard() {
     if (!currentUser) return;
 
-    // ... (yung mga unang linya sa showDashboard, huwag galawin) ...
+    // Itago lahat ng entry screens
+    const rs = document.getElementById('role-select-screen');
+    if (rs) rs.style.display = 'none';
+    document.getElementById('login-screen').classList.add('hidden');
 
-    const menuId = '';
-    
-    // Dito natin aayusin ang menu logic
-    if (activeRole === 'teacher') {
+    // Ipakita ang main layout
+    document.getElementById('sidebar').style.display = 'flex';
+    document.getElementById('main-content').style.display = 'flex';
+
+    // I-setup ang user info sa sidebar
+    const name = String(currentUser['Full Name'] || 'User').trim();
+    const grade = String(currentUser.Grade || '').trim();
+    const section = String(currentUser.Section || '').trim();
+    const rawRole = String(currentUser.Role || '').trim();
+
+    document.getElementById('ui-name').innerText = name;
+    document.getElementById('ui-details').innerText = grade && grade !== '-' ? `Grade ${grade} - ${section}` : '';
+
+    // Setup role switcher dropdown
+    const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r);
+    if (roles.length === 0) roles.push('teacher');
+
+    const switcher = document.getElementById('role-switcher');
+    const select = document.getElementById('active-role-select');
+    if (roles.length > 1) {
+        switcher.classList.remove('hidden');
+        select.innerHTML = roles.map(r => `<option value="${r}" ${r === activeRole ? 'selected' : ''}>${r.replace(/_/g,' ').toUpperCase()}</option>`).join('');
+    } else {
+        switcher.classList.add('hidden');
+    }
+
+    const roleBadge = document.getElementById('ui-role');
+    roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
+
+    // Itago lahat ng menus
+    ['teacher','coordinator','schoolhead','ict'].forEach(r => {
+        const menu = document.getElementById('menu-' + r);
+        if (menu) menu.classList.add('hidden');
+    });
+
+    // Ipakita ang tamang menu at panel base sa activeRole
+    const submitBtn = document.getElementById('btn-submit');
+    const sigBtn = document.getElementById('btn-signature');
+
+    if (activeRole === 'teacher' || activeRole === 'philiri_teacher') {
         document.getElementById('menu-teacher').classList.remove('hidden');
-        document.getElementById('menu-coordinator').classList.add('hidden');
-        document.getElementById('menu-schoolhead').classList.add('hidden');
-        document.getElementById('menu-ict').classList.add('hidden');
         
-        // Ipakita ang Teacher Panel
+        document.getElementById('teacher-grade').value = grade;
+        document.getElementById('teacher-section').value = section;
+        document.getElementById('teacher-name').value = name;
+        
+        if (submitBtn) submitBtn.style.display = 'inline-flex';
+        if (sigBtn) sigBtn.style.display = 'inline-flex';
+
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.getElementById('module-philiri').classList.add('active');
         document.getElementById('page-title').innerText = "PHIL-IRI (KS2)";
-        document.getElementById('btn-submit').style.display = 'inline-flex';
-        document.getElementById('btn-signature').style.display = 'inline-flex';
-        
-    } else if (activeRole.includes('coord')) { // philiri_coord, crla_coord, rma_coord, o coordinator
-        document.getElementById('menu-teacher').classList.add('hidden');
+
+        updateIndividualizedLogic();
+        updateCRLALogic();
+        updateRMALogic();
+
+    } else if (activeRole.includes('coord')) {
+        // Kahit anong uri ng coordinator (philiri_coord, crla_coord, rma_coord)
         document.getElementById('menu-coordinator').classList.remove('hidden');
-        document.getElementById('menu-schoolhead').classList.add('hidden');
-        document.getElementById('menu-ict').classList.add('hidden');
         
-        // Ipakita ang Coordinator Panel
+        if (submitBtn) submitBtn.style.display = 'none';
+        if (sigBtn) sigBtn.style.display = 'none';
+
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.getElementById('coordinator-review').classList.add('active');
         document.getElementById('page-title').innerText = "Teacher Submissions";
-        document.getElementById('btn-submit').style.display = 'none';
-        document.getElementById('btn-signature').style.display = 'none';
         
         refreshCoordinatorList();
-        
+
     } else if (activeRole.includes('schoolhead')) {
-        // ... (schoolhead logic) ...
+        document.getElementById('menu-schoolhead').classList.remove('hidden');
+        
+        if (submitBtn) submitBtn.style.display = 'none';
+        if (sigBtn) sigBtn.style.display = 'none';
+
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('head-approval').classList.add('active');
+        document.getElementById('page-title').innerText = "Forwarded Reports";
+        
+        refreshHeadList();
+
     } else if (activeRole.includes('ict')) {
-        // ... (ict logic) ...
+        document.getElementById('menu-ict').classList.remove('hidden');
+        
+        if (submitBtn) submitBtn.style.display = 'none';
+        if (sigBtn) sigBtn.style.display = 'none';
+
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('manage-users').classList.add('active');
+        document.getElementById('page-title').innerText = "Manage Users";
+        
+        refreshUsersList();
     }
 }
+
 function switchActiveRole(newRole) {
     activeRole = newRole;
-    // I-save sa local storage para kapag nag-refresh, ito pa rin ang role niya
-    localStorage.setItem('activeRole', activeRole); 
+    localStorage.setItem('activeRole', activeRole);
     showDashboard();
 }
-
 /* ============================================================
    PANEL SWITCHER
 ============================================================ */
