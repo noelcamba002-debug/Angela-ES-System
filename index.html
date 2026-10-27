@@ -920,11 +920,26 @@
         }
 
         // --- ITO ANG MGA TOTOONG FUNCTIONS NA NAWALA ---
-        async function refreshMySubmissions() {
-            const container = document.getElementById('my-submissions-list'); container.innerHTML = '<p>Loading...</p>';
+            async function refreshMySubmissions() {
+            const container = document.getElementById('my-submissions-list'); 
+            container.innerHTML = '<p>Loading...</p>';
+            
             const reports = await fetchReports();
-            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes((currentUser['Full Name'] || '').toLowerCase())).sort((a,b) => b.id - a.id);
-            if (mine.length === 0) { container.innerHTML = '<p><em>No submissions yet.</em></p>'; return; }
+            
+            // Kukunin natin ang tamang name variable
+            const myName = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || currentUser.Username).toLowerCase().trim();
+            
+            // I-filter base sa teacher string (halimbawa: "NOEL D. CAMBA - Grade 5 (NEPTUNE)")
+            const mine = reports.filter(r => {
+                const teacherStr = String(r.teacher || '').toLowerCase();
+                return teacherStr.includes(myName);
+            }).sort((a,b) => b.id - a.id);
+            
+            if (mine.length === 0) { 
+                container.innerHTML = '<p><em>No submissions yet.</em></p>'; 
+                return; 
+            }
+            
             let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
             mine.forEach(r => {
                 const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
@@ -934,12 +949,23 @@
             });
             container.innerHTML = html + `</tbody></table>`;
         }
-
-        async function refreshMyApproved() {
-            const container = document.getElementById('my-approved-list'); container.innerHTML = '<p>Loading...</p>';
+                async function refreshMyApproved() {
+            const container = document.getElementById('my-approved-list'); 
+            container.innerHTML = '<p>Loading...</p>';
+            
             const reports = await fetchReports();
-            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes((currentUser['Full Name'] || '').toLowerCase()) && r.status === 'Approved').sort((a,b) => b.id - a.id);
-            if (mine.length === 0) { container.innerHTML = '<p><em>No approved reports yet.</em></p>'; return; }
+            const myName = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || currentUser.Username).toLowerCase().trim();
+            
+            const mine = reports.filter(r => {
+                const teacherStr = String(r.teacher || '').toLowerCase();
+                return teacherStr.includes(myName) && r.status === 'Approved';
+            }).sort((a,b) => b.id - a.id);
+            
+            if (mine.length === 0) { 
+                container.innerHTML = '<p><em>No approved reports yet.</em></p>'; 
+                return; 
+            }
+            
             let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
             mine.forEach(r => {
                 const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
@@ -947,7 +973,6 @@
             });
             container.innerHTML = html + `</tbody></table>`;
         }
-
         async function refreshUsersList() { 
             const c = document.getElementById('users-list'); c.innerHTML = '<p>Loading...</p>';
             const users = await fetchUsers();
