@@ -370,7 +370,7 @@
         async function fetchUsers() { try { const r = await fetch(SCRIPT_URL + '?action=getUsers'); const cachedUsers = await r.json(); return cachedUsers; } catch(e) { return []; } }
         async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
 
-        async function login() {
+              async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value.trim();
             const errBox = document.getElementById('login-error');
@@ -386,6 +386,23 @@
                 const uStatus = String(u.Status || '').trim().toLowerCase();
                 return uName === username && uPass === password && uStatus === 'active';
             });
+            
+            if (!user) { 
+                errBox.innerText = "Invalid credentials. Please check your username, password, and status."; 
+                errBox.style.display = 'block'; 
+                return; 
+            }
+            
+            user['Full Name'] = user['Full Name'] || user.FullName || user.Name || user.Username;
+            
+            currentUser = user; 
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
+            activeRole = rolesArray[0] || 'teacher'; 
+            
+            showDashboard();
+        }
             
             if (!user) { 
                 errBox.innerText = "Invalid credentials. Please check your username, password, and status."; 
