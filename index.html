@@ -1264,6 +1264,25 @@
             }
             return html;
         }
+            <!-- E-SIGNATURE MODAL -->
+    <div id="signature-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10005; display: flex; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; padding: 30px; border-radius: 8px; width: 400px; max-width: 100%; text-align: center;">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">Upload E-Signature</h3>
+            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Mag-upload ng picture ng pirma (puting background, PNG/JPG).</p>
+            
+            <input type="file" id="signature-file-input" accept="image/*" onchange="previewSignature(event)" style="width: 100%; margin-bottom: 15px;">
+            
+            <div style="margin-bottom: 15px; height: 80px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; background: #f9f9f9;">
+                <img id="signature-preview" style="max-height: 100%; max-width: 100%; display: none;">
+                <span id="signature-placeholder" style="color: #999; font-size: 12px;">Walang naka-upload na pirma</span>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn btn-success" onclick="saveSignature()">💾 Save Signature</button>
+                <button class="btn btn-danger" onclick="document.getElementById('signature-modal').classList.add('hidden')">Close</button>
+            </div>
+        </div>
+    </div>
     </script>
 </body>
 </html>
