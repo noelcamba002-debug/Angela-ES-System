@@ -900,7 +900,39 @@
         async function refreshMyApproved() { document.getElementById('my-approved-list').innerHTML = '<p>No approved reports yet.</p>'; }
         async function refreshCoordinatorList() { document.getElementById('coordinator-list').innerHTML = '<p>No pending reports.</p>'; }
         async function refreshHeadList() { document.getElementById('head-list').innerHTML = '<p>No forwarded reports.</p>'; }
-        async function refreshUsersList() { document.getElementById('users-list').innerHTML = '<p>No users.</p>'; }
+               async function refreshUsersList() {
+            const c = document.getElementById('users-list'); 
+            c.innerHTML = '<p>Loading users...</p>';
+            
+            try {
+                const users = await fetchUsers();
+                if (!users || users.length === 0) {
+                    c.innerHTML = '<p><em>Walang nahanap na users. I-check ang Users tab sa Google Sheets.</em></p>'; 
+                    return;
+                }
+                
+                let html = `<table class="data-table"><thead><tr><th>Name</th><th>Username</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+                users.forEach(u => { 
+                    html += `<tr>
+                        <td>${u['Full Name'] || u.FullName || 'N/A'}</td>
+                        <td>${u.Username || 'N/A'}</td>
+                        <td>${u.Role || 'N/A'}</td>
+                        <td>${u.Status || 'N/A'}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="toggleUser('${u.Username}', '${u.Status}')">Toggle</button></td>
+                    </tr>`; 
+                });
+                c.innerHTML = html + `</tbody></table>`;
+                
+            } catch (e) {
+                c.innerHTML = '<p style="color:red;">Error: Hindi makakuha ng data mula sa Google Sheets.</p>';
+            }
+        }
+
+        // Idagdag mo rin ito para gumana ang Toggle button
+        async function toggleUser(u, s) { 
+            await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); 
+            refreshUsersList(); 
+        }
         function openAddUserModal() { alert("Add User feature."); }
         function saveSystemSettings() { alert("Saved!"); }
         function clearAllSubmissions() { alert("Cleared!"); }
