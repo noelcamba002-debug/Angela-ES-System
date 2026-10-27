@@ -62,7 +62,10 @@
         .status-full { background-color: #f8d7da !important; color: #721c24; font-weight: bold; }
         .status-aral { background-color: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
         .hidden { display: none !important; }
+        
+        /* LOGO & SIGNATURE SIZING */
         .report-logo { height: 80px !important; width: auto !important; max-width: 120px !important; object-fit: contain !important; }
+        .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -327,6 +330,26 @@
             </div>
         </div>
     </main>
+
+    <!-- E-SIGNATURE MODAL -->
+    <div id="signature-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10005; display: flex; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; padding: 30px; border-radius: 8px; width: 400px; max-width: 100%; text-align: center;">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">Upload E-Signature</h3>
+            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Mag-upload ng picture ng pirma (puting background).</p>
+            
+            <input type="file" id="signature-file-input" accept="image/*" onchange="previewSignature(event)" style="width: 100%; margin-bottom: 15px;">
+            
+            <div style="margin-bottom: 15px; height: 80px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; background: #f9f9f9;">
+                <img id="signature-preview" style="max-height: 100%; max-width: 100%; display: none;">
+                <span id="signature-placeholder" style="color: #999; font-size: 12px;">Walang naka-upload na pirma</span>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn btn-success" onclick="saveSignature()">💾 Save Signature</button>
+                <button class="btn btn-danger" onclick="document.getElementById('signature-modal').classList.add('hidden')">Close</button>
+            </div>
+        </div>
+    </div>
 
     <div id="official-report-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
         <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
@@ -749,11 +772,11 @@
             if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
         }
 
-        function submitAllToCoordinator() {
+        async function submitAllToCoordinator() {
             const active = document.querySelector('.panel.active');
-            if (active && active.id === 'module-philiri') submitIndividualized();
-            else if (active && active.id === 'module-crla') submitCRLA();
-            else if (active && active.id === 'module-rma') submitRMA();
+            if (active && active.id === 'module-philiri') await submitIndividualized();
+            else if (active && active.id === 'module-crla') await submitCRLA();
+            else if (active && active.id === 'module-rma') await submitRMA();
             else alert("Go to Data Entry.");
         }
         async function submitIndividualized() {
@@ -896,43 +919,11 @@
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
 
-        async function refreshMySubmissions() { document.getElementById('my-submissions-list').innerHTML = '<p>No submissions yet.</p>'; }
-        async function refreshMyApproved() { document.getElementById('my-approved-list').innerHTML = '<p>No approved reports yet.</p>'; }
-        async function refreshCoordinatorList() { document.getElementById('coordinator-list').innerHTML = '<p>No pending reports.</p>'; }
-        async function refreshHeadList() { document.getElementById('head-list').innerHTML = '<p>No forwarded reports.</p>'; }
-               async function refreshUsersList() {
-            const c = document.getElementById('users-list'); 
-            c.innerHTML = '<p>Loading users...</p>';
-            
-            try {
-                const users = await fetchUsers();
-                if (!users || users.length === 0) {
-                    c.innerHTML = '<p><em>Walang nahanap na users. I-check ang Users tab sa Google Sheets.</em></p>'; 
-                    return;
-                }
-                
-                let html = `<table class="data-table"><thead><tr><th>Name</th><th>Username</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
-                users.forEach(u => { 
-                    html += `<tr>
-                        <td>${u['Full Name'] || u.FullName || 'N/A'}</td>
-                        <td>${u.Username || 'N/A'}</td>
-                        <td>${u.Role || 'N/A'}</td>
-                        <td>${u.Status || 'N/A'}</td>
-                        <td><button class="btn btn-danger btn-sm" onclick="toggleUser('${u.Username}', '${u.Status}')">Toggle</button></td>
-                    </tr>`; 
-                });
-                c.innerHTML = html + `</tbody></table>`;
-                
-            } catch (e) {
-                c.innerHTML = '<p style="color:red;">Error: Hindi makakuha ng data mula sa Google Sheets.</p>';
-            }
-        }
-
-        // Idagdag mo rin ito para gumana ang Toggle button
-        async function toggleUser(u, s) { 
-            await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); 
-            refreshUsersList(); 
-        }
+        async function refreshMySubmissions() { document.getElementById('my-submissions-list').innerHTML = '<p>Loading...</p>'; }
+        async function refreshMyApproved() { document.getElementById('my-approved-list').innerHTML = '<p>Loading...</p>'; }
+        async function refreshCoordinatorList() { document.getElementById('coordinator-list').innerHTML = '<p>Loading...</p>'; }
+        async function refreshHeadList() { document.getElementById('head-list').innerHTML = '<p>Loading...</p>'; }
+        async function refreshUsersList() { document.getElementById('users-list').innerHTML = '<p>Loading...</p>'; }
         function openAddUserModal() { alert("Add User feature."); }
         function saveSystemSettings() { alert("Saved!"); }
         function clearAllSubmissions() { alert("Cleared!"); }
@@ -949,7 +940,18 @@
         function finalApproveAndPrint() {}
         function viewMyReport() {}
         function printMyReport() {}
-        function printReport() {}
+        
+        // PRINT FUNCTION (Inayos ang signature spacing)
+        function printReport() {
+            const content = document.getElementById('official-report-modal').querySelector('div').innerHTML;
+            const w = window.open('', '_blank');
+            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; } .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }</style></head><body>${content}</body></html>`);
+            w.document.close();
+            w.onload = () => {
+                ['teacher','coord','head'].forEach(role => { const src = localStorage.getItem(`sig_${role}`); if(src) { const i = w.document.getElementById(`sig-img-${role}`); if(i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); } } });
+                setTimeout(() => { w.focus(); w.print(); }, 500);
+            };
+        }
     </script>
 </body>
 </html>
