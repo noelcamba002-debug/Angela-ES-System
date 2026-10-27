@@ -979,8 +979,38 @@
         }
         async function viewHeadReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (r) { document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('head-view').classList.remove('hidden'); } }
         async function returnToCoordinator() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
-        async function finalApproveAndPrint() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Approved' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
+        async function         async function finalApproveAndPrint() {
+            const reports = await fetchReports(); 
+            const r = reports.find(x => x.id == currentEditingReportId); 
+            if (!r) return;
 
+            // 1. I-SHOW MUNA ANG REPORT PARA MA-PRINT
+            document.getElementById('printable-report-content').innerHTML = renderDataTables(r.data, r.teacher) + `
+                <div style="display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid;">
+                    <div style="text-align: center; width: 45%;">
+                        <p style="margin-bottom: 5px;">Prepared by:</p>
+                        <img id="sig-img-coord" class="signature-img hidden" style="margin-bottom: 5px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">NOEL D. CAMBA</p>
+                        <p style="margin: 0; line-height: 1.2;">ICT Coordinator / System Developer</p>
+                    </div>
+                    <div style="text-align: center; width: 45%;">
+                        <p style="margin-bottom: 5px;">Noted by:</p>
+                        <img id="sig-img-head" class="signature-img hidden" style="margin-bottom: 5px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">RONELYN M. PRODIGO</p>
+                        <p style="margin: 0; line-height: 1.2;">School Head</p>
+                    </div>
+                </div>`;
+            
+            // 2. I-OPEN ANG PRINT WINDOW
+            printReport(); 
+            
+            // 3. I-UPDATE ANG STATUS SA SHEETS PAGKATAPOS NG 2 SEGUNDO (Para hindi maabala ang print)
+            await apiPost({ action: "update", id: r.id, status: 'Approved' });
+            
+            // 4. I-REFRESH ANG LISTAHAN
+            document.getElementById('head-view').classList.add('hidden'); 
+            refreshHeadList(); 
+        }
         async function viewMyReport(id) {
             const reports = await fetchReports();
             const r = reports.find(x => x.id == id); if (!r) return;
