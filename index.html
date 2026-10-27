@@ -1208,8 +1208,79 @@
         function clearAllSubmissions() { alert("Cleared!"); }
         async function refreshARALMasterlist() { document.getElementById('aral-masterlist-content').innerHTML = '<p>No candidates found.</p>'; }
         function printARALMasterlist() {}
-        function refreshFinalReport() {}
-        function printConsolidatedReport() {}
+            async function refreshFinalReport() {
+            const approved = (await fetchReports()).filter(r => r.status === 'Approved');
+            window.cachedApprovedForPrint = approved; 
+            
+            let cons = {}; 
+            approved.forEach(r => { 
+                for (const k in r.data) { 
+                    if (!cons[k]) cons[k] = []; 
+                    cons[k] = cons[k].concat(r.data[k]); 
+                } 
+            });
+            document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons, "All Teachers");
+        }
+            
+            // I-populate ang dropdowns kung wala pang laman
+            const gradeFilter = document.getElementById('filter-grade');
+            if (gradeFilter.options.length <= 1) {
+                const grades = [...new Set(approved.map(r => { const m = String(r.teacher).match(/Grade (.*?) \(/); return m ? m[1] : null; }).filter(Boolean))];
+                grades.sort().forEach(g => { gradeFilter.innerHTML += `<option value="${g}">Grade ${g}</option>`; });
+                
+                const sections = [...new Set(approved.map(r => { const m = String(r.teacher).match(/\((.*?)\)/); return m ? m[1] : null; }).filter(Boolean))];
+                sections.sort().forEach(s => { document.getElementById('filter-section').innerHTML += `<option value="${s}">${s}</option>`; });
+            }
+            
+            document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons, "All Teachers");
+        }
+            function printConsolidatedReport() {
+            const aralContent = document.getElementById('aral-masterlist-content').innerHTML;
+            const summaryContent = generateClassSummary();
+
+            const headerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
+                    <img src="${localStorage.getItem('depedLogo')||''}" class="report-logo" style="display:${localStorage.getItem('depedLogo')?'block':'none'};">
+                    <div style="text-align: center; flex: 1; padding: 0 20px;">
+                        <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
+                        <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
+                        <p style="font-size: 12px; margin: 0;">Region 02-Cagayan Valley</p>
+                        <p style="font-size: 12px; margin: 0;">Schools Division Office of Isabela</p>
+                        <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
+                        <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
+                    </div>
+                    <img src="${localStorage.getItem('schoolLogo')||''}" class="report-logo" style="display:${localStorage.getItem('schoolLogo')?'block':'none'};">
+                </div>
+                <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
+                <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">SCHOOL CONSOLIDATED REPORT</h3>
+            `;
+
+            const signaturesHTML = `
+                <div style="display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid;">
+                    <div style="text-align: center; width: 45%;">
+                        <p style="margin-bottom: 5px;">Prepared by:</p>
+                        <img id="sig-img-coord" class="signature-img hidden" style="margin-bottom: 5px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">NOEL D. CAMBA</p>
+                        <p style="margin: 0; line-height: 1.2;">ICT Coordinator / System Developer</p>
+                    </div>
+                    <div style="text-align: center; width: 45%;">
+                        <p style="margin-bottom: 5px;">Noted by:</p>
+                        <img id="sig-img-head" class="signature-img hidden" style="margin-bottom: 5px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">RONELYN M. PRODIGO</p>
+                        <p style="margin: 0; line-height: 1.2;">School Head</p>
+                    </div>
+                </div>`;
+
+            const w = window.open('', '_blank');
+            w.document.write(`<html><head><title>Consolidated Report</title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .form1b-table th { background: #e0e0e0; font-weight: bold; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; } .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; } .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; } h4, h5 { margin-top: 15px; margin-bottom: 5px; color: #113a6b; }</style></head><body>${headerHTML}${summaryContent}${aralContent}${signaturesHTML}</body></html>`);
+            w.document.close();
+            w.onload = () => {
+                const sC = localStorage.getItem('sig_coord'); const sH = localStorage.getItem('sig_head');
+                if (sC) { const i = w.document.getElementById('sig-img-coord'); if (i) { i.src = sC; i.style.height = '45px'; i.classList.remove('hidden'); } }
+                if (sH) { const i = w.document.getElementById('sig-img-head'); if (i) { i.src = sH; i.style.height = '45px'; i.classList.remove('hidden'); } }
+                setTimeout(() => { w.focus(); w.print(); }, 500);
+            };
+        }
     </script>
 </body>
 </html>
