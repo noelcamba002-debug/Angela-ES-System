@@ -1162,14 +1162,21 @@ function handleLogoUpload(event, type) {
     reader.readAsDataURL(file);
 }
 
-function saveLogos() {
+async function saveLogos() {
     if (!window.tempLogoData || (!window.tempLogoData.depedLogo && !window.tempLogoData.schoolLogo)) {
         alert("Walang bagong logo na in-upload."); return;
     }
-    if (window.tempLogoData.depedLogo) localStorage.setItem('depedLogo', window.tempLogoData.depedLogo);
-    if (window.tempLogoData.schoolLogo) localStorage.setItem('schoolLogo', window.tempLogoData.schoolLogo);
-    alert("Logos saved successfully!");
-    loadSystemSettings();
+    
+    if (window.tempLogoData.depedLogo) {
+        await apiPost({ action: "uploadLogo", type: "depedLogo", filename: "deped_logo.png", image: window.tempLogoData.depedLogo });
+    }
+    if (window.tempLogoData.schoolLogo) {
+        await apiPost({ action: "uploadLogo", type: "schoolLogo", filename: "school_logo.png", image: window.tempLogoData.schoolLogo });
+    }
+    
+    alert("Logos saved successfully sa Google Drive!");
+    window.tempLogoData = {};
+    loadSystemSettings(); 
 }
 
 function loadSystemSettings() {
@@ -1376,9 +1383,18 @@ async function viewMyReport(id) {
     const coordName = (users.find(u => String(u.Role || '').toLowerCase().includes('coord')) || {})['Full Name'] || 'PROGRAM COORDINATOR';
     const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
 
+        // Kunin ang mga logo URL mula sa Apps Script
+    let depedLogoUrl = "", schoolLogoUrl = "";
+    try {
+        const resp = await fetch(SCRIPT_URL + '?action=getLogos');
+        const logos = await resp.json();
+        depedLogoUrl = logos.depedLogo || "";
+        schoolLogoUrl = logos.schoolLogo || "";
+    } catch(e) { console.warn("Logo fetch failed", e); }
+
     const headerHTML = `
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
-            <img src="${localStorage.getItem('depedLogo') || ''}" class="report-logo" style="display:${localStorage.getItem('depedLogo') ? 'block' : 'none'};">
+            <img src="${depedLogoUrl}" class="report-logo" style="display:${depedLogoUrl ? 'block' : 'none'};">
             <div style="text-align: center; flex: 1; padding: 0 20px;">
                 <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
                 <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
@@ -1387,7 +1403,7 @@ async function viewMyReport(id) {
                 <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
                 <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
             </div>
-            <img src="${localStorage.getItem('schoolLogo') || ''}" class="report-logo" style="display:${localStorage.getItem('schoolLogo') ? 'block' : 'none'};">
+            <img src="${schoolLogoUrl}" class="report-logo" style="display:${schoolLogoUrl ? 'block' : 'none'};">
         </div>
         <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
         <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">OFFICIAL REPORT</h3>
