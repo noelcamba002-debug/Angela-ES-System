@@ -68,10 +68,54 @@
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h1>ANGELA ELEMENTARY SCHOOL</h1>
-            <h2>AES Unified Reporting System</h2>
+      <!-- ROLE SELECTION SCREEN -->
+    <div id="role-select-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #113a6b, #2a5a9b); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; text-align: center; color: white; padding: 20px;">
+        
+        <img src="https://via.placeholder.com/120" id="role-school-logo" style="height: 120px; width: 120px; border-radius: 50%; background: white; margin-bottom: 20px; border: 4px solid white; object-fit: contain; padding: 10px;">
+        
+        <h1 style="font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 5px; letter-spacing: 1px;">ANGELA ELEMENTARY SCHOOL</h1>
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 600; font-style: italic; color: #b0c4de; margin-bottom: 30px;">AES Unified Reporting System</h2>
+
+        <div style="display: flex; gap: 30px; margin-bottom: 30px;">
+            <div>
+                <p style="font-size: 12px; color: #88b4e7; letter-spacing: 1px; margin-bottom: 5px;">LEAD PROPONENT</p>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 18px; margin: 0;">RONELYN M. PRODIGO</h3>
+                <p style="font-size: 14px; font-style: italic; color: #b0c4de; margin: 0;">School Head</p>
+            </div>
+            <div>
+                <p style="font-size: 12px; color: #88b4e7; letter-spacing: 1px; margin-bottom: 5px;">DEVELOPER</p>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 18px; margin: 0;">NOEL D. CAMBA</h3>
+                <p style="font-size: 14px; font-style: italic; color: #b0c4de; margin: 0;">Master Teacher 1</p>
+            </div>
+        </div>
+
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 28px; color: #f1c40f; margin-bottom: 40px;">AES Unified Reporting System</h2>
+
+        <div style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 800px;">
+            <!-- Teacher Card -->
+            <div style="background: white; color: #333; border-radius: 12px; padding: 40px 30px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 50px; margin-bottom: 15px;">👨‍🏫</div>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 22px; color: #113a6b; margin-bottom: 10px;">Teacher</h2>
+                <p style="font-size: 14px; color: #666; text-align: center; margin-bottom: 25px; line-height: 1.5;">Mag-submit ng assessment data (PHIL-IRI, CRLA, RMA) at narrative reports.</p>
+                <button class="btn btn-primary" onclick="showLogin('Teacher')" style="width: 100%; justify-content: center; padding: 12px; font-size: 16px;">Pumasok →</button>
+            </div>
+
+            <!-- School Head / Coordinator Card -->
+            <div style="background: white; color: #333; border-radius: 12px; padding: 40px 30px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 50px; margin-bottom: 15px;">👩‍💼</div>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 22px; color: #113a6b; margin-bottom: 10px;">Coordinator / Head</h2>
+                <p style="font-size: 14px; color: #666; text-align: center; margin-bottom: 25px; line-height: 1.5;">Mag-review, mag-approve, at mag-print ng mga reports ng mga guro.</p>
+                <button class="btn btn-success" onclick="showLogin('Admin')" style="width: 100%; justify-content: center; padding: 12px; font-size: 16px;">Pumasok →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN (Lalabas pagkatapos pumili ng role) -->
+    <div id="login-screen" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #113a6b, #2a5a9b); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+        <div class="login-box" style="position: relative;">
+            <button onclick="goBackToRoles()" style="position: absolute; top: 15px; left: 15px; background: none; border: none; color: #666; font-size: 14px; cursor: pointer; font-weight: bold;">← Bumalik</button>
+            <h1 style="margin-top: 10px;">ANGELA ELEMENTARY SCHOOL</h1>
+            <h2 id="login-role-title">Teacher Login</h2>
             <div id="login-error" class="login-error"></div>
             <div class="form-group"><label>Username</label><input type="text" id="login-username" autocomplete="username"></div>
             <div class="form-group"><label>Password</label><input type="password" id="login-password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"></div>
@@ -353,8 +397,25 @@
         async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
         async function fetchUsers() { try { const r = await fetch(SCRIPT_URL + '?action=getUsers'); const cachedUsers = await r.json(); return cachedUsers; } catch(e) { return []; } }
         async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
+        // --- ROLE SELECTION FUNCTIONS ---
+        function showLogin(roleType) {
+            document.getElementById('role-select-screen').style.display = 'none';
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('login-role-title').innerText = roleType + ' Login';
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error').style.display = 'none';
+        }
+
+        function goBackToRoles() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('role-select-screen').style.display = 'flex';
+        }
+        // ---------------------------------
 
         async function login() {
+            // ... (yung existing code mo dito) ...
+               async function login() {
             const username = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value.trim();
             const errBox = document.getElementById('login-error');
@@ -385,10 +446,25 @@
             let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
             activeRole = rolesArray[0] || 'teacher'; 
             
+            document.getElementById('login-screen').classList.add('hidden');
+            showDashboard();
+        }
+            
+            user['Full Name'] = user['Full Name'] || user.FullName || user.Name || user.Username;
+            
+            currentUser = user; 
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
+            activeRole = rolesArray[0] || 'teacher'; 
+            
             showDashboard();
         }
 
-        function logout() { localStorage.removeItem('currentUser'); location.reload(); }
+                function logout() { 
+            localStorage.removeItem('currentUser'); 
+            location.reload(); 
+        }
 
         function showDashboard() {
             document.getElementById('login-screen').style.display = 'none';
@@ -477,7 +553,17 @@
 
         function switchActiveRole(newRole) { activeRole = newRole; showDashboard(); }
         
-        window.addEventListener('DOMContentLoaded', async () => { 
+             window.addEventListener('DOMContentLoaded', async () => { 
+            loadLogos(); 
+            
+            // I-load ang logo sa Role Selection Screen kung meron man
+            const savedLogo = localStorage.getItem('schoolLogo');
+            if (savedLogo) {
+                const roleLogo = document.getElementById('role-school-logo');
+                if(roleLogo) { roleLogo.src = savedLogo; roleLogo.style.display = 'block'; }
+            }
+            
+            // Titingnan kung may naka-login na para deretso sa dashboard
             const saved = localStorage.getItem('currentUser'); 
             if (saved) { 
                 try { 
@@ -487,6 +573,7 @@
                     showDashboard(); 
                 } catch(e) {} 
             } 
+        });
         });
 
         function switchPanel(panelId, btnElement) {
