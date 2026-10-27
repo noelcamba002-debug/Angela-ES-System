@@ -985,25 +985,53 @@
         }
         async function toggleUser(u, s) { await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); refreshUsersList(); }
 
-        async function refreshCoordinatorList() {
-            const c = document.getElementById('coordinator-list'); c.innerHTML = '<p>Loading...</p>';
+             async function refreshCoordinatorList() {
+            const c = document.getElementById('coordinator-list'); 
+            c.innerHTML = '<p>Loading...</p>';
+            
             const reports = await fetchReports();
-            let pending = activeRole === 'philiri_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && (r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst)) : (activeRole === 'rma_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.rma) : (activeRole === 'crla_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.crla) : reports.filter(r => r.status === 'Pending Coordinator Review')));
-            if (!pending.length) { c.innerHTML = '<p><em>No pending reports.</em></p>'; return; }
+            // Hahanapin natin yung mga reports na galing sa Teacher
+            let pending = reports.filter(r => r.status === 'Pending Coordinator Review');
+            
+            if (!pending.length) { 
+                c.innerHTML = '<p><em>No pending reports.</em></p>'; 
+                return; 
+            }
+            
             let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><span class="badge bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`; });
+            pending.forEach(r => { 
+                html += `<tr>
+                    <td>${r.teacher}</td>
+                    <td><span class="badge bg-pending">${r.status}</span></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td>
+                </tr>`; 
+            });
             c.innerHTML = html + `</tbody></table>`;
         }
         async function viewCoordinatorReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return; document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('coordinator-view').classList.remove('hidden'); }
         async function returnToTeacher() { if (!document.getElementById('coordinator-comment').value) return alert("Enter comment."); const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
         async function forwardToHead() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
         
-        async function refreshHeadList() {
-            const c = document.getElementById('head-list'); c.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports(); const pending = reports.filter(r => r.status === 'Pending School Head Approval');
-            if (!pending.length) { c.innerHTML = '<p><em>No forwarded reports.</em></p>'; return; }
+              async function refreshHeadList() {
+            const c = document.getElementById('head-list'); 
+            c.innerHTML = '<p>Loading...</p>';
+            
+            const reports = await fetchReports(); 
+            // Hahanapin natin yung mga reports na galing sa Coordinator
+            const pending = reports.filter(r => r.status === 'Pending School Head Approval');
+            
+            if (!pending.length) { 
+                c.innerHTML = '<p><em>No forwarded reports.</em></p>'; 
+                return; 
+            }
+            
             let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td></tr>`; });
+            pending.forEach(r => { 
+                html += `<tr>
+                    <td>${r.teacher}</td>
+                    <td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td>
+                </tr>`; 
+            });
             c.innerHTML = html + `</tbody></table>`;
         }
         async function viewHeadReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (r) { document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('head-view').classList.remove('hidden'); } }
