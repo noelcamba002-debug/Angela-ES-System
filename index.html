@@ -523,7 +523,23 @@
             else if (currentUser && activeRole.includes('teacher')) { submitBtn.style.display = 'inline-flex'; }
             
             if (panelId === 'report-consolidated') refreshFinalReport();
-            if (panelId === 'my-submissions') refreshMySubmissions();
+                   async function refreshMySubmissions() { 
+            const container = document.getElementById('my-submissions-list'); 
+            container.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports();
+            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes((currentUser['Full Name'] || '').toLowerCase())).sort((a,b) => b.id - a.id);
+            
+            if (mine.length === 0) { container.innerHTML = '<p><em>No submissions yet.</em></p>'; return; }
+            
+            let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+            mine.forEach(r => {
+                const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
+                let statusClass = r.status.includes('Approved') ? 'bg-approved' : (r.status.includes('Returned') ? 'bg-returned' : 'bg-pending');
+                let editBtn = r.status === 'Returned to Teacher' ? `<button class="btn btn-warning btn-sm" onclick="editAndResubmit(${r.id})">✏️ Edit</button>` : "";
+                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><span class="badge ${statusClass}">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button>${editBtn}</td></tr>`;
+            });
+            container.innerHTML = html + `</tbody></table>`;
+        }
             if (panelId === 'my-approved') refreshMyApproved();
             if (panelId === 'manage-users') refreshUsersList();
             if (panelId === 'system-settings') loadSystemSettings();
@@ -921,9 +937,99 @@
 
         async function refreshMySubmissions() { document.getElementById('my-submissions-list').innerHTML = '<p>Loading...</p>'; }
         async function refreshMyApproved() { document.getElementById('my-approved-list').innerHTML = '<p>Loading...</p>'; }
-        async function refreshCoordinatorList() { document.getElementById('coordinator-list').innerHTML = '<p>Loading...</p>'; }
-        async function refreshHeadList() { document.getElementById('head-list').innerHTML = '<p>Loading...</p>'; }
-        async function refreshUsersList() { document.getElementById('users-list').innerHTML = '<p>Loading...</p>'; }
+                async function refreshCoordinatorList() {
+            const c = document.getElementById('coordinator-list'); 
+            c.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports();
+            let pending = reports.filter(r => r.status === 'Pending Coordinator Review');
+            
+            if (!pending.length) { c.innerHTML = '<p><em>No pending reports.</em></p>'; return; }
+            
+            let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+            pending.forEach(r => { 
+                html += `<tr>
+                    <td>${r.teacher}</td>
+                    <td><span class="badge bg-pending">${r.status}</span></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td>
+                </tr>`; 
+            });
+            c.innerHTML = html + `</tbody></table>`;
+        }
+        async function viewCoordinatorReport(id) { 
+            currentEditingReportId = id; 
+            const reports = await fetchReports(); 
+            const r = reports.find(x => x.id == id); 
+            if (!r) return; 
+            document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher); 
+            document.getElementById('coordinator-view').classList.remove('hidden'); 
+        }
+        async function returnToTeacher() { 
+            if (!document.getElementById('coordinator-comment').value) return alert("Enter comment."); 
+            const reports = await fetchReports(); 
+            const r = reports.find(x => x.id == currentEditingReportId); 
+            if (r) { 
+                await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(r.comments||[]) }); 
+                document.getElementById('coordinator-view').classList.add('hidden'); 
+                refreshCoordinatorList(); 
+            } 
+        }
+        async function forwardToHead() { 
+            const reports = await fetchReports(); 
+            const r = reports.find(x => x.id == currentEditingReportId); 
+            if (r) { 
+                await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments||[]) }); 
+                document.getElementById('coordinator-view').classList.add('hidden'); 
+                refreshCoordinatorList(); 
+            } 
+        }
+          async function refreshHeadList() {
+            const c = document.getElementById('head-list'); 
+            c.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports(); 
+            const pending = reports.filter(r => r.status === 'Pending School Head Approval');
+            
+            if (!pending.length) { c.innerHTML = '<p><em>No forwarded reports.</em></p>'; return; }
+            
+            let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Action</th></tr></thead><tbody>`;
+            pending.forEach(r => { 
+                html += `<tr>
+                    <td>${r.teacher}</td>
+                    <td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td>
+                </tr>`; 
+            });
+            c.innerHTML = html + `</tbody></table>`;
+        }
+        async function viewHeadReport(id) { 
+            currentEditingReportId = id; 
+            const reports = await fetchReports(); 
+            const r = reports.find(x => x.id == id); 
+            if (r) { 
+                document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher); 
+                document.getElementById('head-view').classList.remove('hidden'); 
+            } 
+        }
+        async function returnToCoordinator() { 
+            const reports = await fetchReports(); 
+            const r = reports.find(x => x.id == currentEditingReportId); 
+            if (r) { 
+                await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator' }); 
+                document.getElementById('head-view').classList.add('hidden'); 
+                refreshHeadList(); 
+            } 
+        }
+        async function finalApproveAndPrint() { 
+            const reports = await fetchReports(); 
+            const r = reports.find(x => x.id == currentEditingReportId); 
+            if (r) { 
+                await apiPost({ action: "update", id: r.id, status: 'Approved' }); 
+                document.getElementById('head-view').classList.add('hidden'); 
+                refreshHeadList(); 
+            } 
+        }
+        async function toggleUser(u, s) { 
+            await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); 
+            refreshUsersList(); 
+        }
         function openAddUserModal() { alert("Add User feature."); }
         function saveSystemSettings() { alert("Saved!"); }
         function clearAllSubmissions() { alert("Cleared!"); }
