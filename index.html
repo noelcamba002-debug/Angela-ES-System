@@ -9,7 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
-        h1, h2, h3, h4, .btn { font-family: 'Montserrat', sans-serif; }
+        h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
@@ -523,23 +523,7 @@
             else if (currentUser && activeRole.includes('teacher')) { submitBtn.style.display = 'inline-flex'; }
             
             if (panelId === 'report-consolidated') refreshFinalReport();
-                   async function refreshMySubmissions() { 
-            const container = document.getElementById('my-submissions-list'); 
-            container.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports();
-            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes((currentUser['Full Name'] || '').toLowerCase())).sort((a,b) => b.id - a.id);
-            
-            if (mine.length === 0) { container.innerHTML = '<p><em>No submissions yet.</em></p>'; return; }
-            
-            let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
-            mine.forEach(r => {
-                const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
-                let statusClass = r.status.includes('Approved') ? 'bg-approved' : (r.status.includes('Returned') ? 'bg-returned' : 'bg-pending');
-                let editBtn = r.status === 'Returned to Teacher' ? `<button class="btn btn-warning btn-sm" onclick="editAndResubmit(${r.id})">✏️ Edit</button>` : "";
-                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><span class="badge ${statusClass}">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button>${editBtn}</td></tr>`;
-            });
-            container.innerHTML = html + `</tbody></table>`;
-        }
+            if (panelId === 'my-submissions') refreshMySubmissions();
             if (panelId === 'my-approved') refreshMyApproved();
             if (panelId === 'manage-users') refreshUsersList();
             if (panelId === 'system-settings') loadSystemSettings();
@@ -935,119 +919,128 @@
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
 
-        async function refreshMySubmissions() { document.getElementById('my-submissions-list').innerHTML = '<p>Loading...</p>'; }
-        async function refreshMyApproved() { document.getElementById('my-approved-list').innerHTML = '<p>Loading...</p>'; }
-                async function refreshCoordinatorList() {
-            const c = document.getElementById('coordinator-list'); 
-            c.innerHTML = '<p>Loading...</p>';
+        // --- ITO ANG MGA TOTOONG FUNCTIONS NA NAWALA ---
+        async function refreshMySubmissions() {
+            const container = document.getElementById('my-submissions-list'); container.innerHTML = '<p>Loading...</p>';
             const reports = await fetchReports();
-            let pending = reports.filter(r => r.status === 'Pending Coordinator Review');
-            
+            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes((currentUser['Full Name'] || '').toLowerCase())).sort((a,b) => b.id - a.id);
+            if (mine.length === 0) { container.innerHTML = '<p><em>No submissions yet.</em></p>'; return; }
+            let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+            mine.forEach(r => {
+                const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
+                let statusClass = r.status.includes('Approved') ? 'bg-approved' : (r.status.includes('Returned') ? 'bg-returned' : 'bg-pending');
+                let editBtn = r.status === 'Returned to Teacher' ? `<button class="btn btn-warning btn-sm" onclick="editAndResubmit(${r.id})">✏️ Edit</button>` : "";
+                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><span class="badge ${statusClass}">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button>${editBtn}</td></tr>`;
+            });
+            container.innerHTML = html + `</tbody></table>`;
+        }
+
+        async function refreshMyApproved() {
+            const container = document.getElementById('my-approved-list'); container.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports();
+            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes((currentUser['Full Name'] || '').toLowerCase()) && r.status === 'Approved').sort((a,b) => b.id - a.id);
+            if (mine.length === 0) { container.innerHTML = '<p><em>No approved reports yet.</em></p>'; return; }
+            let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
+            mine.forEach(r => {
+                const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
+                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button> <button class="btn btn-success btn-sm" onclick="printMyReport(${r.id})">🖨️ Print</button></td></tr>`;
+            });
+            container.innerHTML = html + `</tbody></table>`;
+        }
+
+        async function refreshUsersList() { 
+            const c = document.getElementById('users-list'); c.innerHTML = '<p>Loading...</p>';
+            const users = await fetchUsers();
+            if (!users || users.length === 0) { c.innerHTML = '<p><em>No users found.</em></p>'; return; }
+            let html = `<table class="data-table"><thead><tr><th>Name</th><th>Username</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+            users.forEach(u => { html += `<tr><td>${u['Full Name']}</td><td>${u.Username}</td><td>${u.Role}</td><td>${u.Status}</td><td><button class="btn btn-danger btn-sm" onclick="toggleUser('${u.Username}', '${u.Status}')">Toggle</button></td></tr>`; });
+            c.innerHTML = html + `</tbody></table>`;
+        }
+        async function toggleUser(u, s) { await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); refreshUsersList(); }
+
+        async function refreshCoordinatorList() {
+            const c = document.getElementById('coordinator-list'); c.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports();
+            let pending = activeRole === 'philiri_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && (r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst)) : (activeRole === 'rma_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.rma) : (activeRole === 'crla_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.crla) : reports.filter(r => r.status === 'Pending Coordinator Review')));
             if (!pending.length) { c.innerHTML = '<p><em>No pending reports.</em></p>'; return; }
-            
             let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { 
-                html += `<tr>
-                    <td>${r.teacher}</td>
-                    <td><span class="badge bg-pending">${r.status}</span></td>
-                    <td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td>
-                </tr>`; 
-            });
+            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><span class="badge bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`; });
             c.innerHTML = html + `</tbody></table>`;
         }
-        async function viewCoordinatorReport(id) { 
-            currentEditingReportId = id; 
-            const reports = await fetchReports(); 
-            const r = reports.find(x => x.id == id); 
-            if (!r) return; 
-            document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher); 
-            document.getElementById('coordinator-view').classList.remove('hidden'); 
-        }
-        async function returnToTeacher() { 
-            if (!document.getElementById('coordinator-comment').value) return alert("Enter comment."); 
-            const reports = await fetchReports(); 
-            const r = reports.find(x => x.id == currentEditingReportId); 
-            if (r) { 
-                await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(r.comments||[]) }); 
-                document.getElementById('coordinator-view').classList.add('hidden'); 
-                refreshCoordinatorList(); 
-            } 
-        }
-        async function forwardToHead() { 
-            const reports = await fetchReports(); 
-            const r = reports.find(x => x.id == currentEditingReportId); 
-            if (r) { 
-                await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments||[]) }); 
-                document.getElementById('coordinator-view').classList.add('hidden'); 
-                refreshCoordinatorList(); 
-            } 
-        }
-          async function refreshHeadList() {
-            const c = document.getElementById('head-list'); 
-            c.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports(); 
-            const pending = reports.filter(r => r.status === 'Pending School Head Approval');
-            
-            if (!pending.length) { c.innerHTML = '<p><em>No forwarded reports.</em></p>'; return; }
-            
-            let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { 
-                html += `<tr>
-                    <td>${r.teacher}</td>
-                    <td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td>
-                </tr>`; 
-            });
-            c.innerHTML = html + `</tbody></table>`;
-        }
-        async function viewHeadReport(id) { 
-            currentEditingReportId = id; 
-            const reports = await fetchReports(); 
-            const r = reports.find(x => x.id == id); 
-            if (r) { 
-                document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher); 
-                document.getElementById('head-view').classList.remove('hidden'); 
-            } 
-        }
-        async function returnToCoordinator() { 
-            const reports = await fetchReports(); 
-            const r = reports.find(x => x.id == currentEditingReportId); 
-            if (r) { 
-                await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator' }); 
-                document.getElementById('head-view').classList.add('hidden'); 
-                refreshHeadList(); 
-            } 
-        }
-        async function finalApproveAndPrint() { 
-            const reports = await fetchReports(); 
-            const r = reports.find(x => x.id == currentEditingReportId); 
-            if (r) { 
-                await apiPost({ action: "update", id: r.id, status: 'Approved' }); 
-                document.getElementById('head-view').classList.add('hidden'); 
-                refreshHeadList(); 
-            } 
-        }
-        async function toggleUser(u, s) { 
-            await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); 
-            refreshUsersList(); 
-        }
-        function openAddUserModal() { alert("Add User feature."); }
-        function saveSystemSettings() { alert("Saved!"); }
-        function clearAllSubmissions() { alert("Cleared!"); }
-        async function refreshARALMasterlist() { document.getElementById('aral-masterlist-content').innerHTML = '<p>No candidates found.</p>'; }
-        function printARALMasterlist() {}
-        function refreshFinalReport() {}
-        function printConsolidatedReport() {}
-        function editAndResubmit() {}
-        function viewCoordinatorReport() {}
-        function returnToTeacher() {}
-        function forwardToHead() {}
-        function viewHeadReport() {}
-        function returnToCoordinator() {}
-        function finalApproveAndPrint() {}
-        function viewMyReport() {}
-        function printMyReport() {}
+        async function viewCoordinatorReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return; document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('coordinator-view').classList.remove('hidden'); }
+        async function returnToTeacher() { if (!document.getElementById('coordinator-comment').value) return alert("Enter comment."); const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
+        async function forwardToHead() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
         
-        // PRINT FUNCTION (Inayos ang signature spacing)
+        async function refreshHeadList() {
+            const c = document.getElementById('head-list'); c.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports(); const pending = reports.filter(r => r.status === 'Pending School Head Approval');
+            if (!pending.length) { c.innerHTML = '<p><em>No forwarded reports.</em></p>'; return; }
+            let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Action</th></tr></thead><tbody>`;
+            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td></tr>`; });
+            c.innerHTML = html + `</tbody></table>`;
+        }
+        async function viewHeadReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (r) { document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('head-view').classList.remove('hidden'); } }
+        async function returnToCoordinator() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
+        async function finalApproveAndPrint() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Approved' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
+
+        async function viewMyReport(id) {
+            const reports = await fetchReports();
+            const r = reports.find(x => x.id == id); if (!r) return;
+            const users = await fetchUsers();
+            const headName = users.find(u => u.Role.toLowerCase().includes('schoolhead'))?.['Full Name'] || 'SCHOOL HEAD';
+            const coordName = users.find(u => u.Role.toLowerCase().includes('coord'))?.['Full Name'] || 'PROGRAM COORDINATOR';
+            const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
+
+            const headerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
+                    <img src="${localStorage.getItem('depedLogo')||''}" class="report-logo" style="display:${localStorage.getItem('depedLogo')?'block':'none'};">
+                    <div style="text-align: center; flex: 1; padding: 0 20px;">
+                        <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
+                        <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
+                        <p style="font-size: 12px; margin: 0;">Region 02-Cagayan Valley</p>
+                        <p style="font-size: 12px; margin: 0;">Schools Division Office of Isabela</p>
+                        <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
+                        <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
+                    </div>
+                    <img src="${localStorage.getItem('schoolLogo')||''}" class="report-logo" style="display:${localStorage.getItem('schoolLogo')?'block':'none'};">
+                </div>
+                <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
+                <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">OFFICIAL REPORT</h3>
+            `;
+
+            const signaturesHTML = `
+                <div style="display: flex; justify-content: space-between; margin-top: 50px;">
+                    <div style="text-align: center; width: 30%;">
+                        <p style="margin-bottom: 10px;">Prepared by:</p>
+                        <img id="sig-img-teacher" class="signature-img hidden" style="margin-bottom: 5px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${teacherDisplayName.toUpperCase()}</p>
+                        <p style="margin: 0; line-height: 1.2;">Class Adviser</p>
+                    </div>
+                    <div style="text-align: center; width: 30%;">
+                        <p style="margin-bottom: 10px;">Noted by:</p>
+                        <img id="sig-img-coord" class="signature-img hidden" style="margin-bottom: 5px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${coordName.toUpperCase()}</p>
+                        <p style="margin: 0; line-height: 1.2;">Program Coordinator</p>
+                    </div>
+                    <div style="text-align: center; width: 30%;">
+                        <p style="margin-bottom: 10px;">Approved by:</p>
+                        <img id="sig-img-head" class="signature-img hidden" style="margin-bottom: 5px;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${headName.toUpperCase()}</p>
+                        <p style="margin: 0; line-height: 1.2;">School Head</p>
+                    </div>
+                </div>`;
+
+            if (r.data && r.data.narrative) {
+                const narr = r.data.narrative[0];
+                document.getElementById('printable-report-content').innerHTML = `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML.replace('Class Adviser', narr.position)}`;
+            } else {
+                document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + signaturesHTML;
+            }
+            document.getElementById('official-report-modal').classList.remove('hidden');
+        }
+
+        function printMyReport(id) { viewMyReport(id).then(() => setTimeout(() => printReport(), 300)); }
+        
         function printReport() {
             const content = document.getElementById('official-report-modal').querySelector('div').innerHTML;
             const w = window.open('', '_blank');
@@ -1058,6 +1051,106 @@
                 setTimeout(() => { w.focus(); w.print(); }, 500);
             };
         }
+
+        function renderDataTables(dataObj, teacherName) {
+            let gradeLevelStr = "";
+            if (teacherName) {
+                const match = teacherName.match(/Grade (.*?) \((.*?)\)/);
+                if (match) gradeLevelStr = `Grade ${match[1]} - ${match[2]}`;
+            }
+
+            let all = []; 
+            for (const key in dataObj) { 
+                if (Array.isArray(dataObj[key])) dataObj[key].forEach(rec => { 
+                    if (!rec.type) rec.type = key.toUpperCase(); 
+                    all.push(rec); 
+                }); 
+            }
+            
+            const gstData = all.filter(r => r.type === 'GST');
+            const philiriOther = all.filter(r => r.type !== 'CRLA' && r.type !== 'RMA' && r.type !== 'GST');
+            const crla = all.filter(r => r.type === 'CRLA');
+            const rma = all.filter(r => r.type === 'RMA');
+            
+            let html = "";
+            
+            if (gradeLevelStr) {
+                html += `<h4 style="margin-top:20px; margin-bottom:10px; color:#333;">Grade Level: <span style="color:#113a6b;">${gradeLevelStr}</span></h4>`;
+            }
+
+            if (gstData.length) {
+                html += `<h5 style="margin-top:25px; color:var(--primary);">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                gstData.forEach((l, i) => { 
+                    let colorClass = 'status-full';
+                    if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
+                    else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                });
+                html += `</tbody></table>`;
+            }
+
+            if (philiriOther.length) {
+                html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                philiriOther.forEach((l, i) => { 
+                    let colorClass = 'status-full';
+                    if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
+                    else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                });
+                html += `</tbody></table>`;
+            }
+
+            if (crla.length) {
+                html += `<h5 style="margin-top:25px; color:var(--primary);">CRLA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                crla.forEach((l, i) => { 
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.category}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                });
+                html += `</tbody></table>`;
+            }
+
+            if (rma.length) {
+                html += `<h5 style="margin-top:25px; color:var(--primary);">RMA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+                rma.forEach((l, i) => { 
+                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.level}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+                });
+                html += `</tbody></table>`;
+            }
+            
+            return html;
+        }
+
+        async function editAndResubmit(id) {
+            const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return;
+            const type = Object.keys(r.data)[0]; const dataArr = r.data[type];
+            if (type === 'pretest' || type === 'mosy' || type === 'posttest' || type === 'gst') {
+                switchPanel('module-philiri', document.querySelectorAll('#menu-teacher .nav-item')[0]);
+                document.getElementById('ind-assessment-type').value = type === 'gst' ? 'GST' : type;
+                updateIndividualizedLogic(); document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
+                dataArr.forEach(item => addIndividualizedRow(item));
+            } else if (type === 'crla') {
+                switchPanel('module-crla', document.querySelectorAll('#menu-teacher .nav-item')[1]);
+                updateCRLALogic(); document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0;
+                dataArr.forEach(item => addCRLARow(item));
+            } else if (type === 'rma') {
+                switchPanel('module-rma', document.querySelectorAll('#menu-teacher .nav-item')[2]);
+                updateRMALogic(); document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0;
+                dataArr.forEach(item => addRMARow(item));
+            } else if (type === 'narrative') {
+                switchPanel('module-narrative', document.querySelectorAll('#menu-teacher .nav-item')[3]);
+                document.getElementById('narr-type').value = dataArr[0].reportType; document.getElementById('narr-subject').value = dataArr[0].subject;
+                document.getElementById('narr-position').value = dataArr[0].position; document.getElementById('narr-title').value = dataArr[0].title; document.getElementById('narr-content').value = dataArr[0].content;
+            }
+            alert("Edit your data and submit again.");
+        }
+
+        // --- IBA PANG FEATURES ---
+        function openAddUserModal() { alert("Add User feature soon."); }
+        function saveSystemSettings() { alert("Saved!"); }
+        function clearAllSubmissions() { alert("Cleared!"); }
+        async function refreshARALMasterlist() { document.getElementById('aral-masterlist-content').innerHTML = '<p>No candidates found.</p>'; }
+        function printARALMasterlist() {}
+        function refreshFinalReport() {}
+        function printConsolidatedReport() {}
     </script>
 </body>
 </html>
