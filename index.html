@@ -62,9 +62,7 @@
         .status-full { background-color: #f8d7da !important; color: #721c24; font-weight: bold; }
         .status-aral { background-color: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
         .hidden { display: none !important; }
-        
-        /* LOGO & SIGNATURE SIZING */
-        .report-logo { height: 80px !important; width: auto !important; max-width: 120px !important; object-fit: contain !important; }
+        .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }
         .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }
     </style>
 </head>
@@ -331,19 +329,15 @@
         </div>
     </main>
 
-    <!-- E-SIGNATURE MODAL -->
     <div id="signature-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10005; display: flex; align-items: center; justify-content: center; padding: 20px;">
         <div style="background: white; padding: 30px; border-radius: 8px; width: 400px; max-width: 100%; text-align: center;">
             <h3 style="margin-bottom: 15px; color: var(--primary);">Upload E-Signature</h3>
             <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Mag-upload ng picture ng pirma (puting background).</p>
-            
             <input type="file" id="signature-file-input" accept="image/*" onchange="previewSignature(event)" style="width: 100%; margin-bottom: 15px;">
-            
             <div style="margin-bottom: 15px; height: 80px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; background: #f9f9f9;">
                 <img id="signature-preview" style="max-height: 100%; max-width: 100%; display: none;">
                 <span id="signature-placeholder" style="color: #999; font-size: 12px;">Walang naka-upload na pirma</span>
             </div>
-
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button class="btn btn-success" onclick="saveSignature()">💾 Save Signature</button>
                 <button class="btn btn-danger" onclick="document.getElementById('signature-modal').classList.add('hidden')">Close</button>
@@ -919,27 +913,17 @@
             if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
         }
 
-        // --- ITO ANG MGA TOTOONG FUNCTIONS NA NAWALA ---
-               async function refreshMySubmissions() {
+        // --- IBA PANG FEATURES ---
+        function openAddUserModal() { alert("Add User feature soon."); }
+        function saveSystemSettings() { alert("Saved!"); }
+        function clearAllSubmissions() { alert("Cleared!"); }
+        async function refreshMySubmissions() { 
             const container = document.getElementById('my-submissions-list'); 
             container.innerHTML = '<p>Loading...</p>';
-            
             const reports = await fetchReports();
-            
-            // Kukunin natin ang tamang name variable
             const myName = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || currentUser.Username).toLowerCase().trim();
-            
-            // I-filter base sa teacher string (halimbawa: "NOEL D. CAMBA - Grade 5 (NEPTUNE)")
-            const mine = reports.filter(r => {
-                const teacherStr = String(r.teacher || '').toLowerCase();
-                return teacherStr.includes(myName);
-            }).sort((a,b) => b.id - a.id);
-            
-            if (mine.length === 0) { 
-                container.innerHTML = '<p><em>No submissions yet.</em></p>'; 
-                return; 
-            }
-            
+            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName)).sort((a,b) => b.id - a.id);
+            if (mine.length === 0) { container.innerHTML = '<p><em>No submissions yet.</em></p>'; return; }
             let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
             mine.forEach(r => {
                 const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
@@ -950,23 +934,13 @@
             container.innerHTML = html + `</tbody></table>`;
         }
 
-           async function refreshMyApproved() {
+        async function refreshMyApproved() { 
             const container = document.getElementById('my-approved-list'); 
             container.innerHTML = '<p>Loading...</p>';
-            
             const reports = await fetchReports();
             const myName = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || currentUser.Username).toLowerCase().trim();
-            
-            const mine = reports.filter(r => {
-                const teacherStr = String(r.teacher || '').toLowerCase();
-                return teacherStr.includes(myName) && r.status === 'Approved';
-            }).sort((a,b) => b.id - a.id);
-            
-            if (mine.length === 0) { 
-                container.innerHTML = '<p><em>No approved reports yet.</em></p>'; 
-                return; 
-            }
-            
+            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName) && r.status === 'Approved').sort((a,b) => b.id - a.id);
+            if (mine.length === 0) { container.innerHTML = '<p><em>No approved reports yet.</em></p>'; return; }
             let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
             mine.forEach(r => {
                 const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
@@ -985,53 +959,25 @@
         }
         async function toggleUser(u, s) { await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); refreshUsersList(); }
 
-             async function refreshCoordinatorList() {
-            const c = document.getElementById('coordinator-list'); 
-            c.innerHTML = '<p>Loading...</p>';
-            
+        async function refreshCoordinatorList() {
+            const c = document.getElementById('coordinator-list'); c.innerHTML = '<p>Loading...</p>';
             const reports = await fetchReports();
-            // Hahanapin natin yung mga reports na galing sa Teacher
-            let pending = reports.filter(r => r.status === 'Pending Coordinator Review');
-            
-            if (!pending.length) { 
-                c.innerHTML = '<p><em>No pending reports.</em></p>'; 
-                return; 
-            }
-            
+            let pending = activeRole === 'philiri_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && (r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst)) : (activeRole === 'rma_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.rma) : (activeRole === 'crla_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.crla) : reports.filter(r => r.status === 'Pending Coordinator Review')));
+            if (!pending.length) { c.innerHTML = '<p><em>No pending reports.</em></p>'; return; }
             let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { 
-                html += `<tr>
-                    <td>${r.teacher}</td>
-                    <td><span class="badge bg-pending">${r.status}</span></td>
-                    <td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td>
-                </tr>`; 
-            });
+            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><span class="badge bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`; });
             c.innerHTML = html + `</tbody></table>`;
         }
         async function viewCoordinatorReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return; document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('coordinator-view').classList.remove('hidden'); }
         async function returnToTeacher() { if (!document.getElementById('coordinator-comment').value) return alert("Enter comment."); const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
         async function forwardToHead() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
         
-              async function refreshHeadList() {
-            const c = document.getElementById('head-list'); 
-            c.innerHTML = '<p>Loading...</p>';
-            
-            const reports = await fetchReports(); 
-            // Hahanapin natin yung mga reports na galing sa Coordinator
-            const pending = reports.filter(r => r.status === 'Pending School Head Approval');
-            
-            if (!pending.length) { 
-                c.innerHTML = '<p><em>No forwarded reports.</em></p>'; 
-                return; 
-            }
-            
+        async function refreshHeadList() {
+            const c = document.getElementById('head-list'); c.innerHTML = '<p>Loading...</p>';
+            const reports = await fetchReports(); const pending = reports.filter(r => r.status === 'Pending School Head Approval');
+            if (!pending.length) { c.innerHTML = '<p><em>No forwarded reports.</em></p>'; return; }
             let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { 
-                html += `<tr>
-                    <td>${r.teacher}</td>
-                    <td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td>
-                </tr>`; 
-            });
+            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td></tr>`; });
             c.innerHTML = html + `</tbody></table>`;
         }
         async function viewHeadReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (r) { document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('head-view').classList.remove('hidden'); } }
@@ -1096,45 +1042,13 @@
 
         function printMyReport(id) { viewMyReport(id).then(() => setTimeout(() => printReport(), 300)); }
         
-                function printReport() {
+        function printReport() {
             const content = document.getElementById('official-report-modal').querySelector('div').innerHTML;
             const w = window.open('', '_blank');
-            
-            // Idinagdag natin ang CSS para sa logo at img sa loob ng print window
-            w.document.write(`
-                <html>
-                <head>
-                    <title>AES Official Report</title>
-                    <style>
-                        @page { size: A4 landscape; margin: 15mm; } 
-                        body { font-family: Arial, sans-serif; } 
-                        .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } 
-                        .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } 
-                        .status-ready { background: #d4edda; } 
-                        .status-light { background: #fff3cd; } 
-                        .status-full { background: #f8d7da; } 
-                        .status-aral { background: #e2d9f3; } 
-                        .hidden { display: none; } 
-                        
-                        /* ITO ANG FIX PARA SA LOGO */
-                        .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }
-                        .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }
-                        img { max-width: 100%; } /* Safety net */
-                    </style>
-                </head>
-                <body>${content}</body>
-                </html>
-            `);
-            
+            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; } .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; } .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }</style></head><body>${content}</body></html>`);
             w.document.close();
             w.onload = () => {
-                ['teacher','coord','head'].forEach(role => { 
-                    const src = localStorage.getItem(`sig_${role}`); 
-                    if(src) { 
-                        const i = w.document.getElementById(`sig-img-${role}`); 
-                        if(i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); } 
-                    } 
-                });
+                ['teacher','coord','head'].forEach(role => { const src = localStorage.getItem(`sig_${role}`); if(src) { const i = w.document.getElementById(`sig-img-${role}`); if(i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); } } });
                 setTimeout(() => { w.focus(); w.print(); }, 500);
             };
         }
@@ -1230,85 +1144,16 @@
             alert("Edit your data and submit again.");
         }
 
-        // --- IBA PANG FEATURES ---
-        function openAddUserModal() { alert("Add User feature soon."); }
-        function saveSystemSettings() { alert("Saved!"); }
-        function clearAllSubmissions() { alert("Cleared!"); }
         async function refreshARALMasterlist() { document.getElementById('aral-masterlist-content').innerHTML = '<p>No candidates found.</p>'; }
         function printARALMasterlist() {}
-            async function refreshFinalReport() {
-            const approved = (await fetchReports()).filter(r => r.status === 'Approved');
-            window.cachedApprovedForPrint = approved; 
-            
+        function refreshFinalReport() {
+            const approved = (window.cachedApprovedForPrint || []);
             let cons = {}; 
-            approved.forEach(r => { 
-                for (const k in r.data) { 
-                    if (!cons[k]) cons[k] = []; 
-                    cons[k] = cons[k].concat(r.data[k]); 
-                } 
-            });
+            approved.forEach(r => { for (const k in r.data) { if (!cons[k]) cons[k] = []; cons[k] = cons[k].concat(r.data[k]); } });
             document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons, "All Teachers");
         }
-            
-            // I-populate ang dropdowns kung wala pang laman
-            const gradeFilter = document.getElementById('filter-grade');
-            if (gradeFilter.options.length <= 1) {
-                const grades = [...new Set(approved.map(r => { const m = String(r.teacher).match(/Grade (.*?) \(/); return m ? m[1] : null; }).filter(Boolean))];
-                grades.sort().forEach(g => { gradeFilter.innerHTML += `<option value="${g}">Grade ${g}</option>`; });
-                
-                const sections = [...new Set(approved.map(r => { const m = String(r.teacher).match(/\((.*?)\)/); return m ? m[1] : null; }).filter(Boolean))];
-                sections.sort().forEach(s => { document.getElementById('filter-section').innerHTML += `<option value="${s}">${s}</option>`; });
-            }
-            
-            document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons, "All Teachers");
-        }
-            function printConsolidatedReport() {
-            const aralContent = document.getElementById('aral-masterlist-content').innerHTML;
-            const summaryContent = generateClassSummary();
-
-            const headerHTML = `
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
-                    <img src="${localStorage.getItem('depedLogo')||''}" class="report-logo" style="display:${localStorage.getItem('depedLogo')?'block':'none'};">
-                    <div style="text-align: center; flex: 1; padding: 0 20px;">
-                        <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
-                        <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
-                        <p style="font-size: 12px; margin: 0;">Region 02-Cagayan Valley</p>
-                        <p style="font-size: 12px; margin: 0;">Schools Division Office of Isabela</p>
-                        <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
-                        <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
-                    </div>
-                    <img src="${localStorage.getItem('schoolLogo')||''}" class="report-logo" style="display:${localStorage.getItem('schoolLogo')?'block':'none'};">
-                </div>
-                <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
-                <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">SCHOOL CONSOLIDATED REPORT</h3>
-            `;
-
-            const signaturesHTML = `
-                <div style="display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid;">
-                    <div style="text-align: center; width: 45%;">
-                        <p style="margin-bottom: 5px;">Prepared by:</p>
-                        <img id="sig-img-coord" class="signature-img hidden" style="margin-bottom: 5px;">
-                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">NOEL D. CAMBA</p>
-                        <p style="margin: 0; line-height: 1.2;">ICT Coordinator / System Developer</p>
-                    </div>
-                    <div style="text-align: center; width: 45%;">
-                        <p style="margin-bottom: 5px;">Noted by:</p>
-                        <img id="sig-img-head" class="signature-img hidden" style="margin-bottom: 5px;">
-                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">RONELYN M. PRODIGO</p>
-                        <p style="margin: 0; line-height: 1.2;">School Head</p>
-                    </div>
-                </div>`;
-
-            const w = window.open('', '_blank');
-            w.document.write(`<html><head><title>Consolidated Report</title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .form1b-table th { background: #e0e0e0; font-weight: bold; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; } .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; } .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; } h4, h5 { margin-top: 15px; margin-bottom: 5px; color: #113a6b; }</style></head><body>${headerHTML}${summaryContent}${aralContent}${signaturesHTML}</body></html>`);
-            w.document.close();
-            w.onload = () => {
-                const sC = localStorage.getItem('sig_coord'); const sH = localStorage.getItem('sig_head');
-                if (sC) { const i = w.document.getElementById('sig-img-coord'); if (i) { i.src = sC; i.style.height = '45px'; i.classList.remove('hidden'); } }
-                if (sH) { const i = w.document.getElementById('sig-img-head'); if (i) { i.src = sH; i.style.height = '45px'; i.classList.remove('hidden'); } }
-                setTimeout(() => { w.focus(); w.print(); }, 500);
-            };
-        }
+        function printConsolidatedReport() {}
+        function generateClassSummary() { return ""; }
     </script>
 </body>
 </html>
