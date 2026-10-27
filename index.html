@@ -1068,13 +1068,45 @@
 
         function printMyReport(id) { viewMyReport(id).then(() => setTimeout(() => printReport(), 300)); }
         
-        function printReport() {
+                function printReport() {
             const content = document.getElementById('official-report-modal').querySelector('div').innerHTML;
             const w = window.open('', '_blank');
-            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; } .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }</style></head><body>${content}</body></html>`);
+            
+            // Idinagdag natin ang CSS para sa logo at img sa loob ng print window
+            w.document.write(`
+                <html>
+                <head>
+                    <title>AES Official Report</title>
+                    <style>
+                        @page { size: A4 landscape; margin: 15mm; } 
+                        body { font-family: Arial, sans-serif; } 
+                        .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } 
+                        .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } 
+                        .status-ready { background: #d4edda; } 
+                        .status-light { background: #fff3cd; } 
+                        .status-full { background: #f8d7da; } 
+                        .status-aral { background: #e2d9f3; } 
+                        .hidden { display: none; } 
+                        
+                        /* ITO ANG FIX PARA SA LOGO */
+                        .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }
+                        .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }
+                        img { max-width: 100%; } /* Safety net */
+                    </style>
+                </head>
+                <body>${content}</body>
+                </html>
+            `);
+            
             w.document.close();
             w.onload = () => {
-                ['teacher','coord','head'].forEach(role => { const src = localStorage.getItem(`sig_${role}`); if(src) { const i = w.document.getElementById(`sig-img-${role}`); if(i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); } } });
+                ['teacher','coord','head'].forEach(role => { 
+                    const src = localStorage.getItem(`sig_${role}`); 
+                    if(src) { 
+                        const i = w.document.getElementById(`sig-img-${role}`); 
+                        if(i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); } 
+                    } 
+                });
                 setTimeout(() => { w.focus(); w.print(); }, 500);
             };
         }
