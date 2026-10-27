@@ -9,11 +9,17 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
-        h1, h2, h3, h4, .btn { font-family: 'Montserrat', sans-serif; }
+        h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
-        
+
+        /* ROLE SELECTION */
+        #role-select-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #113a6b, #2a5a9b); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; text-align: center; color: white; padding: 20px; overflow-y: auto; }
+        #role-school-logo { height: 120px; width: 120px; border-radius: 50%; background: white; margin-bottom: 20px; border: 4px solid white; object-fit: contain; padding: 10px; }
+        .role-card { background: white; color: #333; border-radius: 12px; padding: 40px 30px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; }
+
+        /* LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
+        .login-box { background: white; border-radius: 12px; padding: 40px; width: 400px; max-width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; position: relative; }
         .login-box h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
         .login-box h2 { font-size: 14px; color: #666; font-weight: normal; margin-bottom: 25px; }
         .login-box .form-group { margin-bottom: 15px; text-align: left; }
@@ -22,6 +28,7 @@
         .login-box .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; }
 
+        /* LAYOUT */
         .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; flex-direction: column; overflow-y: auto; display: none; flex-shrink: 0; }
         .main-content { flex: 1; flex-direction: column; overflow: hidden; display: none; background: var(--bg); }
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -31,13 +38,13 @@
         .nav-group { padding: 15px 20px 5px 20px; font-size: 11px; color: #88b4e7; text-transform: uppercase; font-weight: bold; }
         .nav-item { display: block; padding: 12px 20px; color: white; text-decoration: none; font-size: 14px; cursor: pointer; border-left: 4px solid transparent; }
         .nav-item:hover, .nav-item.active { background: var(--secondary); border-left: 4px solid white; }
-        
+
         .top-bar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .top-bar h1 { font-size: 18px; color: var(--primary); }
         .workspace { flex: 1; overflow-y: auto; padding: 30px; }
         .panel { display: none; }
         .panel.active { display: block; }
-        
+
         .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .card h3 { margin-bottom: 20px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 18px; }
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
@@ -50,1181 +57,1659 @@
         .btn-warning { background: var(--warning); color: #333; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
         .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; margin-top: 20px; }
         .form1b-table th, .form1b-table td, .data-table th, .data-table td { border: 1px solid #000; padding: 8px; }
         .form1b-table th, .data-table th { background: #e0e0e0; font-weight: bold; }
         .form1b-table input[type="number"], .form1b-table input[type="text"] { width: 100%; padding: 6px; text-align: center; }
         .form1b-table .auto-calc { background: #f9f9f9; font-weight: bold; }
-        
+
         .status-ready { background-color: #d4edda !important; color: #155724; font-weight: bold; }
         .status-light { background-color: #fff3cd !important; color: #856404; font-weight: bold; }
         .status-full { background-color: #f8d7da !important; color: #721c24; font-weight: bold; }
         .status-aral { background-color: #e2d9f3 !important; color: #5e239d; font-weight: bold; }
+        .bg-pending { background: #fff3cd; color: #856404; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+        .bg-approved { background: #d4edda; color: #155724; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+        .bg-returned { background: #f8d7da; color: #721c24; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
         .hidden { display: none !important; }
         .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }
         .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }
+        .info-box { background: #e7f3ff; border-left: 4px solid var(--info); padding: 10px 15px; font-size: 13px; }
     </style>
 </head>
 <body>
 
-      <!-- ROLE SELECTION SCREEN -->
-    <div id="role-select-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #113a6b, #2a5a9b); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; text-align: center; color: white; padding: 20px;">
-        
-        <img src="https://via.placeholder.com/120" id="role-school-logo" style="height: 120px; width: 120px; border-radius: 50%; background: white; margin-bottom: 20px; border: 4px solid white; object-fit: contain; padding: 10px;">
-        
-        <h1 style="font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 5px; letter-spacing: 1px;">ANGELA ELEMENTARY SCHOOL</h1>
-        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 600; font-style: italic; color: #b0c4de; margin-bottom: 30px;">AES Unified Reporting System</h2>
+<!-- 1. ROLE SELECTION -->
+<div id="role-select-screen">
+    <img src="https://via.placeholder.com/120" id="role-school-logo" alt="School Logo">
+    <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 5px; letter-spacing: 1px;">ANGELA ELEMENTARY SCHOOL</h1>
+    <h2 style="font-size: 18px; font-weight: 600; font-style: italic; color: #b0c4de; margin-bottom: 30px;">AES Unified Reporting System</h2>
 
-        <div style="display: flex; gap: 30px; margin-bottom: 30px;">
-            <div>
-                <p style="font-size: 12px; color: #88b4e7; letter-spacing: 1px; margin-bottom: 5px;">LEAD PROPONENT</p>
-                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 18px; margin: 0;">RONELYN M. PRODIGO</h3>
-                <p style="font-size: 14px; font-style: italic; color: #b0c4de; margin: 0;">School Head</p>
-            </div>
-            <div>
-                <p style="font-size: 12px; color: #88b4e7; letter-spacing: 1px; margin-bottom: 5px;">DEVELOPER</p>
-                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 18px; margin: 0;">NOEL D. CAMBA</h3>
-                <p style="font-size: 14px; font-style: italic; color: #b0c4de; margin: 0;">Master Teacher 1</p>
-            </div>
+    <div style="display: flex; gap: 30px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center;">
+        <div>
+            <p style="font-size: 12px; color: #88b4e7; letter-spacing: 1px; margin-bottom: 5px;">LEAD PROPONENT</p>
+            <h3 style="font-size: 18px; margin: 0;">RONELYN M. PRODIGO</h3>
+            <p style="font-size: 14px; font-style: italic; color: #b0c4de; margin: 0;">School Head</p>
         </div>
-
-        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 28px; color: #f1c40f; margin-bottom: 40px;">AES Unified Reporting System</h2>
-
-        <div style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 800px;">
-            <!-- Teacher Card -->
-            <div style="background: white; color: #333; border-radius: 12px; padding: 40px 30px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center;">
-                <div style="font-size: 50px; margin-bottom: 15px;">👨‍🏫</div>
-                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 22px; color: #113a6b; margin-bottom: 10px;">Teacher</h2>
-                <p style="font-size: 14px; color: #666; text-align: center; margin-bottom: 25px; line-height: 1.5;">Mag-submit ng assessment data (PHIL-IRI, CRLA, RMA) at narrative reports.</p>
-                <button class="btn btn-primary" onclick="showLogin('Teacher')" style="width: 100%; justify-content: center; padding: 12px; font-size: 16px;">Pumasok →</button>
-            </div>
-
-            <!-- School Head / Coordinator Card -->
-            <div style="background: white; color: #333; border-radius: 12px; padding: 40px 30px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center;">
-                <div style="font-size: 50px; margin-bottom: 15px;">👩‍💼</div>
-                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 22px; color: #113a6b; margin-bottom: 10px;">Coordinator / Head</h2>
-                <p style="font-size: 14px; color: #666; text-align: center; margin-bottom: 25px; line-height: 1.5;">Mag-review, mag-approve, at mag-print ng mga reports ng mga guro.</p>
-                <button class="btn btn-success" onclick="showLogin('Admin')" style="width: 100%; justify-content: center; padding: 12px; font-size: 16px;">Pumasok →</button>
-            </div>
+        <div>
+            <p style="font-size: 12px; color: #88b4e7; letter-spacing: 1px; margin-bottom: 5px;">DEVELOPER</p>
+            <h3 style="font-size: 18px; margin: 0;">NOEL D. CAMBA</h3>
+            <p style="font-size: 14px; font-style: italic; color: #b0c4de; margin: 0;">Master Teacher 1</p>
         </div>
     </div>
 
-    <!-- LOGIN SCREEN (Lalabas pagkatapos pumili ng role) -->
-    <div id="login-screen" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #113a6b, #2a5a9b); display: flex; align-items: center; justify-content: center; z-index: 9999;">
-        <div class="login-box" style="position: relative;">
-            <button onclick="goBackToRoles()" style="position: absolute; top: 15px; left: 15px; background: none; border: none; color: #666; font-size: 14px; cursor: pointer; font-weight: bold;">← Bumalik</button>
-            <h1 style="margin-top: 10px;">ANGELA ELEMENTARY SCHOOL</h1>
-            <h2 id="login-role-title">Teacher Login</h2>
-            <div id="login-error" class="login-error"></div>
-            <div class="form-group"><label>Username</label><input type="text" id="login-username" autocomplete="username"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="login-password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"></div>
-            <button class="btn-login" onclick="login()">🔐 Login</button>
+    <h2 style="font-size: 24px; color: #f1c40f; margin-bottom: 40px;">Pumili ng Role</h2>
+
+    <div style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 800px;">
+        <div class="role-card">
+            <div style="font-size: 50px; margin-bottom: 15px;">👨‍🏫</div>
+            <h3 style="font-size: 22px; color: #113a6b; margin-bottom: 10px;">Teacher</h3>
+            <p style="font-size: 14px; color: #666; text-align: center; margin-bottom: 25px; line-height: 1.5;">Mag-submit ng assessment data (PHIL-IRI, CRLA, RMA) at narrative reports.</p>
+            <button class="btn btn-primary" onclick="showLogin('Teacher')" style="width: 100%; justify-content: center; padding: 12px; font-size: 16px;">Pumasok →</button>
+        </div>
+        <div class="role-card">
+            <div style="font-size: 50px; margin-bottom: 15px;">👩‍💼</div>
+            <h3 style="font-size: 22px; color: #113a6b; margin-bottom: 10px;">Coordinator / Head</h3>
+            <p style="font-size: 14px; color: #666; text-align: center; margin-bottom: 25px; line-height: 1.5;">Mag-review, mag-approve, at mag-print ng mga reports ng mga guro.</p>
+            <button class="btn btn-success" onclick="showLogin('Admin')" style="width: 100%; justify-content: center; padding: 12px; font-size: 16px;">Pumasok →</button>
+        </div>
+    </div>
+</div>
+
+<!-- 2. LOGIN -->
+<div id="login-screen" class="hidden">
+    <div class="login-box">
+        <button onclick="goBackToRoles()" style="position: absolute; top: 15px; left: 15px; background: none; border: none; color: #666; font-size: 14px; cursor: pointer; font-weight: bold;">← Bumalik</button>
+        <h1 style="margin-top: 10px;">ANGELA ELEMENTARY SCHOOL</h1>
+        <h2 id="login-role-title">Teacher Login</h2>
+        <div id="login-error" class="login-error"></div>
+        <div class="form-group"><label>Username</label><input type="text" id="login-username" autocomplete="username"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="login-password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"></div>
+        <button class="btn-login" onclick="login()">🔐 Login</button>
+    </div>
+</div>
+
+<!-- 3. SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><h2>Angela ES</h2><p style="font-size:11px; color:#88b4e7;">Unified Reporting System</p></div>
+    <div class="user-info" id="user-info-display">
+        <strong id="ui-name">Loading...</strong><span id="ui-details"></span><span id="ui-role" class="role-badge"></span>
+        <div id="role-switcher" class="hidden" style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2);">
+            <select id="active-role-select" onchange="switchActiveRole(this.value)" style="width:100%; padding:5px; font-size:12px;"></select>
         </div>
     </div>
 
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><h2>Angela ES</h2><p>Unified Reporting System</p></div>
-        <div class="user-info" id="user-info-display">
-            <strong id="ui-name">Loading...</strong><span id="ui-details"></span><span id="ui-role" class="role-badge"></span>
-            <div id="role-switcher" class="hidden" style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2);">
-                <select id="active-role-select" onchange="switchActiveRole(this.value)" style="width:100%; padding:5px; font-size:12px;"></select>
-            </div>
-        </div>
-        
-        <div id="menu-teacher" class="hidden">
-            <div class="nav-group">Data Entry</div>
-            <a class="nav-item" onclick="switchPanel('module-philiri', this)">📝 PHIL-IRI (KS2)</a>
-            <a class="nav-item" onclick="switchPanel('module-crla', this)">📝 CRLA (KS1)</a>
-            <a class="nav-item" onclick="switchPanel('module-rma', this)">📝 RMA (Math)</a>
-            <a class="nav-item" onclick="switchPanel('module-narrative', this)">📄 Narrative Reports</a>
-            <a class="nav-item" onclick="switchPanel('module-aral', this)">🌟 ARAL Masterlist</a>
-            <div class="nav-group">My Reports</div>
-            <a class="nav-item" onclick="switchPanel('my-submissions', this)">📤 My Submissions</a>
-            <a class="nav-item" onclick="switchPanel('my-approved', this)">📁 My Approved Reports</a>
-        </div>
+    <div id="menu-teacher" class="hidden">
+        <div class="nav-group">Data Entry</div>
+        <a class="nav-item" onclick="switchPanel('module-philiri', this)">📝 PHIL-IRI (KS2)</a>
+        <a class="nav-item" onclick="switchPanel('module-crla', this)">📝 CRLA (KS1)</a>
+        <a class="nav-item" onclick="switchPanel('module-rma', this)">📝 RMA (Math)</a>
+        <a class="nav-item" onclick="switchPanel('module-narrative', this)">📄 Narrative Reports</a>
+        <a class="nav-item" onclick="switchPanel('module-aral', this)">🌟 ARAL Masterlist</a>
+        <div class="nav-group">My Reports</div>
+        <a class="nav-item" onclick="switchPanel('my-submissions', this)">📤 My Submissions</a>
+        <a class="nav-item" onclick="switchPanel('my-approved', this)">📁 My Approved Reports</a>
+    </div>
+    <div id="menu-coordinator" class="hidden">
+        <div class="nav-group">Review & Approve</div>
+        <a class="nav-item" onclick="switchPanel('coordinator-review', this)">📋 Teacher Submissions</a>
+        <div class="nav-group">Reports</div>
+        <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📄 School Consolidated Report</a>
+    </div>
+    <div id="menu-schoolhead" class="hidden">
+        <div class="nav-group">Approval</div>
+        <a class="nav-item" onclick="switchPanel('head-approval', this)">✅ Forwarded Reports</a>
+        <div class="nav-group">Management</div>
+        <a class="nav-item" onclick="switchPanel('manage-users', this)">👥 Manage Users</a>
+        <div class="nav-group">Monitoring</div>
+        <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📊 Final School Report</a>
+    </div>
+    <div id="menu-ict" class="hidden">
+        <div class="nav-group">Management</div>
+        <a class="nav-item" onclick="switchPanel('manage-users', this)">👥 Manage Users</a>
+        <a class="nav-item" onclick="switchPanel('system-settings', this)">🔧 System Settings</a>
+        <div class="nav-group">Approval (Backup)</div>
+        <a class="nav-item" onclick="switchPanel('head-approval', this)">✅ Forwarded Reports</a>
+        <div class="nav-group">Monitoring</div>
+        <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📊 Final School Report</a>
+    </div>
 
-        <div id="menu-coordinator" class="hidden">
-            <div class="nav-group">Review & Approve</div>
-            <a class="nav-item active" onclick="switchPanel('coordinator-review', this)">📋 Teacher Submissions</a>
-            <div class="nav-group">Reports</div>
-            <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📄 School Consolidated Report</a>
-        </div>
+    <div style="margin-top: auto; padding: 20px; font-size: 10px; text-align: center; color: #88b4e7;">
+        <p style="margin-bottom: 5px;">Lead Proponent: <strong>RONELYN M. PRODIGO</strong></p>
+        <p style="margin-bottom: 15px;">Developed by: <strong>NOEL D. CAMBA</strong></p>
+        <a class="nav-item" href="manual.html" target="_blank" style="background: rgba(255,255,255,0.1); margin-bottom: 10px; border-radius: 5px;">📖 User Manual</a>
+        <a class="nav-item" style="background: rgba(255,0,0,0.2); border-radius: 5px;" onclick="logout()">🚪 Logout</a>
+    </div>
+</aside>
 
-        <div id="menu-schoolhead" class="hidden">
-            <div class="nav-group">Approval</div>
-            <a class="nav-item active" onclick="switchPanel('head-approval', this)">✅ Forwarded Reports</a>
-            <div class="nav-group">Management</div>
-            <a class="nav-item" onclick="switchPanel('manage-users', this)">👥 Manage Users</a>
-            <div class="nav-group">Monitoring</div>
-            <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📊 Final School Report</a>
-        </div>
-
-        <div id="menu-ict" class="hidden">
-            <div class="nav-group">Management</div>
-            <a class="nav-item active" onclick="switchPanel('manage-users', this)">👥 Manage Users</a>
-            <a class="nav-item" onclick="switchPanel('system-settings', this)">🔧 System Settings</a>
-            <div class="nav-group">Approval (Backup)</div>
-            <a class="nav-item" onclick="switchPanel('head-approval', this)">✅ Forwarded Reports</a>
-            <div class="nav-group">Monitoring</div>
-            <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📊 Final School Report</a>
-        </div>
-        
-        <div style="margin-top: auto; padding: 20px; font-size: 10px; text-align: center; color: #88b4e7;">
-            <p style="margin-bottom: 5px;">Lead Proponent: <strong>RONELYN M. PRODIGO</strong></p>
-            <p style="margin-bottom: 15px;">Developed by: <strong>NOEL D. CAMBA</strong></p>
-            <a class="nav-item" href="manual.html" target="_blank" style="background: rgba(255,255,255,0.1); margin-bottom: 10px; border-radius: 5px;">📖 User Manual</a>
-            <a class="nav-item" style="background: rgba(255,0,0,0.2); border-radius: 5px;" onclick="logout()">🚪 Logout</a>
-        </div>
-    </aside>
-
-    <main class="main-content" id="main-content">
-        <div class="top-bar">
-            <h1 id="page-title">Dashboard</h1>
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-primary btn-sm" onclick="openSignatureModal()" id="btn-signature" style="display:none;">✍️ E-Signatures</button>
-                <button class="btn btn-primary btn-sm" onclick="submitAllToCoordinator()" id="btn-submit" style="display:none;">🚀 Submit All Data</button>
-            </div>
-        </div>
-
-        <div class="workspace">
-            
-            <div id="module-philiri" class="panel">
-                <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
-                    <h3>Teacher Details</h3>
-                    <div class="form-row">
-                        <div class="form-group"><label>Grade Level</label><input type="text" id="teacher-grade" placeholder="Enter Grade"></div>
-                        <div class="form-group"><label>Section</label><input type="text" id="teacher-section" placeholder="Enter Section"></div>
-                        <div class="form-group"><label>Teacher Name</label><input type="text" id="teacher-name"></div>
-                    </div>
-                </div>
-                <div class="card" style="background: #fff8e6; border: 1px solid var(--warning); margin-bottom: 20px;">
-                    <h3>PHIL-IRI Assessment Setup</h3>
-                    <div class="form-row">
-                        <div class="form-group"><label>Language</label><select id="ind-language"><option value="English">English</option><option value="Filipino">Filipino</option></select></div>
-                        <div class="form-group"><label>Assessment Type</label><select id="ind-assessment-type" onchange="updateIndividualizedLogic()"><option value="GST">GST (Group Screening Test)</option><option value="Pre-test">Pre-Test (Individualized)</option><option value="MOSY">MOSY (Individualized)</option><option value="Post-test">Post-Test (Individualized)</option></select></div>
-                    </div>
-                </div>
-                <div class="card" style="background: #fff8e6; border: 1px solid var(--warning);">
-                    <h3 id="ind-paste-title">📋 Paste GST Data</h3>
-                    <p id="ind-paste-format" style="font-size:12px; color:#666; margin-bottom:8px;">Format: <code>Name, Total Score</code></p>
-                    <textarea id="ind-paste-data" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;" placeholder="Juan Dela Cruz, 15"></textarea>
-                    <div style="margin-top: 10px;"><button class="btn btn-success" onclick="parseIndividualizedData()">🔍 Parse Data</button></div>
-                </div>
-                <div class="card">
-                    <h3 id="result-table-title">GST Result</h3>
-                    <div style="overflow-x: auto;"><table class="form1b-table"><thead id="ind-table-head"></thead><tbody id="ind-table-body"></tbody></table></div>
-                    <button class="btn btn-primary" onclick="addIndividualizedRow()">➕ Add Manual</button>
-                </div>
-            </div>
-
-            <div id="module-crla" class="panel">
-                <div class="card" style="background: #f4f0fa; border: 1px solid #9b59b6; margin-bottom: 20px;">
-                    <h3>CRLA Assessment (KS1)</h3>
-                    <div class="form-row">
-                        <div class="form-group"><label>Grade Level</label><input type="text" id="crla-grade" placeholder="e.g., 1, 2, 3"></div>
-                        <div class="form-group"><label>Section</label><input type="text" id="crla-section" placeholder="e.g., Rizal"></div>
-                    </div>
-                </div>
-                <div class="card" style="background: #f4f0fa; border: 1px solid #9b59b6;">
-                    <h3>📋 Paste CRLA Data</h3>
-                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Format: <code>Name, Language, Score, CRLA Category</code></p>
-                    <textarea id="crla-paste-data" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;" placeholder="Juan Dela Cruz, Filipino, 85, High Emerging"></textarea>
-                    <div style="margin-top: 10px;"><button class="btn btn-success" onclick="parseCRLAData()">🔍 Parse Data</button></div>
-                </div>
-                <div class="card">
-                    <h3>CRLA Results</h3>
-                    <div style="overflow-x: auto;"><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Language</th><th>Score</th><th>CRLA Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody id="crla-table-body"></tbody></table></div>
-                    <button class="btn btn-primary" onclick="addCRLARow()">➕ Add Manual</button>
-                </div>
-            </div>
-
-            <div id="module-rma" class="panel">
-                <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
-                    <h3>RMA Assessment (KS1 & KS2)</h3>
-                    <div class="form-row">
-                        <div class="form-group"><label>Grade Level</label><input type="text" id="rma-grade" placeholder="e.g., 1-6"></div>
-                        <div class="form-group"><label>Section</label><input type="text" id="rma-section" placeholder="e.g., Rizal"></div>
-                        <div class="form-group"><label>Total Items (Default: 32)</label><input type="number" id="rma-total-items" value="32"></div>
-                    </div>
-                </div>
-                <div class="card" style="background: #eef8fb; border: 1px solid var(--info);">
-                    <h3>📋 Paste RMA Data</h3>
-                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Format: <code>Name, Score</code></p>
-                    <textarea id="rma-paste-data" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;" placeholder="Juan Dela Cruz, 15"></textarea>
-                    <div style="margin-top: 10px;"><button class="btn btn-success" onclick="parseRMAData()">🔍 Parse Data</button></div>
-                </div>
-                <div class="card">
-                    <h3>RMA Results</h3>
-                    <div style="overflow-x: auto;"><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Score</th><th>Percentage</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody id="rma-table-body"></tbody></table></div>
-                    <button class="btn btn-primary" onclick="addRMARow()">➕ Add Manual</button>
-                </div>
-            </div>
-
-            <div id="module-narrative" class="panel">
-                <div class="card">
-                    <h3>📄 Submit Report</h3>
-                    <div class="form-row">
-                        <div class="form-group"><label>Report Type</label><select id="narr-type"><option value="Narrative Report">Narrative Report</option><option value="Accomplishment Report">Accomplishment Report</option><option value="Activity Report">Activity Report</option><option value="Project Proposal">Project Proposal</option></select></div>
-                        <div class="form-group"><label>Subject / Program</label><select id="narr-subject"><option value="English">English</option><option value="Math">Math</option><option value="Science">Science</option><option value="Filipino">Filipino</option><option value="Other">Other</option></select></div>
-                        <div class="form-group"><label>Your Position / Title</label><input type="text" id="narr-position"></div>
-                    </div>
-                    <div class="form-row"><div class="form-group"><label>Title</label><input type="text" id="narr-title"></div></div>
-                    <div class="form-group" style="margin-bottom:15px;"><label>Report Content</label><textarea id="narr-content" rows="8" style="width:100%; padding:10px;"></textarea></div>
-                    <button class="btn btn-success" onclick="submitNarrativeReport()">🚀 Submit Report</button>
-                </div>
-            </div>
-
-            <div id="module-aral" class="panel">
-                <div class="card">
-                    <div class="flex-between">
-                        <div><h3>🌟 ARAL Masterlist</h3></div>
-                        <button class="btn btn-primary" onclick="printARALMasterlist()">🖨️ Print</button>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Filter by Grade</label><select id="aral-filter-grade" onchange="refreshARALMasterlist()"><option value="all">All</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>
-                        <div class="form-group"><label>Filter by Section</label><input type="text" id="aral-filter-section" oninput="refreshARALMasterlist()"></div>
-                    </div>
-                    <div id="aral-masterlist-content"></div>
-                </div>
-            </div>
-
-            <div id="my-submissions" class="panel">
-                <div class="card"><h3>📤 My Submissions</h3><div id="my-submissions-list"></div></div>
-            </div>
-
-            <div id="my-approved" class="panel">
-                <div class="card"><h3>📁 My Approved Reports</h3><div id="my-approved-list"></div></div>
-            </div>
-
-            <div id="coordinator-review" class="panel">
-                <div class="card"><h3>Teacher Submissions</h3><div id="coordinator-list"></div></div>
-                <div id="coordinator-view" class="card hidden">
-                    <h3>Reviewing Report</h3><div id="coordinator-view-content"></div>
-                    <div class="form-group"><label>Comment</label><textarea id="coordinator-comment" rows="3"></textarea></div>
-                    <div class="flex-between"><button class="btn btn-warning" onclick="returnToTeacher()">↩️ Return</button><button class="btn btn-success" onclick="forwardToHead()">✅ Approve</button></div>
-                </div>
-            </div>
-
-            <div id="head-approval" class="panel">
-                <div class="card"><h3>Forwarded Reports</h3><div id="head-list"></div></div>
-                <div id="head-view" class="card hidden">
-                    <h3>Approving Report</h3><div id="head-view-content"></div>
-                    <div class="flex-between"><button class="btn btn-warning" onclick="returnToCoordinator()">↩️ Return</button><button class="btn btn-success" onclick="finalApproveAndPrint()">🏁 Approve & Print</button></div>
-                </div>
-            </div>
-
-            <div id="manage-users" class="panel">
-                <div class="card">
-                    <div class="flex-between"><h3>👥 Manage Users</h3><button class="btn btn-success" onclick="openAddUserModal()">➕ Add User</button></div>
-                    <div id="users-list"></div>
-                </div>
-            </div>
-
-            <div id="system-settings" class="panel">
-                <div class="card">
-                    <h3>🔧 System Settings</h3>
-                    <div class="form-group"><label>Google Apps Script URL</label><input type="text" id="setting-script-url"></div>
-                    <button class="btn btn-primary" onclick="saveSystemSettings()">💾 Save</button>
-                    
-                    <h3 style="margin-top:30px;">🖼️ School & DepEd Logos</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>DepEd Logo (Left)</label>
-                            <input type="file" id="upload-deped-logo" accept="image/*" onchange="handleLogoUpload(event, 'depedLogo')">
-                            <img id="preview-deped-logo" class="report-logo" style="margin-top: 10px; display: none;">
-                        </div>
-                        <div class="form-group">
-                            <label>School Logo (Right)</label>
-                            <input type="file" id="upload-school-logo" accept="image/*" onchange="handleLogoUpload(event, 'schoolLogo')">
-                            <img id="preview-school-logo" class="report-logo" style="margin-top: 10px; display: none;">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="saveLogos()">💾 Save Logos</button>
-                </div>
-            </div>
-
-            <div id="report-consolidated" class="panel">
-                <div class="card">
-                    <div class="flex-between" style="flex-wrap:wrap; gap:10px;">
-                        <div>
-                            <h3>Final School Consolidated Report</h3>
-                            <p class="info-box" style="margin-bottom:0;">Only <strong>Final Approved</strong> data is shown here.</p>
-                        </div>
-                        <div style="display:flex; gap:15px; align-items:flex-end;">
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label>Filter by Grade</label>
-                                <select id="filter-grade" onchange="refreshFinalReport()" style="padding:8px; min-width:150px;">
-                                    <option value="all">All Grades</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label>Filter by Section</label>
-                                <select id="filter-section" onchange="refreshFinalReport()" style="padding:8px; min-width:150px;">
-                                    <option value="all">All Sections</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-primary" onclick="printConsolidatedReport()">🖨️ Print Consolidated Report</button>
-                        </div>
-                    </div>
-                    <div id="final-philiri-table"></div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="official-report-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
-        <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
-            <button class="btn btn-danger hidden-print" onclick="document.getElementById('official-report-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
-            <button class="btn btn-primary hidden-print" onclick="printReport()" style="position: absolute; top: 15px; right: 100px;">Print</button>
-            <div id="printable-report-content"></div>
+<!-- 4. MAIN CONTENT -->
+<main class="main-content" id="main-content">
+    <div class="top-bar">
+        <h1 id="page-title">Dashboard</h1>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-primary btn-sm" onclick="openSignatureModal()" id="btn-signature" style="display:none;">✍️ E-Signatures</button>
+            <button class="btn btn-primary btn-sm" onclick="submitAllToCoordinator()" id="btn-submit" style="display:none;">🚀 Submit All Data</button>
         </div>
     </div>
 
-    <div id="aral-print-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
-        <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
-            <button class="btn btn-danger hidden-print" onclick="document.getElementById('aral-print-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
-            <button class="btn btn-primary hidden-print" onclick="printARALReport()" style="position: absolute; top: 15px; right: 100px;">Print</button>
-            <div id="printable-aral-content"></div>
+    <div class="workspace">
+
+        <!-- PHIL-IRI -->
+        <div id="module-philiri" class="panel">
+            <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
+                <h3>Teacher Details</h3>
+                <div class="form-row">
+                    <div class="form-group"><label>Grade Level</label><input type="text" id="teacher-grade" placeholder="Enter Grade"></div>
+                    <div class="form-group"><label>Section</label><input type="text" id="teacher-section" placeholder="Enter Section"></div>
+                    <div class="form-group"><label>Teacher Name</label><input type="text" id="teacher-name"></div>
+                </div>
+            </div>
+            <div class="card" style="background: #fff8e6; border: 1px solid var(--warning); margin-bottom: 20px;">
+                <h3>PHIL-IRI Assessment Setup</h3>
+                <div class="form-row">
+                    <div class="form-group"><label>Language</label><select id="ind-language"><option value="English">English</option><option value="Filipino">Filipino</option></select></div>
+                    <div class="form-group"><label>Assessment Type</label><select id="ind-assessment-type" onchange="updateIndividualizedLogic()"><option value="GST">GST (Group Screening Test)</option><option value="Pre-test">Pre-Test (Individualized)</option><option value="MOSY">MOSY (Individualized)</option><option value="Post-test">Post-Test (Individualized)</option></select></div>
+                </div>
+            </div>
+            <div class="card" style="background: #fff8e6; border: 1px solid var(--warning);">
+                <h3 id="ind-paste-title">📋 Paste GST Data</h3>
+                <p id="ind-paste-format" style="font-size:12px; color:#666; margin-bottom:8px;">Format: <code>Name, Total Score</code></p>
+                <textarea id="ind-paste-data" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;" placeholder="Juan Dela Cruz, 15"></textarea>
+                <div style="margin-top: 10px;"><button class="btn btn-success" onclick="parseIndividualizedData()">🔍 Parse Data</button></div>
+            </div>
+            <div class="card">
+                <h3 id="result-table-title">GST Result</h3>
+                <div style="overflow-x: auto;"><table class="form1b-table"><thead id="ind-table-head"></thead><tbody id="ind-table-body"></tbody></table></div>
+                <button class="btn btn-primary" onclick="addIndividualizedRow()" style="margin-top:10px;">➕ Add Manual</button>
+            </div>
         </div>
+
+        <!-- CRLA -->
+        <div id="module-crla" class="panel">
+            <div class="card" style="background: #f4f0fa; border: 1px solid #9b59b6; margin-bottom: 20px;">
+                <h3>CRLA Assessment (KS1)</h3>
+                <div class="form-row">
+                    <div class="form-group"><label>Grade Level</label><input type="text" id="crla-grade" placeholder="e.g., 1, 2, 3"></div>
+                    <div class="form-group"><label>Section</label><input type="text" id="crla-section" placeholder="e.g., Rizal"></div>
+                </div>
+            </div>
+            <div class="card" style="background: #f4f0fa; border: 1px solid #9b59b6;">
+                <h3>📋 Paste CRLA Data</h3>
+                <p style="font-size:12px; color:#666; margin-bottom:8px;">Format: <code>Name, Language, Score, CRLA Category</code></p>
+                <textarea id="crla-paste-data" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;" placeholder="Juan Dela Cruz, Filipino, 85, High Emerging"></textarea>
+                <div style="margin-top: 10px;"><button class="btn btn-success" onclick="parseCRLAData()">🔍 Parse Data</button></div>
+            </div>
+            <div class="card">
+                <h3>CRLA Results</h3>
+                <div style="overflow-x: auto;"><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Language</th><th>Score</th><th>CRLA Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody id="crla-table-body"></tbody></table></div>
+                <button class="btn btn-primary" onclick="addCRLARow()" style="margin-top:10px;">➕ Add Manual</button>
+            </div>
+        </div>
+
+        <!-- RMA -->
+        <div id="module-rma" class="panel">
+            <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
+                <h3>RMA Assessment (KS1 & KS2)</h3>
+                <div class="form-row">
+                    <div class="form-group"><label>Grade Level</label><input type="text" id="rma-grade" placeholder="e.g., 1-6"></div>
+                    <div class="form-group"><label>Section</label><input type="text" id="rma-section" placeholder="e.g., Rizal"></div>
+                    <div class="form-group"><label>Total Items</label><input type="number" id="rma-total-items" value="32"></div>
+                </div>
+            </div>
+            <div class="card" style="background: #eef8fb; border: 1px solid var(--info);">
+                <h3>📋 Paste RMA Data</h3>
+                <p style="font-size:12px; color:#666; margin-bottom:8px;">Format: <code>Name, Score</code></p>
+                <textarea id="rma-paste-data" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;" placeholder="Juan Dela Cruz, 15"></textarea>
+                <div style="margin-top: 10px;"><button class="btn btn-success" onclick="parseRMAData()">🔍 Parse Data</button></div>
+            </div>
+            <div class="card">
+                <h3>RMA Results</h3>
+                <div style="overflow-x: auto;"><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Score</th><th>Percentage</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody id="rma-table-body"></tbody></table></div>
+                <button class="btn btn-primary" onclick="addRMARow()" style="margin-top:10px;">➕ Add Manual</button>
+            </div>
+        </div>
+
+        <!-- NARRATIVE -->
+        <div id="module-narrative" class="panel">
+            <div class="card">
+                <h3>📄 Submit Report</h3>
+                <div class="form-row">
+                    <div class="form-group"><label>Report Type</label><select id="narr-type"><option>Narrative Report</option><option>Accomplishment Report</option><option>Activity Report</option><option>Project Proposal</option></select></div>
+                    <div class="form-group"><label>Subject / Program</label><select id="narr-subject"><option>English</option><option>Math</option><option>Science</option><option>Filipino</option><option>Other</option></select></div>
+                    <div class="form-group"><label>Your Position / Title</label><input type="text" id="narr-position"></div>
+                </div>
+                <div class="form-row"><div class="form-group"><label>Title</label><input type="text" id="narr-title"></div></div>
+                <div class="form-group" style="margin-bottom:15px;"><label>Report Content</label><textarea id="narr-content" rows="8" style="width:100%; padding:10px;"></textarea></div>
+                <button class="btn btn-success" onclick="submitNarrativeReport()">🚀 Submit Report</button>
+            </div>
+        </div>
+
+        <!-- ARAL -->
+        <div id="module-aral" class="panel">
+            <div class="card">
+                <div class="flex-between">
+                    <h3>🌟 ARAL Masterlist</h3>
+                    <button class="btn btn-primary" onclick="printARALMasterlist()">🖨️ Print</button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Filter by Grade</label><select id="aral-filter-grade" onchange="refreshARALMasterlist()"><option value="all">All</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+                    <div class="form-group"><label>Filter by Section</label><input type="text" id="aral-filter-section" oninput="refreshARALMasterlist()"></div>
+                </div>
+                <div id="aral-masterlist-content"></div>
+            </div>
+        </div>
+
+        <!-- MY SUBMISSIONS -->
+        <div id="my-submissions" class="panel">
+            <div class="card"><h3>📤 My Submissions</h3><div id="my-submissions-list"></div></div>
+        </div>
+        <div id="my-approved" class="panel">
+            <div class="card"><h3>📁 My Approved Reports</h3><div id="my-approved-list"></div></div>
+        </div>
+
+        <!-- COORDINATOR -->
+        <div id="coordinator-review" class="panel">
+            <div class="card"><h3>Teacher Submissions</h3><div id="coordinator-list"></div></div>
+            <div id="coordinator-view" class="card hidden">
+                <h3>Reviewing Report</h3><div id="coordinator-view-content"></div>
+                <div class="form-group" style="margin-top:15px;"><label>Comment</label><textarea id="coordinator-comment" rows="3" style="width:100%; padding:10px;"></textarea></div>
+                <div class="flex-between" style="margin-top:15px;"><button class="btn btn-warning" onclick="returnToTeacher()">↩️ Return</button><button class="btn btn-success" onclick="forwardToHead()">✅ Approve</button></div>
+            </div>
+        </div>
+
+        <!-- HEAD -->
+        <div id="head-approval" class="panel">
+            <div class="card"><h3>Forwarded Reports</h3><div id="head-list"></div></div>
+            <div id="head-view" class="card hidden">
+                <h3>Approving Report</h3><div id="head-view-content"></div>
+                <div class="flex-between" style="margin-top:15px;"><button class="btn btn-warning" onclick="returnToCoordinator()">↩️ Return</button><button class="btn btn-success" onclick="finalApproveAndPrint()">🏁 Approve & Print</button></div>
+            </div>
+        </div>
+
+        <!-- USERS -->
+        <div id="manage-users" class="panel">
+            <div class="card">
+                <div class="flex-between"><h3>👥 Manage Users</h3><button class="btn btn-success" onclick="openAddUserModal()">➕ Add User</button></div>
+                <div id="users-list"></div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="system-settings" class="panel">
+            <div class="card">
+                <h3>🔧 System Settings</h3>
+                <div class="form-group"><label>Google Apps Script URL</label><input type="text" id="setting-script-url"></div>
+                <button class="btn btn-primary" onclick="saveSystemSettings()" style="margin-top:10px;">💾 Save</button>
+
+                <h3 style="margin-top:30px;">🖼️ School & DepEd Logos</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>DepEd Logo (Left)</label>
+                        <input type="file" id="upload-deped-logo" accept="image/*" onchange="handleLogoUpload(event, 'depedLogo')">
+                        <img id="preview-deped-logo" class="report-logo" style="margin-top: 10px; display: none;">
+                    </div>
+                    <div class="form-group">
+                        <label>School Logo (Right)</label>
+                        <input type="file" id="upload-school-logo" accept="image/*" onchange="handleLogoUpload(event, 'schoolLogo')">
+                        <img id="preview-school-logo" class="report-logo" style="margin-top: 10px; display: none;">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="saveLogos()" style="margin-top:10px;">💾 Save Logos</button>
+            </div>
+        </div>
+
+        <!-- CONSOLIDATED -->
+        <div id="report-consolidated" class="panel">
+            <div class="card">
+                <div class="flex-between" style="flex-wrap:wrap; gap:10px;">
+                    <div>
+                        <h3>Final School Consolidated Report</h3>
+                        <p class="info-box">Only <strong>Final Approved</strong> data is shown here.</p>
+                    </div>
+                    <div style="display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap;">
+                        <div class="form-group" style="margin-bottom:0;"><label>Filter by Grade</label><select id="filter-grade" onchange="refreshFinalReport()" style="padding:8px; min-width:150px;"><option value="all">All Grades</option></select></div>
+                        <div class="form-group" style="margin-bottom:0;"><label>Filter by Section</label><select id="filter-section" onchange="refreshFinalReport()" style="padding:8px; min-width:150px;"><option value="all">All Sections</option></select></div>
+                        <button class="btn btn-primary" onclick="printConsolidatedReport()">🖨️ Print Consolidated</button>
+                    </div>
+                </div>
+                <div id="final-philiri-table"></div>
+            </div>
+        </div>
+
     </div>
+</main>
 
-    <script>
-        let SCRIPT_URL = localStorage.getItem('SCRIPT_URL') || "https://script.google.com/macros/s/AKfycbyiq2jKzahhDLDSL9cqGJw99gl-WcZTcLNUqkRsDyKf5Yk5QUZpLf9k8b084L0XXrt6uQ/exec";
-        let currentUser = null, activeRole = '', currentEditingReportId = null;
-        let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0;
+<!-- OFFICIAL REPORT MODAL -->
+<div id="official-report-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
+    <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
+        <button class="btn btn-danger" onclick="document.getElementById('official-report-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
+        <button class="btn btn-primary" onclick="printReport()" style="position: absolute; top: 15px; right: 100px;">Print</button>
+        <div id="printable-report-content"></div>
+    </div>
+</div>
 
-        async function fetchReports() { try { const r = await fetch(SCRIPT_URL + '?action=getReports'); const data = await r.json(); return data.map(rep => { if (typeof rep.data === 'string') rep.data = JSON.parse(rep.data); return rep; }); } catch(e) { return []; } }
-        async function fetchUsers() { try { const r = await fetch(SCRIPT_URL + '?action=getUsers'); const cachedUsers = await r.json(); return cachedUsers; } catch(e) { return []; } }
-        async function apiPost(payload) { try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); return await r.json(); } catch(e) { return { result: "error" }; } }
-        // --- ROLE SELECTION FUNCTIONS ---
-        function showLogin(roleType) {
-            document.getElementById('role-select-screen').style.display = 'none';
-            document.getElementById('login-screen').classList.remove('hidden');
-            document.getElementById('login-role-title').innerText = roleType + ' Login';
-            document.getElementById('login-username').value = '';
-            document.getElementById('login-password').value = '';
-            document.getElementById('login-error').style.display = 'none';
-        }
+<!-- ARAL PRINT MODAL -->
+<div id="aral-print-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
+    <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
+        <button class="btn btn-danger" onclick="document.getElementById('aral-print-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
+        <button class="btn btn-primary" onclick="printARALReport()" style="position: absolute; top: 15px; right: 100px;">Print</button>
+        <div id="printable-aral-content"></div>
+    </div>
+</div>
 
-        function goBackToRoles() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('role-select-screen').style.display = 'flex';
-        }
-        // ---------------------------------
+<!-- SIGNATURE MODAL -->
+<div id="signature-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
+    <div style="background: white; max-width: 500px; margin: 0 auto; padding: 40px; position: relative; border-radius: 8px;">
+        <button class="btn btn-danger" onclick="document.getElementById('signature-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
+        <h3 style="color: var(--primary); margin-bottom: 20px;">✍️ Upload E-Signature</h3>
+        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Ito ay lalabas sa printed reports.</p>
+        <div style="border: 2px dashed #ccc; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center;">
+            <img id="signature-preview" style="max-height: 130px; max-width: 100%; display: none;">
+            <p id="signature-placeholder" style="color: #999;">Walang signature na naka-upload</p>
+        </div>
+        <input type="file" id="sig-upload" accept="image/*" onchange="previewSignature(event)" style="margin-bottom: 15px; width: 100%;">
+        <button class="btn btn-success" onclick="saveSignature()" style="width: 100%; justify-content: center;">💾 Save Signature</button>
+    </div>
+</div>
 
-        async function login() {
-            // ... (yung existing code mo dito) ...
-               async function login() {
-            const username = document.getElementById('login-username').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value.trim();
-            const errBox = document.getElementById('login-error');
-            errBox.style.display = 'none';
-            
-            if (!username || !password) { errBox.innerText = "Enter username and password."; errBox.style.display = 'block'; return; }
-            
-            const users = await fetchUsers();
-            
-            const user = users.find(u => {
-                const uName = String(u.Username || '').trim().toLowerCase();
-                const uPass = String(u.Password || '').trim();
-                const uStatus = String(u.Status || '').trim().toLowerCase();
-                return uName === username && uPass === password && uStatus === 'active';
-            });
-            
-            if (!user) { 
-                errBox.innerText = "Invalid credentials. Please check your username, password, and status."; 
-                errBox.style.display = 'block'; 
-                return; 
+<script>
+/* ============================================================
+   CONFIG & STATE
+============================================================ */
+let SCRIPT_URL = localStorage.getItem('SCRIPT_URL') || "https://script.google.com/macros/s/AKfycbyiq2jKzahhDLDSL9cqGJw99gl-WcZTcLNUqkRsDyKf5Yk5QUZpLf9k8b084L0XXrt6uQ/exec";
+let currentUser = null;
+let activeRole = '';
+let currentEditingReportId = null;
+let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0;
+window.cachedApprovedForPrint = [];
+window.tempLogoData = {};
+
+/* ============================================================
+   API HELPERS (defensive)
+============================================================ */
+async function fetchReports() {
+    try {
+        const r = await fetch(SCRIPT_URL + '?action=getReports', { cache: 'no-store' });
+        const data = await r.json();
+        if (!Array.isArray(data)) return [];
+        return data.map(rep => {
+            if (typeof rep.data === 'string') {
+                try { rep.data = JSON.parse(rep.data); } catch(e) { rep.data = {}; }
             }
-            
-            user['Full Name'] = user['Full Name'] || user.FullName || user.Name || user.Username;
-            
-            currentUser = user; 
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            
-            let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
-            activeRole = rolesArray[0] || 'teacher'; 
-            
-            document.getElementById('login-screen').classList.add('hidden');
-            showDashboard();
-        }
-            
-            user['Full Name'] = user['Full Name'] || user.FullName || user.Name || user.Username;
-            
-            currentUser = user; 
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            
-            let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
-            activeRole = rolesArray[0] || 'teacher'; 
-            
-            showDashboard();
-        }
-
-                function logout() { 
-            localStorage.removeItem('currentUser'); 
-            location.reload(); 
-        }
-
-        function showDashboard() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('sidebar').style.display = 'flex';
-            document.getElementById('main-content').style.display = 'flex';
-            
-            const name = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || 'User').trim();
-            const grade = String(currentUser.Grade || '').trim();
-            const section = String(currentUser.Section || '').trim();
-            const rawRole = String(currentUser.Role || '').trim();
-            
-            document.getElementById('ui-name').innerText = name;
-            document.getElementById('ui-details').innerText = grade ? `Grade ${grade} - ${section}` : '';
-            
-            const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r !== '');
-            if(roles.length === 0) roles.push('teacher');
-            
-            const switcher = document.getElementById('role-switcher');
-            const select = document.getElementById('active-role-select');
-            
-            if (roles.length > 1) {
-                switcher.classList.remove('hidden');
-                select.innerHTML = roles.map(r => `<option value="${r}" ${r === activeRole ? 'selected' : ''}>${r.replace(/_/g,' ').toUpperCase()}</option>`).join('');
-            } else { 
-                switcher.classList.add('hidden'); 
+            if (typeof rep.comments === 'string') {
+                try { rep.comments = JSON.parse(rep.comments); } catch(e) { rep.comments = []; }
             }
-            
-            const roleBadge = document.getElementById('ui-role');
-            roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
-            roleBadge.className = 'role-badge ' + activeRole;
-            
-            ['teacher','coordinator','schoolhead','ict'].forEach(r => {
-                const menu = document.getElementById('menu-' + r);
-                if(menu) menu.classList.add('hidden');
-            });
-            
-            let menuId = '';
-            if (activeRole.includes('teacher')) menuId = 'menu-teacher';
-            else if (activeRole.includes('coord')) menuId = 'menu-coordinator';
-            else if (activeRole.includes('schoolhead')) menuId = 'menu-schoolhead';
-            else if (activeRole.includes('ict')) menuId = 'menu-ict';
-            
-            if (menuId) {
-                const menuEl = document.getElementById(menuId);
-                if(menuEl) menuEl.classList.remove('hidden');
-            }
-            
-            if (activeRole.includes('teacher')) {
-                document.getElementById('teacher-grade').removeAttribute('readonly');
-                document.getElementById('teacher-section').removeAttribute('readonly');
-                document.getElementById('teacher-name').removeAttribute('readonly');
-                
-                document.getElementById('teacher-grade').value = grade;
-                document.getElementById('teacher-section').value = section;
-                document.getElementById('teacher-name').value = name;
-                document.getElementById('btn-submit').style.display = 'inline-flex';
-                document.getElementById('btn-signature').style.display = 'inline-flex';
-                
-                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('module-philiri').classList.add('active');
-                document.getElementById('page-title').innerText = "PHIL-IRI (KS2)";
-                
-                updateIndividualizedLogic();
-                updateCRLALogic();
-                updateRMALogic();
-            } 
-            else if (activeRole.includes('coord')) {
-                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('coordinator-review').classList.add('active');
-                document.getElementById('page-title').innerText = "Teacher Submissions";
-                refreshCoordinatorList();
-            } 
-            else if (activeRole.includes('schoolhead')) {
-                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('head-approval').classList.add('active');
-                document.getElementById('page-title').innerText = "Forwarded Reports";
-                refreshHeadList();
-            } 
-            else if (activeRole.includes('ict')) {
-                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('manage-users').classList.add('active');
-                document.getElementById('page-title').innerText = "Manage Users";
-                refreshUsersList();
-            }
-        }
-
-        function switchActiveRole(newRole) { activeRole = newRole; showDashboard(); }
-        
-             window.addEventListener('DOMContentLoaded', async () => { 
-            loadLogos(); 
-            
-            // I-load ang logo sa Role Selection Screen kung meron man
-            const savedLogo = localStorage.getItem('schoolLogo');
-            if (savedLogo) {
-                const roleLogo = document.getElementById('role-school-logo');
-                if(roleLogo) { roleLogo.src = savedLogo; roleLogo.style.display = 'block'; }
-            }
-            
-            // Titingnan kung may naka-login na para deretso sa dashboard
-            const saved = localStorage.getItem('currentUser'); 
-            if (saved) { 
-                try { 
-                    currentUser = JSON.parse(saved); 
-                    let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase());
-                    activeRole = rolesArray[0] || 'teacher'; 
-                    showDashboard(); 
-                } catch(e) {} 
-            } 
+            if (!rep.data) rep.data = {};
+            return rep;
         });
+    } catch(e) { console.error("fetchReports:", e); return []; }
+}
+async function fetchUsers() {
+    try {
+        const r = await fetch(SCRIPT_URL + '?action=getUsers', { cache: 'no-store' });
+        const data = await r.json();
+        return Array.isArray(data) ? data : [];
+    } catch(e) { console.error("fetchUsers:", e); return []; }
+}
+async function apiPost(payload) {
+    try {
+        const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        return await r.json();
+    } catch(e) { console.error("apiPost:", e); return { result: "error", message: e.toString() }; }
+}
+
+/* ============================================================
+   ROLE SELECTION / LOGIN
+============================================================ */
+function showLogin(roleType) {
+    document.getElementById('role-select-screen').style.display = 'none';
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('login-role-title').innerText = roleType + ' Login';
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+    document.getElementById('login-error').style.display = 'none';
+    setTimeout(() => document.getElementById('login-username').focus(), 100);
+}
+
+function goBackToRoles() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('role-select-screen').style.display = 'flex';
+}
+
+async function login() {
+    const username = document.getElementById('login-username').value.trim().toLowerCase();
+    const password = document.getElementById('login-password').value.trim();
+    const errBox = document.getElementById('login-error');
+    errBox.style.display = 'none';
+
+    if (!username || !password) {
+        errBox.innerText = "Enter username and password.";
+        errBox.style.display = 'block';
+        return;
+    }
+
+    errBox.innerText = "Loading..."; errBox.style.display = 'block';
+
+    const users = await fetchUsers();
+    if (!users.length) {
+        errBox.innerText = "Cannot reach server. Check internet or System Settings URL.";
+        return;
+    }
+
+    const user = users.find(u => {
+        const uName = String(u.Username || '').trim().toLowerCase();
+        const uPass = String(u.Password || '').trim();
+        const uStatus = String(u.Status || '').trim().toLowerCase();
+        return uName === username && uPass === password && uStatus === 'active';
+    });
+
+    if (!user) {
+        errBox.innerText = "Invalid credentials. Check username, password, and status.";
+        return;
+    }
+
+    user['Full Name'] = user['Full Name'] || user.FullName || user.Name || user.Username;
+    currentUser = user;
+    localStorage.setItem('currentUser', JSON.stringify(user));
+
+    let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
+    activeRole = rolesArray[0] || 'teacher';
+
+    document.getElementById('login-screen').classList.add('hidden');
+    showDashboard();
+}
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    location.reload();
+}
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+function showDashboard() {
+    if (!currentUser) return;
+
+    // Hide all entry screens
+    const rs = document.getElementById('role-select-screen');
+    if (rs) rs.style.display = 'none';
+    document.getElementById('login-screen').classList.add('hidden');
+
+    document.getElementById('sidebar').style.display = 'flex';
+    document.getElementById('main-content').style.display = 'flex';
+
+    const name = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || 'User').trim();
+    const grade = String(currentUser.Grade || '').trim();
+    const section = String(currentUser.Section || '').trim();
+    const rawRole = String(currentUser.Role || '').trim();
+
+    document.getElementById('ui-name').innerText = name;
+    document.getElementById('ui-details').innerText = grade ? `Grade ${grade} - ${section}` : '';
+
+    const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r);
+    if (roles.length === 0) roles.push('teacher');
+
+    const switcher = document.getElementById('role-switcher');
+    const select = document.getElementById('active-role-select');
+    if (roles.length > 1) {
+        switcher.classList.remove('hidden');
+        select.innerHTML = roles.map(r => `<option value="${r}" ${r === activeRole ? 'selected' : ''}>${r.replace(/_/g,' ').toUpperCase()}</option>`).join('');
+    } else {
+        switcher.classList.add('hidden');
+    }
+
+    const roleBadge = document.getElementById('ui-role');
+    roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
+    roleBadge.className = 'role-badge ' + activeRole;
+
+    ['teacher','coordinator','schoolhead','ict'].forEach(r => {
+        const menu = document.getElementById('menu-' + r);
+        if (menu) menu.classList.add('hidden');
+    });
+
+    let menuId = '';
+    if (activeRole.includes('teacher')) menuId = 'menu-teacher';
+    else if (activeRole.includes('coord')) menuId = 'menu-coordinator';
+    else if (activeRole.includes('schoolhead')) menuId = 'menu-schoolhead';
+    else if (activeRole.includes('ict')) menuId = 'menu-ict';
+
+    if (menuId) {
+        const menuEl = document.getElementById(menuId);
+        if (menuEl) menuEl.classList.remove('hidden');
+    }
+
+    const submitBtn = document.getElementById('btn-submit');
+    const sigBtn = document.getElementById('btn-signature');
+
+    if (activeRole.includes('teacher')) {
+        document.getElementById('teacher-grade').value = grade;
+        document.getElementById('teacher-section').value = section;
+        document.getElementById('teacher-name').value = name;
+        if (submitBtn) submitBtn.style.display = 'inline-flex';
+        if (sigBtn) sigBtn.style.display = 'inline-flex';
+
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('module-philiri').classList.add('active');
+        document.getElementById('page-title').innerText = "PHIL-IRI (KS2)";
+
+        updateIndividualizedLogic();
+        updateCRLALogic();
+        updateRMALogic();
+    } else {
+        if (submitBtn) submitBtn.style.display = 'none';
+        if (sigBtn) sigBtn.style.display = 'none';
+    }
+
+    if (activeRole.includes('coord')) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('coordinator-review').classList.add('active');
+        document.getElementById('page-title').innerText = "Teacher Submissions";
+        refreshCoordinatorList();
+    } else if (activeRole.includes('schoolhead')) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('head-approval').classList.add('active');
+        document.getElementById('page-title').innerText = "Forwarded Reports";
+        refreshHeadList();
+    } else if (activeRole.includes('ict')) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('manage-users').classList.add('active');
+        document.getElementById('page-title').innerText = "Manage Users";
+        refreshUsersList();
+    }
+}
+
+function switchActiveRole(newRole) {
+    activeRole = newRole;
+    showDashboard();
+}
+
+/* ============================================================
+   PANEL SWITCHER
+============================================================ */
+function switchPanel(panelId, btnElement) {
+    const target = document.getElementById(panelId);
+    if (!target) return;
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    target.classList.add('active');
+    if (btnElement) btnElement.classList.add('active');
+    document.getElementById('page-title').innerText = btnElement ? btnElement.innerText : panelId;
+
+    const submitBtn = document.getElementById('btn-submit');
+    if (submitBtn) {
+        if (panelId === 'module-narrative') submitBtn.style.display = 'none';
+        else if (currentUser && activeRole.includes('teacher')) submitBtn.style.display = 'inline-flex';
+    }
+
+    if (panelId === 'report-consolidated') refreshFinalReport();
+    if (panelId === 'my-submissions') refreshMySubmissions();
+    if (panelId === 'my-approved') refreshMyApproved();
+    if (panelId === 'manage-users') refreshUsersList();
+    if (panelId === 'system-settings') loadSystemSettings();
+    if (panelId === 'module-aral') refreshARALMasterlist();
+}
+
+/* ============================================================
+   UTILITIES
+============================================================ */
+function smartSplit(line) {
+    if (line.includes('\t')) return line.split('\t').map(s => s.trim());
+    if (line.includes(',')) return line.split(',').map(s => s.trim());
+    return line.split(/\s{2,}|\s+/).map(s => s.trim());
+}
+
+/* ============================================================
+   PHIL-IRI
+============================================================ */
+function updateIndividualizedLogic() {
+    const type = document.getElementById('ind-assessment-type').value;
+    const thead = document.getElementById('ind-table-head');
+    const tbody = document.getElementById('ind-table-body');
+    const pasteTitle = document.getElementById('ind-paste-title');
+    const pasteFormat = document.getElementById('ind-paste-format');
+    const textarea = document.getElementById('ind-paste-data');
+    const resultTitle = document.getElementById('result-table-title');
+
+    if (resultTitle) resultTitle.innerText = type === 'GST' ? "GST Result" : `${type} Results`;
+    tbody.innerHTML = '';
+    indRowCount = 0;
+
+    if (type === 'GST') {
+        pasteTitle.innerText = "📋 Paste GST Data";
+        pasteFormat.innerHTML = 'Format: <code>Name, Total Score</code>';
+        textarea.placeholder = "Juan Dela Cruz, 15";
+        thead.innerHTML = `<tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr>`;
+    } else {
+        pasteTitle.innerText = `📋 Paste ${type} Data`;
+        pasteFormat.innerHTML = 'Format: <code>Name, Level Passed, Oral Level, Comp Level</code>';
+        textarea.placeholder = "Maria Clara, Grade 4, Independent, Instructional";
+        thead.innerHTML = `<tr><th>No.</th><th>Name</th><th>Level Passed</th><th>Oral Level</th><th>Comp Level</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr>`;
+    }
+    addIndividualizedRow();
+}
+
+function parseIndividualizedData() {
+    const text = document.getElementById('ind-paste-data').value;
+    if (!text) { alert("No data to paste."); return; }
+    const type = document.getElementById('ind-assessment-type').value;
+    const rows = text.split('\n').filter(r => r.trim() !== '');
+    document.getElementById('ind-table-body').innerHTML = '';
+    indRowCount = 0;
+
+    rows.forEach((row, index) => {
+        if (index === 0 && row.toLowerCase().includes('name')) return;
+        const cols = smartSplit(row);
+        const name = cols[0] || "";
+        if (!name) return;
+        if (type === 'GST') {
+            const total = parseInt(cols[1]) || 0;
+            addIndividualizedRow({ name, total });
+        } else {
+            addIndividualizedRow({ name, level: cols[1] || "", oral: cols[2] || "Frustration", comp: cols[3] || "Frustration" });
+        }
+    });
+    document.getElementById('ind-paste-data').value = '';
+}
+
+function addIndividualizedRow(data = null) {
+    indRowCount++;
+    const type = document.getElementById('ind-assessment-type').value;
+    const tbody = document.getElementById('ind-table-body');
+    const tr = document.createElement('tr');
+    tr.id = `ind-row-${indRowCount}`;
+
+    if (type === 'GST') {
+        tr.innerHTML = `
+            <td>${indRowCount}</td>
+            <td><input type="text" id="ind-name-${indRowCount}" value="${data ? data.name : ''}"></td>
+            <td><input type="number" id="gst-total-${indRowCount}" value="${data ? data.total : ''}" oninput="calcGST(${indRowCount})"></td>
+            <td class="auto-calc" id="ind-profile-${indRowCount}"></td>
+            <td class="auto-calc" id="ind-aral-${indRowCount}"></td>
+            <td><input type="text" id="ind-intervention-${indRowCount}" value="${data ? (data.intervention || '') : ''}" placeholder="Auto-suggested..."></td>`;
+    } else {
+        tr.innerHTML = `
+            <td>${indRowCount}</td>
+            <td><input type="text" id="ind-name-${indRowCount}" value="${data ? data.name : ''}"></td>
+            <td><input type="text" id="ind-level-${indRowCount}" value="${data ? data.level : ''}" placeholder="e.g., Grade 4"></td>
+            <td><select id="ind-oral-${indRowCount}" onchange="calcIndividualized(${indRowCount})">
+                <option value="Independent" ${data && data.oral === 'Independent' ? 'selected' : ''}>Independent</option>
+                <option value="Instructional" ${data && data.oral === 'Instructional' ? 'selected' : ''}>Instructional</option>
+                <option value="Frustration" ${data && data.oral === 'Frustration' ? 'selected' : ''}>Frustration</option>
+            </select></td>
+            <td><select id="ind-comp-${indRowCount}" onchange="calcIndividualized(${indRowCount})">
+                <option value="Independent" ${data && data.comp === 'Independent' ? 'selected' : ''}>Independent</option>
+                <option value="Instructional" ${data && data.comp === 'Instructional' ? 'selected' : ''}>Instructional</option>
+                <option value="Frustration" ${data && data.comp === 'Frustration' ? 'selected' : ''}>Frustration</option>
+            </select></td>
+            <td class="auto-calc" id="ind-profile-${indRowCount}"></td>
+            <td class="auto-calc" id="ind-aral-${indRowCount}"></td>
+            <td><input type="text" id="ind-intervention-${indRowCount}" value="${data ? (data.intervention || '') : ''}" placeholder="Auto-suggested..."></td>`;
+    }
+    tbody.appendChild(tr);
+    if (data) { type === 'GST' ? calcGST(indRowCount) : calcIndividualized(indRowCount); }
+}
+
+function calcGST(row) {
+    const totalEl = document.getElementById(`gst-total-${row}`);
+    if (!totalEl) return;
+    const total = parseInt(totalEl.value) || 0;
+    const pc = document.getElementById(`ind-profile-${row}`);
+    const aralCell = document.getElementById(`ind-aral-${row}`);
+    const intCell = document.getElementById(`ind-intervention-${row}`);
+    const targetGrade = parseInt(document.getElementById('teacher-grade').value) || 0;
+
+    if (!targetGrade || targetGrade < 1 || targetGrade > 6) {
+        pc.innerText = "Set Grade"; pc.className = "auto-calc status-light"; return;
+    }
+
+    let profile = "", suggestion = "", displayStr = "", isAral = false;
+
+    if (total >= 14 && total <= 20) {
+        if (total >= 18) profile = "Independent";
+        else if (total >= 16) profile = "Instructional";
+        else profile = "Frustration";
+        displayStr = `Grade Ready (${profile})`;
+        if (profile === "Independent") suggestion = "ENRICHMENT: Advanced reading materials, book reports, peer tutoring.";
+        else if (profile === "Instructional") suggestion = "ENRICHMENT: Independent reading with minimal guidance, vocabulary expansion.";
+        else suggestion = "ENRICHMENT: Easy-to-read books, guided reading to build confidence.";
+    } else {
+        isAral = true;
+        let offset = 0;
+        if (total <= 4) { profile = "Frustration"; offset = 3; suggestion = "REMEDIATION: Intensive Remedial Reading, 1-on-1 Tutoring, PTC"; }
+        else if (total <= 10) { profile = "Instructional"; offset = 2; suggestion = "REMEDIATION: Guided Reading, Vocabulary Enhancement, Peer Buddy"; }
+        else { profile = "Independent"; offset = 1; suggestion = "REMEDIATION: Enrichment Activities, Independent Reading Projects"; }
+        let readingLevel = targetGrade - offset;
+        if (readingLevel < 1) readingLevel = 1;
+        displayStr = `${profile} (Gr. ${readingLevel})`;
+    }
+
+    pc.innerText = displayStr;
+    pc.className = "auto-calc";
+    pc.style.cssText = "";
+    if (displayStr.includes("Grade Ready")) {
+        pc.style.setProperty('background-color', '#cce5ff', 'important');
+        pc.style.setProperty('color', '#004085', 'important');
+    } else if (profile === "Frustration") pc.classList.add("status-full");
+    else if (profile === "Instructional") pc.classList.add("status-light");
+    else pc.classList.add("status-ready");
+
+    aralCell.className = "auto-calc";
+    aralCell.innerText = "";
+    if (isAral) { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); }
+
+    if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) {
+        intCell.value = suggestion;
+        intCell.dataset.auto = "true";
+    }
+}
+
+function calcIndividualized(row) {
+    const oralEl = document.getElementById(`ind-oral-${row}`);
+    const compEl = document.getElementById(`ind-comp-${row}`);
+    if (!oralEl || !compEl) return;
+    const oral = oralEl.value, comp = compEl.value;
+    const pc = document.getElementById(`ind-profile-${row}`);
+    const aralCell = document.getElementById(`ind-aral-${row}`);
+    const intCell = document.getElementById(`ind-intervention-${row}`);
+    pc.className = "auto-calc";
+    aralCell.className = "auto-calc";
+    aralCell.innerText = "";
+    const levels = { "Independent": 3, "Instructional": 2, "Frustration": 1 };
+    const lowestLevel = Math.min(levels[oral] || 1, levels[comp] || 1);
+    let finalLvl = "Independent", suggestion = "";
+    if (lowestLevel === 1) { finalLvl = "Frustration"; pc.classList.add("status-full"); aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive Remedial Reading"; }
+    else if (lowestLevel === 2) { finalLvl = "Instructional"; pc.classList.add("status-light"); suggestion = "Guided Reading"; }
+    else { pc.classList.add("status-ready"); suggestion = "Enrichment Activities"; }
+    pc.innerText = finalLvl;
+    if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+}
+
+/* ============================================================
+   CRLA
+============================================================ */
+function updateCRLALogic() {
+    const tbody = document.getElementById('crla-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    crlaRowCount = 0;
+    addCRLARow();
+}
+
+function parseCRLAData() {
+    const text = document.getElementById('crla-paste-data').value;
+    if (!text) { alert("No data to paste."); return; }
+    const rows = text.split('\n').filter(r => r.trim() !== '');
+    document.getElementById('crla-table-body').innerHTML = '';
+    crlaRowCount = 0;
+    rows.forEach((row, index) => {
+        if (index === 0 && row.toLowerCase().includes('name')) return;
+        const cols = smartSplit(row);
+        if (!cols[0]) return;
+        addCRLARow({ name: cols[0], language: cols[1] || "Filipino", score: parseInt(cols[2]) || 0, category: cols[3] || "Low Emerging" });
+    });
+    document.getElementById('crla-paste-data').value = '';
+}
+
+function addCRLARow(data = null) {
+    crlaRowCount++;
+    const tr = document.createElement('tr');
+    tr.id = `crla-row-${crlaRowCount}`;
+    tr.innerHTML = `
+        <td>${crlaRowCount}</td>
+        <td><input type="text" id="crla-name-${crlaRowCount}" value="${data ? data.name : ''}"></td>
+        <td><select id="crla-lang-${crlaRowCount}">
+            <option value="Filipino" ${data && data.language === 'Filipino' ? 'selected' : ''}>Filipino</option>
+            <option value="English" ${data && data.language === 'English' ? 'selected' : ''}>English</option>
+            <option value="MT" ${data && data.language === 'MT' ? 'selected' : ''}>Mother Tongue</option>
+        </select></td>
+        <td><input type="number" id="crla-score-${crlaRowCount}" value="${data ? data.score : ''}"></td>
+        <td><select id="crla-category-${crlaRowCount}" onchange="calcCRLA(${crlaRowCount})">
+            <option value="Grade Ready" ${data && data.category === 'Grade Ready' ? 'selected' : ''}>Grade Ready</option>
+            <option value="Transitioning" ${data && data.category === 'Transitioning' ? 'selected' : ''}>Transitioning</option>
+            <option value="Developing" ${data && data.category === 'Developing' ? 'selected' : ''}>Developing</option>
+            <option value="High Emerging" ${data && data.category === 'High Emerging' ? 'selected' : ''}>High Emerging</option>
+            <option value="Low Emerging" ${data && data.category === 'Low Emerging' ? 'selected' : ''}>Low Emerging</option>
+        </select></td>
+        <td class="auto-calc" id="crla-aral-${crlaRowCount}"></td>
+        <td><input type="text" id="crla-intervention-${crlaRowCount}" value="${data ? (data.intervention || '') : ''}"></td>`;
+    document.getElementById('crla-table-body').appendChild(tr);
+    if (data) calcCRLA(crlaRowCount);
+}
+
+function calcCRLA(row) {
+    const catEl = document.getElementById(`crla-category-${row}`);
+    if (!catEl) return;
+    const category = catEl.value;
+    const aralCell = document.getElementById(`crla-aral-${row}`);
+    const intCell = document.getElementById(`crla-intervention-${row}`);
+    aralCell.className = "auto-calc";
+    aralCell.innerText = "";
+    let suggestion = "";
+    if (category === 'Low Emerging') { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive 1-on-1 Phonics"; }
+    else if (category === 'High Emerging') suggestion = "Guided Reading, Fluency Drills";
+    else if (category === 'Developing') suggestion = "Vocabulary Building";
+    else if (category === 'Transitioning') suggestion = "Differentiated Instruction";
+    else if (category === 'Grade Ready') suggestion = "Sustained Silent Reading";
+    if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+}
+
+/* ============================================================
+   RMA
+============================================================ */
+function updateRMALogic() {
+    const tbody = document.getElementById('rma-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    rmaRowCount = 0;
+    addRMARow();
+}
+
+function parseRMAData() {
+    const text = document.getElementById('rma-paste-data').value;
+    if (!text) { alert("No data to paste."); return; }
+    const rows = text.split('\n').filter(r => r.trim() !== '');
+    document.getElementById('rma-table-body').innerHTML = '';
+    rmaRowCount = 0;
+    rows.forEach((row, index) => {
+        if (index === 0 && row.toLowerCase().includes('name')) return;
+        const cols = smartSplit(row);
+        if (!cols[0]) return;
+        addRMARow({ name: cols[0], score: parseInt(cols[1]) || 0 });
+    });
+    document.getElementById('rma-paste-data').value = '';
+}
+
+function addRMARow(data = null) {
+    rmaRowCount++;
+    const tr = document.createElement('tr');
+    tr.id = `rma-row-${rmaRowCount}`;
+    tr.innerHTML = `
+        <td>${rmaRowCount}</td>
+        <td><input type="text" id="rma-name-${rmaRowCount}" value="${data ? data.name : ''}"></td>
+        <td><input type="number" id="rma-score-${rmaRowCount}" value="${data ? data.score : ''}" oninput="calcRMA(${rmaRowCount})"></td>
+        <td class="auto-calc" id="rma-percent-${rmaRowCount}"></td>
+        <td class="auto-calc" id="rma-level-${rmaRowCount}"></td>
+        <td class="auto-calc" id="rma-aral-${rmaRowCount}"></td>
+        <td><input type="text" id="rma-intervention-${rmaRowCount}" value="${data ? (data.intervention || '') : ''}"></td>`;
+    document.getElementById('rma-table-body').appendChild(tr);
+    if (data) calcRMA(rmaRowCount);
+}
+
+function calcRMA(row) {
+    const scoreEl = document.getElementById(`rma-score-${row}`);
+    if (!scoreEl) return;
+    const score = parseInt(scoreEl.value) || 0;
+    const totalItems = parseInt(document.getElementById('rma-total-items').value) || 32;
+    const percentCell = document.getElementById(`rma-percent-${row}`);
+    const levelCell = document.getElementById(`rma-level-${row}`);
+    const aralCell = document.getElementById(`rma-aral-${row}`);
+    const intCell = document.getElementById(`rma-intervention-${row}`);
+    percentCell.className = "auto-calc";
+    levelCell.className = "auto-calc";
+    aralCell.className = "auto-calc";
+    aralCell.innerText = "";
+    if (score === 0 && scoreEl.value === "") { percentCell.innerText = ""; levelCell.innerText = ""; return; }
+    const percent = Math.round(((score / totalItems) * 100) * 100) / 100;
+    percentCell.innerText = percent + "%";
+    let level = "", suggestion = "";
+    if (percent >= 90) { level = "Highly Proficient"; levelCell.classList.add("status-ready"); suggestion = "Math Enrichment"; }
+    else if (percent >= 75) { level = "Proficient"; levelCell.classList.add("status-ready"); suggestion = "Math Problem Solving"; }
+    else if (percent >= 50) { level = "Developing"; levelCell.classList.add("status-light"); suggestion = "Targeted Skills Practice"; }
+    else if (percent >= 25) { level = "Low Proficient"; levelCell.classList.add("status-full"); aralCell.innerText = "ARAL Math Candidate"; aralCell.classList.add("status-aral"); suggestion = "Guided Math Instruction"; }
+    else { level = "Non Proficient"; levelCell.classList.add("status-full"); aralCell.innerText = "ARAL Math Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive Numeracy Remediation"; }
+    levelCell.innerText = level;
+    if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+}
+
+/* ============================================================
+   SUBMISSIONS
+============================================================ */
+async function submitAllToCoordinator() {
+    const active = document.querySelector('.panel.active');
+    if (!active) return;
+    if (active.id === 'module-philiri') await submitIndividualized();
+    else if (active.id === 'module-crla') await submitCRLA();
+    else if (active.id === 'module-rma') await submitRMA();
+    else alert("Pumunta sa Data Entry panel para mag-submit.");
+}
+
+async function submitIndividualized() {
+    const type = document.getElementById('ind-assessment-type').value;
+    const rows = document.querySelectorAll('#ind-table-body tr');
+    const data = [];
+    rows.forEach(tr => {
+        const rowId = tr.id.replace('ind-row-', '');
+        const nameEl = document.getElementById(`ind-name-${rowId}`);
+        if (!nameEl) return;
+        const name = nameEl.value.trim();
+        if (!name) return;
+        if (type === 'GST') {
+            data.push({
+                type, name,
+                total: parseInt(document.getElementById(`gst-total-${rowId}`).value) || 0,
+                profile: document.getElementById(`ind-profile-${rowId}`).innerText,
+                aralTag: document.getElementById(`ind-aral-${rowId}`).innerText,
+                intervention: document.getElementById(`ind-intervention-${rowId}`).value
+            });
+        } else {
+            data.push({
+                type, name,
+                level: document.getElementById(`ind-level-${rowId}`).value,
+                oral: document.getElementById(`ind-oral-${rowId}`).value,
+                comp: document.getElementById(`ind-comp-${rowId}`).value,
+                profile: document.getElementById(`ind-profile-${rowId}`).innerText,
+                aralTag: document.getElementById(`ind-aral-${rowId}`).innerText,
+                intervention: document.getElementById(`ind-intervention-${rowId}`).value
+            });
+        }
+    });
+    if (!data.length) { alert("Walang data."); return; }
+    const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('teacher-grade').value} (${document.getElementById('teacher-section').value})`;
+    const key = type.toLowerCase().replace('-','');
+    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ [key]: data }), comments: "[]" });
+    if (result.result === "success") { alert(`Submitted!`); showDashboard(); } else alert("Error submitting: " + (result.message || 'unknown'));
+}
+
+async function submitCRLA() {
+    const rows = document.querySelectorAll('#crla-table-body tr');
+    const data = [];
+    rows.forEach(tr => {
+        const rowId = tr.id.replace('crla-row-', '');
+        const nameEl = document.getElementById(`crla-name-${rowId}`);
+        if (!nameEl) return;
+        const name = nameEl.value.trim();
+        if (!name) return;
+        data.push({
+            type: "CRLA", name,
+            language: document.getElementById(`crla-lang-${rowId}`).value,
+            score: parseInt(document.getElementById(`crla-score-${rowId}`).value) || 0,
+            category: document.getElementById(`crla-category-${rowId}`).value,
+            aralTag: document.getElementById(`crla-aral-${rowId}`).innerText,
+            intervention: document.getElementById(`crla-intervention-${rowId}`).value
         });
+    });
+    if (!data.length) { alert("Walang data."); return; }
+    const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('crla-grade').value} (${document.getElementById('crla-section').value})`;
+    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ crla: data }), comments: "[]" });
+    if (result.result === "success") { alert(`CRLA submitted!`); showDashboard(); } else alert("Error submitting.");
+}
 
-        function switchPanel(panelId, btnElement) {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(panelId).classList.add('active');
-            if(btnElement) btnElement.classList.add('active');
-            document.getElementById('page-title').innerText = btnElement ? btnElement.innerText : panelId;
-            
-            const submitBtn = document.getElementById('btn-submit');
-            if (panelId === 'module-narrative') { submitBtn.style.display = 'none'; } 
-            else if (currentUser && activeRole.includes('teacher')) { submitBtn.style.display = 'inline-flex'; }
-            
-            if (panelId === 'report-consolidated') refreshFinalReport();
-            if (panelId === 'my-submissions') refreshMySubmissions();
-            if (panelId === 'my-approved') refreshMyApproved();
-            if (panelId === 'manage-users') refreshUsersList();
-            if (panelId === 'system-settings') loadSystemSettings();
-            if (panelId === 'module-aral') refreshARALMasterlist();
-        }
+async function submitRMA() {
+    const rows = document.querySelectorAll('#rma-table-body tr');
+    const data = [];
+    rows.forEach(tr => {
+        const rowId = tr.id.replace('rma-row-', '');
+        const nameEl = document.getElementById(`rma-name-${rowId}`);
+        if (!nameEl) return;
+        const name = nameEl.value.trim();
+        if (!name) return;
+        data.push({
+            type: "RMA", name,
+            score: parseInt(document.getElementById(`rma-score-${rowId}`).value) || 0,
+            percent: document.getElementById(`rma-percent-${rowId}`).innerText,
+            level: document.getElementById(`rma-level-${rowId}`).innerText,
+            aralTag: document.getElementById(`rma-aral-${rowId}`).innerText,
+            intervention: document.getElementById(`rma-intervention-${rowId}`).value
+        });
+    });
+    if (!data.length) { alert("Walang data."); return; }
+    const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('rma-grade').value} (${document.getElementById('rma-section').value})`;
+    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ rma: data }), comments: "[]" });
+    if (result.result === "success") { alert(`RMA submitted!`); showDashboard(); } else alert("Error submitting.");
+}
 
-        function smartSplit(line) {
-            if (line.includes('\t')) return line.split('\t').map(s => s.trim());
-            if (line.includes(',')) return line.split(',').map(s => s.trim());
-            return line.split(/\s{2,}|\s+/).map(s => s.trim());
-        }
+async function submitNarrativeReport() {
+    const position = document.getElementById('narr-position').value.trim();
+    const title = document.getElementById('narr-title').value.trim();
+    const content = document.getElementById('narr-content').value.trim();
+    if (!title || !content || !position) { alert("Title, Content, and Position are required."); return; }
+    const teacherName = `${currentUser['Full Name']} - Grade ${currentUser.Grade || '-'} (${currentUser.Section || '-'})`;
+    const reportData = { narrative: [{ reportType: document.getElementById('narr-type').value, subject: document.getElementById('narr-subject').value, position, title, content }] };
+    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending School Head Approval', data: JSON.stringify(reportData), comments: "[]" });
+    if (result.result === "success") { alert("Report submitted!"); showDashboard(); } else alert("Error submitting.");
+}
 
-        function updateIndividualizedLogic() {
-            const type = document.getElementById('ind-assessment-type').value;
-            const thead = document.getElementById('ind-table-head');
-            const tbody = document.getElementById('ind-table-body');
-            const pasteTitle = document.getElementById('ind-paste-title');
-            const pasteFormat = document.getElementById('ind-paste-format');
-            const textarea = document.getElementById('ind-paste-data');
-            const resultTitle = document.getElementById('result-table-title');
+/* ============================================================
+   SIGNATURE
+============================================================ */
+function openSignatureModal() {
+    document.getElementById('signature-modal').classList.remove('hidden');
+    const savedSig = localStorage.getItem('sig_teacher');
+    const preview = document.getElementById('signature-preview');
+    const placeholder = document.getElementById('signature-placeholder');
+    if (savedSig) { preview.src = savedSig; preview.style.display = 'block'; placeholder.style.display = 'none'; }
+    else { preview.style.display = 'none'; placeholder.style.display = 'block'; }
+}
 
-            if (resultTitle) resultTitle.innerText = type === 'GST' ? "GST Result" : `${type} Results`;
-            tbody.innerHTML = ''; indRowCount = 0;
+function previewSignature(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const img = document.getElementById('signature-preview');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        document.getElementById('signature-placeholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+}
 
-            if (type === 'GST') {
-                pasteTitle.innerText = "📋 Paste GST Data";
-                pasteFormat.innerHTML = 'Format: <code>Name, Total Score</code>';
-                textarea.placeholder = "Juan Dela Cruz, 15";
-                thead.innerHTML = `<tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr>`;
-            } else {
-                pasteTitle.innerText = `📋 Paste ${type} Data`;
-                pasteFormat.innerHTML = 'Format: <code>Name, Level Passed, Oral Level, Comp Level</code>';
-                textarea.placeholder = "Maria Clara, Grade 4, Independent, Instructional";
-                thead.innerHTML = `<tr><th>No.</th><th>Name</th><th>Level Passed</th><th>Oral Level</th><th>Comp Level</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr>`;
-            }
-            addIndividualizedRow();
-        }
+function saveSignature() {
+    const img = document.getElementById('signature-preview');
+    if (img.style.display === 'none' || !img.src) { alert("Mag-upload muna ng signature."); return; }
+    const canvas = document.createElement('canvas');
+    const MAX_WIDTH = 300, MAX_HEIGHT = 150;
+    let width = img.naturalWidth || 300, height = img.naturalHeight || 150;
+    if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } }
+    else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+    canvas.width = width; canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, width, height);
+    localStorage.setItem('sig_teacher', canvas.toDataURL('image/png'));
+    alert("Signature saved!");
+    document.getElementById('signature-modal').classList.add('hidden');
+}
 
-        function parseIndividualizedData() {
-            const text = document.getElementById('ind-paste-data').value;
-            if (!text) { alert("No data to paste."); return; }
-            const type = document.getElementById('ind-assessment-type').value;
-            const rows = text.split('\n').filter(r => r.trim() !== '');
-            document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
-            
-            rows.forEach((row, index) => {
-                if (index === 0 && row.toLowerCase().includes('name')) return;
-                let cols = smartSplit(row);
-                let name = cols[0] || "";
-                
-                if (type === 'GST') {
-                    let total = parseInt(cols[1]) || 0;
-                    if (name && !name.toLowerCase().includes('total')) addIndividualizedRow({ name, total });
-                } else {
-                    if (name) addIndividualizedRow({ name, level: cols[1] || "", oral: cols[2] || "Frustration", comp: cols[3] || "Frustration" });
-                }
-            });
-            document.getElementById('ind-paste-data').value = '';
-        }
-
-        function addIndividualizedRow(data = null) {
-            indRowCount++;
-            const type = document.getElementById('ind-assessment-type').value;
-            const tbody = document.getElementById('ind-table-body');
-            const tr = document.createElement('tr');
-            tr.id = `ind-row-${indRowCount}`;
-
-            if (type === 'GST') {
-                tr.innerHTML = `
-                    <td>${indRowCount}</td>
-                    <td><input type="text" id="ind-name-${indRowCount}" value="${data ? data.name : ''}"></td>
-                    <td><input type="number" id="gst-total-${indRowCount}" value="${data ? data.total : ''}" oninput="calcGST(${indRowCount})"></td>
-                    <td class="auto-calc" id="ind-profile-${indRowCount}"></td>
-                    <td class="auto-calc" id="ind-aral-${indRowCount}"></td>
-                    <td><input type="text" id="ind-intervention-${indRowCount}" value="${data ? (data.intervention || '') : ''}" placeholder="Auto-suggested..."></td>`;
-            } else {
-                tr.innerHTML = `
-                    <td>${indRowCount}</td>
-                    <td><input type="text" id="ind-name-${indRowCount}" value="${data ? data.name : ''}"></td>
-                    <td><input type="text" id="ind-level-${indRowCount}" value="${data ? data.level : ''}" placeholder="e.g., Grade 4"></td>
-                    <td><select id="ind-oral-${indRowCount}" onchange="calcIndividualized(${indRowCount})"><option value="Independent" ${data && data.oral === 'Independent' ? 'selected' : ''}>Independent</option><option value="Instructional" ${data && data.oral === 'Instructional' ? 'selected' : ''}>Instructional</option><option value="Frustration" ${data && data.oral === 'Frustration' ? 'selected' : ''}>Frustration</option></select></td>
-                    <td><select id="ind-comp-${indRowCount}" onchange="calcIndividualized(${indRowCount})"><option value="Independent" ${data && data.comp === 'Independent' ? 'selected' : ''}>Independent</option><option value="Instructional" ${data && data.comp === 'Instructional' ? 'selected' : ''}>Instructional</option><option value="Frustration" ${data && data.comp === 'Frustration' ? 'selected' : ''}>Frustration</option></select></td>
-                    <td class="auto-calc" id="ind-profile-${indRowCount}"></td>
-                    <td class="auto-calc" id="ind-aral-${indRowCount}"></td>
-                    <td><input type="text" id="ind-intervention-${indRowCount}" value="${data ? (data.intervention || '') : ''}" placeholder="Auto-suggested..."></td>`;
-            }
-            tbody.appendChild(tr);
-            if(data) { type === 'GST' ? calcGST(indRowCount) : calcIndividualized(indRowCount); }
-        }
-
-        function calcGST(row) {
-            const total = parseInt(document.getElementById(`gst-total-${row}`).value) || 0;
-            const pc = document.getElementById(`ind-profile-${row}`);
-            const aralCell = document.getElementById(`ind-aral-${row}`);
-            const intCell = document.getElementById(`ind-intervention-${row}`);
-            const targetGrade = parseInt(document.getElementById('teacher-grade').value) || 0;
-            
-            if (!targetGrade || targetGrade < 1 || targetGrade > 6) { 
-                pc.innerText = "Set Grade"; pc.className = "auto-calc status-light"; return; 
-            }
-            
-            let profile = ""; let suggestion = ""; let displayStr = ""; let isAral = false;
-
-            if (total >= 14 && total <= 20) {
-                if (total >= 18) { profile = "Independent"; }
-                else if (total >= 16) { profile = "Instructional"; }
-                else { profile = "Frustration"; }
-                displayStr = `Grade Ready (${profile})`;
-                if (profile === "Independent") suggestion = "ENRICHMENT: Provide advanced reading materials, book reports, or peer tutoring roles.";
-                else if (profile === "Instructional") suggestion = "ENRICHMENT: Encourage independent reading with minimal guidance, vocabulary expansion.";
-                else suggestion = "ENRICHMENT: Provide easy-to-read enrichment books, guided reading sessions to build confidence.";
-                isAral = false;
-            } else {
-                isAral = true; 
-                let offset = 0;
-                if (total >= 0 && total <= 4) { profile = "Frustration"; offset = 3; suggestion = "REMEDIATION: Intensive Remedial Reading, One-on-One Tutoring, Parent-Teacher Conference"; }
-                else if (total >= 5 && total <= 10) { profile = "Instructional"; offset = 2; suggestion = "REMEDIATION: Guided Reading, Vocabulary Enhancement, Peer Buddy System"; }
-                else if (total >= 11 && total <= 13) { profile = "Independent"; offset = 1; suggestion = "REMEDIATION: Enrichment Activities within the Lower Grade Level, Independent Reading Projects"; }
-                let readingLevel = targetGrade - offset;
-                if (readingLevel < 1) readingLevel = 1; 
-                displayStr = `${profile} (Gr. ${readingLevel})`;
-            }
-
-            pc.innerText = displayStr; pc.className = "auto-calc"; 
-            
-            if (displayStr.includes("Grade Ready")) {
-                pc.style.setProperty('background-color', '#cce5ff', 'important');
-                pc.style.setProperty('color', '#004085', 'important');
-            } else {
-                pc.style.removeProperty('background-color');
-                pc.style.removeProperty('color');
-                if (profile === "Frustration") pc.classList.add("status-full");
-                else if (profile === "Instructional") pc.classList.add("status-light");
-                else pc.classList.add("status-ready");
-            }
-
-            aralCell.className = "auto-calc";
-            if (isAral) { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); } 
-            else { aralCell.innerText = ""; }
-
-            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
-        }
-
-        function calcIndividualized(row) {
-            const oral = document.getElementById(`ind-oral-${row}`).value;
-            const comp = document.getElementById(`ind-comp-${row}`).value;
-            const pc = document.getElementById(`ind-profile-${row}`);
-            const aralCell = document.getElementById(`ind-aral-${row}`);
-            const intCell = document.getElementById(`ind-intervention-${row}`);
-            pc.className = "auto-calc"; aralCell.className = "auto-calc"; aralCell.innerText = "";
-            const levels = { "Independent": 3, "Instructional": 2, "Frustration": 1 };
-            const lowestLevel = Math.min(levels[oral], levels[comp]);
-            let finalLvl = "Independent"; let suggestion = "";
-            if (lowestLevel === 1) { finalLvl = "Frustration"; pc.classList.add("status-full"); aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive Remedial Reading"; }
-            else if (lowestLevel === 2) { finalLvl = "Instructional"; pc.classList.add("status-light"); suggestion = "Guided Reading"; }
-            else { pc.classList.add("status-ready"); suggestion = "Enrichment Activities"; }
-            pc.innerText = finalLvl;
-            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
-        }
-
-        function updateCRLALogic() { document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0; addCRLARow(); }
-        function parseCRLAData() {
-            const text = document.getElementById('crla-paste-data').value;
-            if (!text) { alert("No data to paste."); return; }
-            const rows = text.split('\n').filter(r => r.trim() !== '');
-            document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0;
-            rows.forEach((row, index) => {
-                if (index === 0 && row.toLowerCase().includes('name')) return;
-                let cols = smartSplit(row);
-                if (cols[0] && !cols[0].toLowerCase().includes('total')) addCRLARow({ name: cols[0], language: cols[1] || "Filipino", score: parseInt(cols[2]) || 0, category: cols[3] || "Low Emerging" });
-            });
-            document.getElementById('crla-paste-data').value = '';
-        }
-        function addCRLARow(data = null) {
-            crlaRowCount++;
-            const tr = document.createElement('tr'); tr.id = `crla-row-${crlaRowCount}`;
-            tr.innerHTML = `
-                <td>${crlaRowCount}</td>
-                <td><input type="text" id="crla-name-${crlaRowCount}" value="${data ? data.name : ''}"></td>
-                <td><select id="crla-lang-${crlaRowCount}"><option value="Filipino" ${data && data.language === 'Filipino' ? 'selected' : ''}>Filipino</option><option value="English" ${data && data.language === 'English' ? 'selected' : ''}>English</option><option value="MT" ${data && data.language === 'MT' ? 'selected' : ''}>Mother Tongue</option></select></td>
-                <td><input type="number" id="crla-score-${crlaRowCount}" value="${data ? data.score : ''}"></td>
-                <td><select id="crla-category-${crlaRowCount}" onchange="calcCRLA(${crlaRowCount})"><option value="Grade Ready" ${data && data.category === 'Grade Ready' ? 'selected' : ''}>Grade Ready</option><option value="Transitioning" ${data && data.category === 'Transitioning' ? 'selected' : ''}>Transitioning</option><option value="Developing" ${data && data.category === 'Developing' ? 'selected' : ''}>Developing</option><option value="High Emerging" ${data && data.category === 'High Emerging' ? 'selected' : ''}>High Emerging</option><option value="Low Emerging" ${data && data.category === 'Low Emerging' ? 'selected' : ''}>Low Emerging</option></select></td>
-                <td class="auto-calc" id="crla-aral-${crlaRowCount}"></td>
-                <td><input type="text" id="crla-intervention-${crlaRowCount}" value="${data ? (data.intervention || '') : ''}"></td>`;
-            document.getElementById('crla-table-body').appendChild(tr);
-            if(data) calcCRLA(crlaRowCount);
-        }
-        function calcCRLA(row) {
-            const category = document.getElementById(`crla-category-${row}`).value;
-            const aralCell = document.getElementById(`crla-aral-${row}`);
-            const intCell = document.getElementById(`crla-intervention-${row}`);
-            aralCell.className = "auto-calc"; aralCell.innerText = ""; let suggestion = "";
-            if (category === 'Low Emerging') { aralCell.innerText = "ARAL Reading Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive 1-on-1 Phonics"; }
-            else if (category === 'High Emerging') suggestion = "Guided Reading, Fluency Drills";
-            else if (category === 'Developing') suggestion = "Vocabulary Building";
-            else if (category === 'Transitioning') suggestion = "Differentiated Instruction";
-            else if (category === 'Grade Ready') suggestion = "Sustained Silent Reading";
-            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
-        }
-
-        function updateRMALogic() { document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0; addRMARow(); }
-        function parseRMAData() {
-            const text = document.getElementById('rma-paste-data').value;
-            if (!text) { alert("No data to paste."); return; }
-            const rows = text.split('\n').filter(r => r.trim() !== '');
-            document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0;
-            rows.forEach((row, index) => {
-                if (index === 0 && row.toLowerCase().includes('name')) return;
-                let cols = smartSplit(row);
-                if (cols[0] && !cols[0].toLowerCase().includes('total')) addRMARow({ name: cols[0], score: parseInt(cols[1]) || 0 });
-            });
-            document.getElementById('rma-paste-data').value = '';
-        }
-        function addRMARow(data = null) {
-            rmaRowCount++;
-            const tr = document.createElement('tr'); tr.id = `rma-row-${rmaRowCount}`;
-            tr.innerHTML = `
-                <td>${rmaRowCount}</td>
-                <td><input type="text" id="rma-name-${rmaRowCount}" value="${data ? data.name : ''}"></td>
-                <td><input type="number" id="rma-score-${rmaRowCount}" value="${data ? data.score : ''}" oninput="calcRMA(${rmaRowCount})"></td>
-                <td class="auto-calc" id="rma-percent-${rmaRowCount}"></td>
-                <td class="auto-calc" id="rma-level-${rmaRowCount}"></td>
-                <td class="auto-calc" id="rma-aral-${rmaRowCount}"></td>
-                <td><input type="text" id="rma-intervention-${rmaRowCount}" value="${data ? (data.intervention || '') : ''}"></td>`;
-            document.getElementById('rma-table-body').appendChild(tr);
-            if(data) calcRMA(rmaRowCount);
-        }
-        function calcRMA(row) {
-            const score = parseInt(document.getElementById(`rma-score-${row}`).value) || 0;
-            const totalItems = parseInt(document.getElementById('rma-total-items').value) || 32;
-            const percentCell = document.getElementById(`rma-percent-${row}`);
-            const levelCell = document.getElementById(`rma-level-${row}`);
-            const aralCell = document.getElementById(`rma-aral-${row}`);
-            const intCell = document.getElementById(`rma-intervention-${row}`);
-            percentCell.className = "auto-calc"; levelCell.className = "auto-calc"; aralCell.className = "auto-calc"; aralCell.innerText = "";
-            if (score === 0) { percentCell.innerText = ""; levelCell.innerText = ""; if (intCell.dataset.auto === "true") intCell.value = ""; return; }
-            let percent = Math.round(((score / totalItems) * 100) * 100) / 100;
-            percentCell.innerText = percent + "%";
-            let level = ""; let suggestion = "";
-            if (percent >= 90) { level = "Highly Proficient"; levelCell.classList.add("status-ready"); suggestion = "Math Enrichment"; }
-            else if (percent >= 75) { level = "Proficient"; levelCell.classList.add("status-ready"); suggestion = "Math Problem Solving"; }
-            else if (percent >= 50) { level = "Developing"; levelCell.classList.add("status-light"); suggestion = "Targeted Skills Practice"; }
-            else if (percent >= 25) { level = "Low Proficient"; levelCell.classList.add("status-full"); aralCell.innerText = "ARAL Math Candidate"; aralCell.classList.add("status-aral"); suggestion = "Guided Math Instruction"; }
-            else { level = "Non Proficient"; levelCell.classList.add("status-full"); aralCell.innerText = "ARAL Math Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive Numeracy Remediation"; }
-            levelCell.innerText = level;
-            if (intCell.value === "" || intCell.dataset.auto === "true") { intCell.value = suggestion; intCell.dataset.auto = "true"; }
-        }
-
-        async function submitAllToCoordinator() {
-            const active = document.querySelector('.panel.active');
-            if (active && active.id === 'module-philiri') await submitIndividualized();
-            else if (active && active.id === 'module-crla') await submitCRLA();
-            else if (active && active.id === 'module-rma') await submitRMA();
-            else alert("Go to Data Entry.");
-        }
-        async function submitIndividualized() {
-            const type = document.getElementById('ind-assessment-type').value;
-            const rows = document.querySelectorAll('#ind-table-body tr');
-            let data = [];
-            rows.forEach(tr => {
-                const rowId = tr.id.replace('ind-row-', '');
-                const name = document.getElementById(`ind-name-${rowId}`).value.trim();
-                if(name) {
-                    if (type === 'GST') data.push({ type, name, total: parseInt(document.getElementById(`gst-total-${rowId}`).value), profile: document.getElementById(`ind-profile-${rowId}`).innerText, aralTag: document.getElementById(`ind-aral-${rowId}`).innerText, intervention: document.getElementById(`ind-intervention-${rowId}`).value });
-                    else data.push({ type, name, level: document.getElementById(`ind-level-${rowId}`).value, oral: document.getElementById(`ind-oral-${rowId}`).value, comp: document.getElementById(`ind-comp-${rowId}`).value, profile: document.getElementById(`ind-profile-${rowId}`).innerText, aralTag: document.getElementById(`ind-aral-${rowId}`).innerText, intervention: document.getElementById(`ind-intervention-${rowId}`).value });
-                }
-            });
-            if (!data.length) { alert("No data."); return; }
-            const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('teacher-grade').value} (${document.getElementById('teacher-section').value})`;
-            const key = type.toLowerCase().replace('-','');
-            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({[key]: data}), comments: "[]" });
-            if (result.result === "success") { alert(`Submitted!`); showDashboard(); } else alert("Error submitting.");
-        }
-        async function submitCRLA() {
-            const rows = document.querySelectorAll('#crla-table-body tr');
-            let data = [];
-            rows.forEach(tr => {
-                const rowId = tr.id.replace('crla-row-', '');
-                const name = document.getElementById(`crla-name-${rowId}`).value.trim();
-                if(name) data.push({ type: "CRLA", name, language: document.getElementById(`crla-lang-${rowId}`).value, score: parseInt(document.getElementById(`crla-score-${rowId}`).value) || 0, category: document.getElementById(`crla-category-${rowId}`).value, aralTag: document.getElementById(`crla-aral-${rowId}`).innerText, intervention: document.getElementById(`crla-intervention-${rowId}`).value });
-            });
-            if (!data.length) { alert("No data."); return; }
-            const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('crla-grade').value} (${document.getElementById('crla-section').value})`;
-            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({crla: data}), comments: "[]" });
-            if (result.result === "success") { alert(`CRLA submitted!`); showDashboard(); } else alert("Error submitting.");
-        }
-        async function submitRMA() {
-            const rows = document.querySelectorAll('#rma-table-body tr');
-            let data = [];
-            rows.forEach(tr => {
-                const rowId = tr.id.replace('rma-row-', '');
-                const name = document.getElementById(`rma-name-${rowId}`).value.trim();
-                if(name) data.push({ type: "RMA", name, score: parseInt(document.getElementById(`rma-score-${rowId}`).value) || 0, percent: document.getElementById(`rma-percent-${rowId}`).innerText, level: document.getElementById(`rma-level-${rowId}`).innerText, aralTag: document.getElementById(`rma-aral-${rowId}`).innerText, intervention: document.getElementById(`rma-intervention-${rowId}`).value });
-            });
-            if (!data.length) { alert("No data."); return; }
-            const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('rma-grade').value} (${document.getElementById('rma-section').value})`;
-            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({rma: data}), comments: "[]" });
-            if (result.result === "success") { alert(`RMA submitted!`); showDashboard(); } else alert("Error submitting.");
-        }
-        async function submitNarrativeReport() {
-            const position = document.getElementById('narr-position').value.trim();
-            const title = document.getElementById('narr-title').value.trim();
-            const content = document.getElementById('narr-content').value.trim();
-            if (!title || !content || !position) { alert("Title, Content, and Position are required."); return; }
-            const teacherName = `${currentUser['Full Name']} - Grade ${currentUser.Grade || '-'} (${currentUser.Section || '-'})`;
-            const reportData = { narrative: [{ reportType: document.getElementById('narr-type').value, subject: document.getElementById('narr-subject').value, position, title, content }] };
-            const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending School Head Approval', data: JSON.stringify(reportData), comments: "[]" });
-            if (result.result === "success") { alert("Report submitted!"); showDashboard(); } else alert("Error submitting.");
-        }
-
-        function openSignatureModal() {
-            document.getElementById('signature-modal').classList.remove('hidden');
-            const savedSig = localStorage.getItem('sig_teacher');
-            const preview = document.getElementById('signature-preview');
-            const placeholder = document.getElementById('signature-placeholder');
-            if (savedSig) { preview.src = savedSig; preview.style.display = 'block'; placeholder.style.display = 'none'; } 
-            else { preview.style.display = 'none'; placeholder.style.display = 'block'; }
-        }
-
-        function previewSignature(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.getElementById('signature-preview');
-                img.src = e.target.result;
-                img.style.display = 'block';
-                document.getElementById('signature-placeholder').style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function saveSignature() {
-            const img = document.getElementById('signature-preview');
-            if (img.style.display === 'none' || !img.src) { alert("Mag-upload muna ng signature."); return; }
-            
+/* ============================================================
+   LOGOS & SETTINGS
+============================================================ */
+function handleLogoUpload(event, type) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
             const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 300; const MAX_HEIGHT = 150;
-            let width = img.naturalWidth; let height = img.naturalHeight;
-            if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+            const MAX_WIDTH = 250, MAX_HEIGHT = 250;
+            let width = img.width, height = img.height;
+            if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } }
             else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
-            
             canvas.width = width; canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            const finalBase64 = canvas.toDataURL('image/png');
-            
-            localStorage.setItem('sig_teacher', finalBase64); 
-            alert("Signature saved! Lalabas na ito sa printed reports.");
-            document.getElementById('signature-modal').classList.add('hidden');
-        }
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/png');
+            window.tempLogoData[type] = dataUrl;
+            const previewId = type === 'depedLogo' ? 'preview-deped-logo' : 'preview-school-logo';
+            const previewImg = document.getElementById(previewId);
+            if (previewImg) { previewImg.src = dataUrl; previewImg.style.display = 'block'; }
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
 
-        function handleLogoUpload(event, type) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 250; const MAX_HEIGHT = 250;
-                    let width = img.width; let height = img.height;
-                    if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
-                    else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
-                    canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const resizedBase64 = canvas.toDataURL('image/png');
-                    window.tempLogoData = window.tempLogoData || {};
-                    window.tempLogoData[type] = resizedBase64;
-                    const previewId = type === 'depedLogo' ? 'preview-deped-logo' : 'preview-school-logo';
-                    const previewImg = document.getElementById(previewId);
-                    if(previewImg) { previewImg.src = resizedBase64; previewImg.style.display = 'block'; }
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+function saveLogos() {
+    if (!window.tempLogoData || (!window.tempLogoData.depedLogo && !window.tempLogoData.schoolLogo)) {
+        alert("Walang bagong logo na in-upload."); return;
+    }
+    if (window.tempLogoData.depedLogo) localStorage.setItem('depedLogo', window.tempLogoData.depedLogo);
+    if (window.tempLogoData.schoolLogo) localStorage.setItem('schoolLogo', window.tempLogoData.schoolLogo);
+    alert("Logos saved successfully!");
+    loadSystemSettings();
+}
 
-        function saveLogos() {
-            if (window.tempLogoData) {
-                if (window.tempLogoData.depedLogo) localStorage.setItem('depedLogo', window.tempLogoData.depedLogo);
-                if (window.tempLogoData.schoolLogo) localStorage.setItem('schoolLogo', window.tempLogoData.schoolLogo);
-                alert("Logos saved successfully!");
-                loadSystemSettings(); 
-            } else { alert("Walang bagong logo na in-upload."); }
-        }
+function loadSystemSettings() {
+    document.getElementById('setting-script-url').value = SCRIPT_URL;
+    const dLogo = localStorage.getItem('depedLogo');
+    const sLogo = localStorage.getItem('schoolLogo');
+    if (dLogo) { const p = document.getElementById('preview-deped-logo'); if (p) { p.src = dLogo; p.style.display = 'block'; } }
+    if (sLogo) { const p = document.getElementById('preview-school-logo'); if (p) { p.src = sLogo; p.style.display = 'block'; } }
+}
 
-        function loadSystemSettings() { 
-            document.getElementById('setting-script-url').value = SCRIPT_URL; 
-            const dLogo = localStorage.getItem('depedLogo'); const sLogo = localStorage.getItem('schoolLogo');
-            if(dLogo) { const p1 = document.getElementById('preview-deped-logo'); if(p1) { p1.src = dLogo; p1.style.display = 'block'; } }
-            if(sLogo) { const p2 = document.getElementById('preview-school-logo'); if(p2) { p2.src = sLogo; p2.style.display = 'block'; } }
-        }
+function saveSystemSettings() {
+    const url = document.getElementById('setting-script-url').value.trim();
+    if (url) { localStorage.setItem('SCRIPT_URL', url); SCRIPT_URL = url; alert("Saved!"); }
+}
 
-        // --- IBA PANG FEATURES ---
-        function openAddUserModal() { alert("Add User feature soon."); }
-        function saveSystemSettings() { alert("Saved!"); }
-        function clearAllSubmissions() { alert("Cleared!"); }
-        async function refreshMySubmissions() { 
-            const container = document.getElementById('my-submissions-list'); 
-            container.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports();
-            const myName = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || currentUser.Username).toLowerCase().trim();
-            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName)).sort((a,b) => b.id - a.id);
-            if (mine.length === 0) { container.innerHTML = '<p><em>No submissions yet.</em></p>'; return; }
-            let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
-            mine.forEach(r => {
-                const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
-                let statusClass = r.status.includes('Approved') ? 'bg-approved' : (r.status.includes('Returned') ? 'bg-returned' : 'bg-pending');
-                let editBtn = r.status === 'Returned to Teacher' ? `<button class="btn btn-warning btn-sm" onclick="editAndResubmit(${r.id})">✏️ Edit</button>` : "";
-                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><span class="badge ${statusClass}">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button>${editBtn}</td></tr>`;
+function loadLogos() {
+    const sLogo = localStorage.getItem('schoolLogo');
+    if (sLogo) {
+        const roleLogo = document.getElementById('role-school-logo');
+        if (roleLogo) roleLogo.src = sLogo;
+    }
+}
+
+/* ============================================================
+   USERS
+============================================================ */
+async function refreshUsersList() {
+    const c = document.getElementById('users-list');
+    c.innerHTML = '<p>Loading...</p>';
+    const users = await fetchUsers();
+    if (!users.length) { c.innerHTML = '<p><em>Walang users. Check Apps Script URL or add manually sa sheet.</em></p>'; return; }
+    let html = `<table class="data-table"><thead><tr><th>Name</th><th>Username</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+    users.forEach(u => {
+        html += `<tr><td>${u['Full Name'] || u.FullName || u.Name || ''}</td><td>${u.Username || ''}</td><td>${u.Role || ''}</td><td>${u.Status || ''}</td><td><button class="btn btn-danger btn-sm" onclick="toggleUser('${u.Username || ''}', '${u.Status || ''}')">Toggle</button></td></tr>`;
+    });
+    c.innerHTML = html + `</tbody></table>`;
+}
+
+async function toggleUser(u, s) {
+    if (!u) return;
+    await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' });
+    refreshUsersList();
+}
+
+function openAddUserModal() {
+    const name = prompt("Full Name:");
+    if (!name) return;
+    const username = prompt("Username:");
+    if (!username) return;
+    const password = prompt("Password:");
+    if (!password) return;
+    const role = prompt("Role (teacher, coordinator, schoolhead, ict — comma-separated):", "teacher");
+    if (!role) return;
+    const grade = prompt("Grade Level (optional):") || "";
+    const section = prompt("Section (optional):") || "";
+    apiPost({
+        action: "addUser", fullName: name, username, password,
+        role, grade, section, status: 'active'
+    }).then(res => {
+        if (res.result === "success") { alert("User added!"); refreshUsersList(); }
+        else alert("Error adding user.");
+    });
+}
+
+/* ============================================================
+   MY SUBMISSIONS / APPROVED
+============================================================ */
+async function refreshMySubmissions() {
+    const c = document.getElementById('my-submissions-list');
+    c.innerHTML = '<p>Loading...</p>';
+    const reports = await fetchReports();
+    const myName = String(currentUser['Full Name'] || '').toLowerCase().trim();
+    const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName)).sort((a,b) => b.id - a.id);
+    if (!mine.length) { c.innerHTML = '<p><em>Walang submissions pa.</em></p>'; return; }
+    let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+    mine.forEach(r => {
+        const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
+        const statusClass = r.status.includes('Approved') ? 'bg-approved' : (r.status.includes('Returned') ? 'bg-returned' : 'bg-pending');
+        const editBtn = r.status === 'Returned to Teacher' ? `<button class="btn btn-warning btn-sm" onclick="editAndResubmit(${r.id})">✏️ Edit</button>` : "";
+        html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><span class="${statusClass}">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button>${editBtn}</td></tr>`;
+    });
+    c.innerHTML = html + `</tbody></table>`;
+}
+
+async function refreshMyApproved() {
+    const c = document.getElementById('my-approved-list');
+    c.innerHTML = '<p>Loading...</p>';
+    const reports = await fetchReports();
+    const myName = String(currentUser['Full Name'] || '').toLowerCase().trim();
+    const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName) && r.status === 'Approved').sort((a,b) => b.id - a.id);
+    if (!mine.length) { c.innerHTML = '<p><em>Walang approved reports pa.</em></p>'; return; }
+    let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
+    mine.forEach(r => {
+        const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
+        html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button> <button class="btn btn-success btn-sm" onclick="printMyReport(${r.id})">🖨️ Print</button></td></tr>`;
+    });
+    c.innerHTML = html + `</tbody></table>`;
+}
+
+/* ============================================================
+   COORDINATOR
+============================================================ */
+async function refreshCoordinatorList() {
+    const c = document.getElementById('coordinator-list');
+    c.innerHTML = '<p>Loading...</p>';
+    const reports = await fetchReports();
+    let pending = reports.filter(r => r.status === 'Pending Coordinator Review');
+    if (activeRole === 'philiri_coord') pending = pending.filter(r => r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst);
+    else if (activeRole === 'rma_coord') pending = pending.filter(r => r.data.rma);
+    else if (activeRole === 'crla_coord') pending = pending.filter(r => r.data.crla);
+    if (!pending.length) { c.innerHTML = '<p><em>Walang pending reports.</em></p>'; return; }
+    let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+    pending.forEach(r => {
+        html += `<tr><td>${r.teacher}</td><td><span class="bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`;
+    });
+    c.innerHTML = html + `</tbody></table>`;
+}
+
+async function viewCoordinatorReport(id) {
+    currentEditingReportId = id;
+    const reports = await fetchReports();
+    const r = reports.find(x => x.id == id);
+    if (!r) return;
+    document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher);
+    document.getElementById('coordinator-view').classList.remove('hidden');
+}
+
+async function returnToTeacher() {
+    const comment = document.getElementById('coordinator-comment').value.trim();
+    if (!comment) { alert("Enter comment."); return; }
+    const reports = await fetchReports();
+    const r = reports.find(x => x.id == currentEditingReportId);
+    if (!r) return;
+    const comments = Array.isArray(r.comments) ? r.comments : [];
+    comments.push({ by: 'Coordinator', text: comment, date: new Date().toISOString() });
+    await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(comments) });
+    document.getElementById('coordinator-view').classList.add('hidden');
+    document.getElementById('coordinator-comment').value = '';
+    refreshCoordinatorList();
+}
+
+async function forwardToHead() {
+    const reports = await fetchReports();
+    const r = reports.find(x => x.id == currentEditingReportId);
+    if (!r) return;
+    await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments || []) });
+    document.getElementById('coordinator-view').classList.add('hidden');
+    refreshCoordinatorList();
+}
+
+/* ============================================================
+   HEAD
+============================================================ */
+async function refreshHeadList() {
+    const c = document.getElementById('head-list');
+    c.innerHTML = '<p>Loading...</p>';
+    const reports = await fetchReports();
+    const pending = reports.filter(r => r.status === 'Pending School Head Approval');
+    if (!pending.length) { c.innerHTML = '<p><em>Walang forwarded reports.</em></p>'; return; }
+    let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Action</th></tr></thead><tbody>`;
+    pending.forEach(r => {
+        html += `<tr><td>${r.teacher}</td><td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td></tr>`;
+    });
+    c.innerHTML = html + `</tbody></table>`;
+}
+
+async function viewHeadReport(id) {
+    currentEditingReportId = id;
+    const reports = await fetchReports();
+    const r = reports.find(x => x.id == id);
+    if (!r) return;
+    document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher);
+    document.getElementById('head-view').classList.remove('hidden');
+}
+
+async function returnToCoordinator() {
+    const reports = await fetchReports();
+    const r = reports.find(x => x.id == currentEditingReportId);
+    if (!r) return;
+    await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator', comments: JSON.stringify(r.comments || []) });
+    document.getElementById('head-view').classList.add('hidden');
+    refreshHeadList();
+}
+
+async function finalApproveAndPrint() {
+    const reports = await fetchReports();
+    const r = reports.find(x => x.id == currentEditingReportId);
+    if (!r) return;
+    await apiPost({ action: "update", id: r.id, status: 'Approved', comments: JSON.stringify(r.comments || []) });
+    document.getElementById('head-view').classList.add('hidden');
+    refreshHeadList();
+    viewMyReport(r.id).then(() => setTimeout(() => printReport(), 400));
+}
+
+/* ============================================================
+   VIEW / PRINT REPORT
+============================================================ */
+async function viewMyReport(id) {
+    const reports = await fetchReports();
+    const r = reports.find(x => x.id == id);
+    if (!r) return;
+    const users = await fetchUsers();
+    const headName = (users.find(u => String(u.Role || '').toLowerCase().includes('schoolhead')) || {})['Full Name'] || 'SCHOOL HEAD';
+    const coordName = (users.find(u => String(u.Role || '').toLowerCase().includes('coord')) || {})['Full Name'] || 'PROGRAM COORDINATOR';
+    const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
+
+    const headerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
+            <img src="${localStorage.getItem('depedLogo') || ''}" class="report-logo" style="display:${localStorage.getItem('depedLogo') ? 'block' : 'none'};">
+            <div style="text-align: center; flex: 1; padding: 0 20px;">
+                <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
+                <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
+                <p style="font-size: 12px; margin: 0;">Region 02-Cagayan Valley</p>
+                <p style="font-size: 12px; margin: 0;">Schools Division Office of Isabela</p>
+                <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
+                <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
+            </div>
+            <img src="${localStorage.getItem('schoolLogo') || ''}" class="report-logo" style="display:${localStorage.getItem('schoolLogo') ? 'block' : 'none'};">
+        </div>
+        <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
+        <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">OFFICIAL REPORT</h3>
+    `;
+
+    const signaturesHTML = `
+        <div style="display: flex; justify-content: space-between; margin-top: 50px;">
+            <div style="text-align: center; width: 30%;">
+                <p style="margin-bottom: 10px;">Prepared by:</p>
+                <img id="sig-img-teacher" class="signature-img hidden" style="margin-bottom: 5px;">
+                <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${teacherDisplayName.toUpperCase()}</p>
+                <p style="margin: 0; line-height: 1.2;">Class Adviser</p>
+            </div>
+            <div style="text-align: center; width: 30%;">
+                <p style="margin-bottom: 10px;">Noted by:</p>
+                <img id="sig-img-coord" class="signature-img hidden" style="margin-bottom: 5px;">
+                <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${coordName.toUpperCase()}</p>
+                <p style="margin: 0; line-height: 1.2;">Program Coordinator</p>
+            </div>
+            <div style="text-align: center; width: 30%;">
+                <p style="margin-bottom: 10px;">Approved by:</p>
+                <img id="sig-img-head" class="signature-img hidden" style="margin-bottom: 5px;">
+                <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${headName.toUpperCase()}</p>
+                <p style="margin: 0; line-height: 1.2;">School Head</p>
+            </div>
+        </div>`;
+
+    if (r.data && r.data.narrative && r.data.narrative.length) {
+        const narr = r.data.narrative[0];
+        document.getElementById('printable-report-content').innerHTML =
+            `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML.replace('Class Adviser', narr.position || 'Teacher')}`;
+    } else {
+        document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + signaturesHTML;
+    }
+    document.getElementById('official-report-modal').classList.remove('hidden');
+}
+
+function printMyReport(id) {
+    viewMyReport(id).then(() => setTimeout(() => printReport(), 300));
+}
+
+function printReport() {
+    const modal = document.getElementById('official-report-modal');
+    const content = modal.querySelector('div').innerHTML;
+    const w = window.open('', '_blank');
+    w.document.write(`<html><head><title></title><style>
+        @page { size: A4 landscape; margin: 15mm; }
+        body { font-family: Arial, sans-serif; }
+        .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; }
+        .status-ready { background: #d4edda; }
+        .status-light { background: #fff3cd; }
+        .status-full { background: #f8d7da; }
+        .status-aral { background: #e2d9f3; }
+        .hidden { display: none; }
+        .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }
+        .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }
+    </style></head><body>${content}</body></html>`);
+    w.document.close();
+    w.onload = () => {
+        ['teacher','coord','head'].forEach(role => {
+            const src = localStorage.getItem(`sig_${role}`);
+            if (src) {
+                const i = w.document.getElementById(`sig-img-${role}`);
+                if (i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); }
+            }
+        });
+        setTimeout(() => { w.focus(); w.print(); }, 500);
+    };
+}
+
+/* ============================================================
+   RENDER TABLES
+============================================================ */
+function renderDataTables(dataObj, teacherName) {
+    let gradeLevelStr = "";
+    if (teacherName) {
+        const match = String(teacherName).match(/Grade (.*?) \((.*?)\)/);
+        if (match) gradeLevelStr = `Grade ${match[1]} - ${match[2]}`;
+    }
+
+    let all = [];
+    for (const key in dataObj) {
+        if (Array.isArray(dataObj[key])) {
+            dataObj[key].forEach(rec => {
+                if (!rec.type) rec.type = key.toUpperCase();
+                all.push(rec);
             });
-            container.innerHTML = html + `</tbody></table>`;
         }
+    }
 
-        async function refreshMyApproved() { 
-            const container = document.getElementById('my-approved-list'); 
-            container.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports();
-            const myName = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || currentUser.Username).toLowerCase().trim();
-            const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName) && r.status === 'Approved').sort((a,b) => b.id - a.id);
-            if (mine.length === 0) { container.innerHTML = '<p><em>No approved reports yet.</em></p>'; return; }
-            let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
-            mine.forEach(r => {
-                const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
-                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button> <button class="btn btn-success btn-sm" onclick="printMyReport(${r.id})">🖨️ Print</button></td></tr>`;
-            });
-            container.innerHTML = html + `</tbody></table>`;
+    const gstData = all.filter(r => r.type === 'GST');
+    const philiriOther = all.filter(r => r.type !== 'CRLA' && r.type !== 'RMA' && r.type !== 'GST');
+    const crla = all.filter(r => r.type === 'CRLA');
+    const rma = all.filter(r => r.type === 'RMA');
+
+    let html = "";
+
+    if (gradeLevelStr) {
+        html += `<h4 style="margin-top:20px; margin-bottom:10px; color:#333;">Grade Level: <span style="color:#113a6b;">${gradeLevelStr}</span></h4>`;
+    }
+
+    if (gstData.length) {
+        html += `<h5 style="margin-top:25px; color:#113a6b;">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+        gstData.forEach((l, i) => {
+            let colorClass = 'status-full';
+            if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
+            else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
+            else if (l.profile && l.profile.includes('Grade Ready')) colorClass = '';
+            html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile || ''}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+    }
+
+    if (philiriOther.length) {
+        html += `<h5 style="margin-top:25px; color:#113a6b;">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+        philiriOther.forEach((l, i) => {
+            let colorClass = 'status-full';
+            if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
+            else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
+            html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${colorClass}">${l.profile || ''}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+    }
+
+    if (crla.length) {
+        html += `<h5 style="margin-top:25px; color:#113a6b;">CRLA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+        crla.forEach((l, i) => {
+            html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.category || ''}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+    }
+
+    if (rma.length) {
+        html += `<h5 style="margin-top:25px; color:#113a6b;">RMA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+        rma.forEach((l, i) => {
+            html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.level || ''}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+    }
+
+    return html;
+}
+
+/* ============================================================
+   EDIT & RESUBMIT
+============================================================ */
+async function editAndResubmit(id) {
+    const reports = await fetchReports();
+    const r = reports.find(x => x.id == id);
+    if (!r) return;
+    const type = Object.keys(r.data)[0];
+    const dataArr = r.data[type] || [];
+    const navItems = document.querySelectorAll('#menu-teacher .nav-item');
+    if (type === 'pretest' || type === 'mosy' || type === 'posttest' || type === 'gst') {
+        switchPanel('module-philiri', navItems[0]);
+        document.getElementById('ind-assessment-type').value = type === 'gst' ? 'GST' : (type === 'pretest' ? 'Pre-test' : type === 'mosy' ? 'MOSY' : 'Post-test');
+        updateIndividualizedLogic();
+        dataArr.forEach(item => addIndividualizedRow(item));
+    } else if (type === 'crla') {
+        switchPanel('module-crla', navItems[1]);
+        updateCRLALogic();
+        dataArr.forEach(item => addCRLARow(item));
+    } else if (type === 'rma') {
+        switchPanel('module-rma', navItems[2]);
+        updateRMALogic();
+        dataArr.forEach(item => addRMARow(item));
+    } else if (type === 'narrative') {
+        switchPanel('module-narrative', navItems[3]);
+        const d = dataArr[0];
+        if (d) {
+            document.getElementById('narr-type').value = d.reportType;
+            document.getElementById('narr-subject').value = d.subject;
+            document.getElementById('narr-position').value = d.position;
+            document.getElementById('narr-title').value = d.title;
+            document.getElementById('narr-content').value = d.content;
         }
+    }
+    alert("Edit your data and submit again.");
+}
 
-        async function refreshUsersList() { 
-            const c = document.getElementById('users-list'); c.innerHTML = '<p>Loading...</p>';
-            const users = await fetchUsers();
-            if (!users || users.length === 0) { c.innerHTML = '<p><em>No users found.</em></p>'; return; }
-            let html = `<table class="data-table"><thead><tr><th>Name</th><th>Username</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
-            users.forEach(u => { html += `<tr><td>${u['Full Name']}</td><td>${u.Username}</td><td>${u.Role}</td><td>${u.Status}</td><td><button class="btn btn-danger btn-sm" onclick="toggleUser('${u.Username}', '${u.Status}')">Toggle</button></td></tr>`; });
-            c.innerHTML = html + `</tbody></table>`;
-        }
-        async function toggleUser(u, s) { await apiPost({ action: "updateUser", username: u, status: s === 'active' ? 'inactive' : 'active' }); refreshUsersList(); }
+/* ============================================================
+   ARAL MASTERLIST
+============================================================ */
+async function refreshARALMasterlist() {
+    const container = document.getElementById('aral-masterlist-content');
+    container.innerHTML = '<p>Loading...</p>';
+    const reports = await fetchReports();
+    const myName = String(currentUser['Full Name'] || '').toLowerCase().trim();
+    const mine = reports.filter(r => String(r.teacher || '').toLowerCase().includes(myName));
+    const fg = document.getElementById('aral-filter-grade').value;
+    const fs = document.getElementById('aral-filter-section').value.toLowerCase().trim();
 
-        async function refreshCoordinatorList() {
-            const c = document.getElementById('coordinator-list'); c.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports();
-            let pending = activeRole === 'philiri_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && (r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst)) : (activeRole === 'rma_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.rma) : (activeRole === 'crla_coord' ? reports.filter(r => r.status === 'Pending Coordinator Review' && r.data.crla) : reports.filter(r => r.status === 'Pending Coordinator Review')));
-            if (!pending.length) { c.innerHTML = '<p><em>No pending reports.</em></p>'; return; }
-            let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><span class="badge bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`; });
-            c.innerHTML = html + `</tbody></table>`;
-        }
-        async function viewCoordinatorReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return; document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('coordinator-view').classList.remove('hidden'); }
-        async function returnToTeacher() { if (!document.getElementById('coordinator-comment').value) return alert("Enter comment."); const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Teacher', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
-        async function forwardToHead() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Pending School Head Approval', comments: JSON.stringify(r.comments||[]) }); document.getElementById('coordinator-view').classList.add('hidden'); refreshCoordinatorList(); } }
-        
-        async function refreshHeadList() {
-            const c = document.getElementById('head-list'); c.innerHTML = '<p>Loading...</p>';
-            const reports = await fetchReports(); const pending = reports.filter(r => r.status === 'Pending School Head Approval');
-            if (!pending.length) { c.innerHTML = '<p><em>No forwarded reports.</em></p>'; return; }
-            let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Action</th></tr></thead><tbody>`;
-            pending.forEach(r => { html += `<tr><td>${r.teacher}</td><td><button class="btn btn-primary btn-sm" onclick="viewHeadReport(${r.id})">👁️ View</button></td></tr>`; });
-            c.innerHTML = html + `</tbody></table>`;
-        }
-        async function viewHeadReport(id) { currentEditingReportId = id; const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (r) { document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher); document.getElementById('head-view').classList.remove('hidden'); } }
-        async function returnToCoordinator() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Returned to Coordinator' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
-        async function finalApproveAndPrint() { const reports = await fetchReports(); const r = reports.find(x => x.id == currentEditingReportId); if (r) { await apiPost({ action: "update", id: r.id, status: 'Approved' }); document.getElementById('head-view').classList.add('hidden'); refreshHeadList(); } }
-
-        async function viewMyReport(id) {
-            const reports = await fetchReports();
-            const r = reports.find(x => x.id == id); if (!r) return;
-            const users = await fetchUsers();
-            const headName = users.find(u => u.Role.toLowerCase().includes('schoolhead'))?.['Full Name'] || 'SCHOOL HEAD';
-            const coordName = users.find(u => u.Role.toLowerCase().includes('coord'))?.['Full Name'] || 'PROGRAM COORDINATOR';
-            const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
-
-            const headerHTML = `
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
-                    <img src="${localStorage.getItem('depedLogo')||''}" class="report-logo" style="display:${localStorage.getItem('depedLogo')?'block':'none'};">
-                    <div style="text-align: center; flex: 1; padding: 0 20px;">
-                        <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
-                        <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
-                        <p style="font-size: 12px; margin: 0;">Region 02-Cagayan Valley</p>
-                        <p style="font-size: 12px; margin: 0;">Schools Division Office of Isabela</p>
-                        <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
-                        <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
-                    </div>
-                    <img src="${localStorage.getItem('schoolLogo')||''}" class="report-logo" style="display:${localStorage.getItem('schoolLogo')?'block':'none'};">
-                </div>
-                <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
-                <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">OFFICIAL REPORT</h3>
-            `;
-
-            const signaturesHTML = `
-                <div style="display: flex; justify-content: space-between; margin-top: 50px;">
-                    <div style="text-align: center; width: 30%;">
-                        <p style="margin-bottom: 10px;">Prepared by:</p>
-                        <img id="sig-img-teacher" class="signature-img hidden" style="margin-bottom: 5px;">
-                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${teacherDisplayName.toUpperCase()}</p>
-                        <p style="margin: 0; line-height: 1.2;">Class Adviser</p>
-                    </div>
-                    <div style="text-align: center; width: 30%;">
-                        <p style="margin-bottom: 10px;">Noted by:</p>
-                        <img id="sig-img-coord" class="signature-img hidden" style="margin-bottom: 5px;">
-                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${coordName.toUpperCase()}</p>
-                        <p style="margin: 0; line-height: 1.2;">Program Coordinator</p>
-                    </div>
-                    <div style="text-align: center; width: 30%;">
-                        <p style="margin-bottom: 10px;">Approved by:</p>
-                        <img id="sig-img-head" class="signature-img hidden" style="margin-bottom: 5px;">
-                        <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${headName.toUpperCase()}</p>
-                        <p style="margin: 0; line-height: 1.2;">School Head</p>
-                    </div>
-                </div>`;
-
-            if (r.data && r.data.narrative) {
-                const narr = r.data.narrative[0];
-                document.getElementById('printable-report-content').innerHTML = `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML.replace('Class Adviser', narr.position)}`;
-            } else {
-                document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + signaturesHTML;
-            }
-            document.getElementById('official-report-modal').classList.remove('hidden');
-        }
-
-        function printMyReport(id) { viewMyReport(id).then(() => setTimeout(() => printReport(), 300)); }
-        
-        function printReport() {
-            const content = document.getElementById('official-report-modal').querySelector('div').innerHTML;
-            const w = window.open('', '_blank');
-            w.document.write(`<html><head><title></title><style>@page { size: A4 landscape; margin: 15mm; } body { font-family: Arial, sans-serif; } .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; } .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; } .status-ready { background: #d4edda; } .status-light { background: #fff3cd; } .status-full { background: #f8d7da; } .status-aral { background: #e2d9f3; } .hidden { display: none; } .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; } .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }</style></head><body>${content}</body></html>`);
-            w.document.close();
-            w.onload = () => {
-                ['teacher','coord','head'].forEach(role => { const src = localStorage.getItem(`sig_${role}`); if(src) { const i = w.document.getElementById(`sig-img-${role}`); if(i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); } } });
-                setTimeout(() => { w.focus(); w.print(); }, 500);
-            };
-        }
-
-        function renderDataTables(dataObj, teacherName) {
-            let gradeLevelStr = "";
-            if (teacherName) {
-                const match = teacherName.match(/Grade (.*?) \((.*?)\)/);
-                if (match) gradeLevelStr = `Grade ${match[1]} - ${match[2]}`;
-            }
-
-            let all = []; 
-            for (const key in dataObj) { 
-                if (Array.isArray(dataObj[key])) dataObj[key].forEach(rec => { 
-                    if (!rec.type) rec.type = key.toUpperCase(); 
-                    all.push(rec); 
-                }); 
-            }
-            
-            const gstData = all.filter(r => r.type === 'GST');
-            const philiriOther = all.filter(r => r.type !== 'CRLA' && r.type !== 'RMA' && r.type !== 'GST');
-            const crla = all.filter(r => r.type === 'CRLA');
-            const rma = all.filter(r => r.type === 'RMA');
-            
-            let html = "";
-            
-            if (gradeLevelStr) {
-                html += `<h4 style="margin-top:20px; margin-bottom:10px; color:#333;">Grade Level: <span style="color:#113a6b;">${gradeLevelStr}</span></h4>`;
-            }
-
-            if (gstData.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">GST Result</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Total Score</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                gstData.forEach((l, i) => { 
-                    let colorClass = 'status-full';
-                    if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
-                    else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
-                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.total || '-'}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
+    const all = [];
+    mine.forEach(r => {
+        const m = String(r.teacher || '').match(/Grade (.*?) \((.*?)\)/);
+        if (!m) return;
+        if (fg !== 'all' && m[1] !== fg) return;
+        if (fs && !m[2].toLowerCase().includes(fs)) return;
+        for (const k in r.data) {
+            if (Array.isArray(r.data[k])) {
+                r.data[k].forEach(rec => {
+                    if (rec.aralTag) all.push({ ...rec, grade: m[1], section: m[2], status: r.status });
                 });
-                html += `</tbody></table>`;
             }
-
-            if (philiriOther.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">PHIL-IRI Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Profile & Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                philiriOther.forEach((l, i) => { 
-                    let colorClass = 'status-full';
-                    if (l.profile && l.profile.includes('Independent')) colorClass = 'status-ready';
-                    else if (l.profile && l.profile.includes('Instructional')) colorClass = 'status-light';
-                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td class="${colorClass}">${l.profile}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
-                });
-                html += `</tbody></table>`;
-            }
-
-            if (crla.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">CRLA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                crla.forEach((l, i) => { 
-                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.category}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
-                });
-                html += `</tbody></table>`;
-            }
-
-            if (rma.length) {
-                html += `<h5 style="margin-top:25px; color:var(--primary);">RMA Results</h5><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
-                rma.forEach((l, i) => { 
-                    html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.level}</td><td class="${l.aralTag ? 'status-aral' : ''}">${l.aralTag || ''}</td><td>${l.intervention || '-'}</td></tr>`; 
-                });
-                html += `</tbody></table>`;
-            }
-            
-            return html;
         }
+    });
 
-        async function editAndResubmit(id) {
-            const reports = await fetchReports(); const r = reports.find(x => x.id == id); if (!r) return;
-            const type = Object.keys(r.data)[0]; const dataArr = r.data[type];
-            if (type === 'pretest' || type === 'mosy' || type === 'posttest' || type === 'gst') {
-                switchPanel('module-philiri', document.querySelectorAll('#menu-teacher .nav-item')[0]);
-                document.getElementById('ind-assessment-type').value = type === 'gst' ? 'GST' : type;
-                updateIndividualizedLogic(); document.getElementById('ind-table-body').innerHTML = ''; indRowCount = 0;
-                dataArr.forEach(item => addIndividualizedRow(item));
-            } else if (type === 'crla') {
-                switchPanel('module-crla', document.querySelectorAll('#menu-teacher .nav-item')[1]);
-                updateCRLALogic(); document.getElementById('crla-table-body').innerHTML = ''; crlaRowCount = 0;
-                dataArr.forEach(item => addCRLARow(item));
-            } else if (type === 'rma') {
-                switchPanel('module-rma', document.querySelectorAll('#menu-teacher .nav-item')[2]);
-                updateRMALogic(); document.getElementById('rma-table-body').innerHTML = ''; rmaRowCount = 0;
-                dataArr.forEach(item => addRMARow(item));
-            } else if (type === 'narrative') {
-                switchPanel('module-narrative', document.querySelectorAll('#menu-teacher .nav-item')[3]);
-                document.getElementById('narr-type').value = dataArr[0].reportType; document.getElementById('narr-subject').value = dataArr[0].subject;
-                document.getElementById('narr-position').value = dataArr[0].position; document.getElementById('narr-title').value = dataArr[0].title; document.getElementById('narr-content').value = dataArr[0].content;
-            }
-            alert("Edit your data and submit again.");
-        }
+    if (!all.length) { container.innerHTML = '<p><em>Walang ARAL candidates na nakita.</em></p>'; return; }
+    let html = `<table class="data-table"><thead><tr><th>No.</th><th>Name</th><th>Grade</th><th>Section</th><th>Type</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+    all.forEach((l, i) => {
+        html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.grade}</td><td>${l.section}</td><td>${l.type || ''}</td><td class="status-aral">${l.aralTag}</td><td>${l.intervention || '-'}</td></tr>`;
+    });
+    container.innerHTML = html + `</tbody></table>`;
+}
 
-        function refreshARALMasterlist() { document.getElementById('aral-masterlist-content').innerHTML = '<p>No candidates found.</p>'; }
-        function printARALMasterlist() {}
-        function refreshFinalReport() {
-            const approved = (window.cachedApprovedForPrint || []);
-            let cons = {}; 
-            approved.forEach(r => { for (const k in r.data) { if (!cons[k]) cons[k] = []; cons[k] = cons[k].concat(r.data[k]); } });
-            document.getElementById('final-philiri-table').innerHTML = renderARALMasterlist(cons) + renderDataTables(cons, "All Teachers");
+function printARALMasterlist() {
+    const content = document.getElementById('aral-masterlist-content').innerHTML;
+    if (!content || content.includes('Walang ARAL') || content.includes('Loading')) {
+        alert("Walang data para i-print."); return;
+    }
+    const w = window.open('', '_blank');
+    w.document.write(`<html><head><title>ARAL Masterlist</title><style>
+        @page { size: A4 landscape; margin: 15mm; }
+        body { font-family: Arial, sans-serif; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #000; padding: 4px; text-align: center; }
+        th { background: #e0e0e0; }
+        .status-aral { background: #e2d9f3; }
+    </style></head><body>
+        <div style="text-align:center; margin-bottom:20px;">
+            <h2 style="margin:0;">ANGELA ELEMENTARY SCHOOL</h2>
+            <h3 style="margin-top:10px;">ARAL Reading Candidate Masterlist</h3>
+        </div>
+        ${content}
+    </body></html>`);
+    w.document.close();
+    w.onload = () => { w.focus(); w.print(); };
+}
+
+/* ============================================================
+   CONSOLIDATED REPORT
+============================================================ */
+async function refreshFinalReport() {
+    const reports = await fetchReports();
+    const approved = reports.filter(r => r.status === 'Approved');
+    window.cachedApprovedForPrint = approved;
+
+    const gradeFilter = document.getElementById('filter-grade');
+    const sectionFilter = document.getElementById('filter-section');
+    const grades = new Set(), sections = new Set();
+    approved.forEach(r => {
+        const m = String(r.teacher || '').match(/Grade (.*?) \((.*?)\)/);
+        if (m) { grades.add(m[1]); sections.add(m[2]); }
+    });
+    const curG = gradeFilter.value, curS = sectionFilter.value;
+    gradeFilter.innerHTML = '<option value="all">All Grades</option>' + [...grades].sort().map(g => `<option value="${g}" ${g === curG ? 'selected' : ''}>${g}</option>`).join('');
+    sectionFilter.innerHTML = '<option value="all">All Sections</option>' + [...sections].sort().map(s => `<option value="${s}" ${s === curS ? 'selected' : ''}>${s}</option>`).join('');
+
+    const fg = gradeFilter.value, fs = sectionFilter.value;
+    const filtered = approved.filter(r => {
+        const m = String(r.teacher || '').match(/Grade (.*?) \((.*?)\)/);
+        if (!m) return true;
+        if (fg !== 'all' && m[1] !== fg) return false;
+        if (fs !== 'all' && m[2] !== fs) return false;
+        return true;
+    });
+
+    const cons = {};
+    filtered.forEach(r => {
+        for (const k in r.data) {
+            if (!cons[k]) cons[k] = [];
+            cons[k] = cons[k].concat(r.data[k]);
         }
-        function printConsolidatedReport() {}
-        function generateClassSummary() { return ""; }
-    </script>
+    });
+
+    document.getElementById('final-philiri-table').innerHTML =
+        renderARALMasterlist(cons) + renderDataTables(cons, `All Teachers (${filtered.length} reports)`);
+}
+
+function renderARALMasterlist(consolidatedData) {
+    const all = [];
+    for (const k in consolidatedData) {
+        if (Array.isArray(consolidatedData[k])) {
+            consolidatedData[k].forEach(rec => { if (rec.aralTag) all.push(rec); });
+        }
+    }
+    if (!all.length) return '';
+    let html = `<h3 style="margin-top:30px; color:#113a6b;">🌟 ARAL Masterlist (Consolidated)</h3>`;
+    html += `<table class="data-table"><thead><tr><th>No.</th><th>Name</th><th>Type</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody>`;
+    all.forEach((l, i) => {
+        html += `<tr><td>${i+1}</td><td>${l.name}</td><td>${l.type || ''}</td><td class="status-aral">${l.aralTag}</td><td>${l.intervention || '-'}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+    return html;
+}
+
+function printConsolidatedReport() {
+    const content = document.getElementById('final-philiri-table').innerHTML;
+    if (!content || content.includes('Walang')) { alert("Walang data para i-print."); return; }
+    const w = window.open('', '_blank');
+    w.document.write(`<html><head><title>Consolidated Report</title><style>
+        @page { size: A4 landscape; margin: 15mm; }
+        body { font-family: Arial, sans-serif; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #000; padding: 4px; text-align: center; }
+        th { background: #e0e0e0; }
+        .status-ready { background: #d4edda; }
+        .status-light { background: #fff3cd; }
+        .status-full { background: #f8d7da; }
+        .status-aral { background: #e2d9f3; }
+        h3 { color: #113a6b; }
+    </style></head><body>
+        <div style="text-align:center; margin-bottom:20px;">
+            <h2 style="margin:0;">ANGELA ELEMENTARY SCHOOL</h2>
+            <p style="margin:0;">San Mariano I District</p>
+            <h3 style="margin-top:10px;">Final School Consolidated Report</h3>
+        </div>
+        ${content}
+    </body></html>`);
+    w.document.close();
+    w.onload = () => { w.focus(); w.print(); };
+}
+
+/* ============================================================
+   BOOT
+============================================================ */
+window.addEventListener('DOMContentLoaded', async () => {
+    loadLogos();
+    const savedLogo = localStorage.getItem('schoolLogo');
+    if (savedLogo) {
+        const roleLogo = document.getElementById('role-school-logo');
+        if (roleLogo) { roleLogo.src = savedLogo; roleLogo.style.display = 'block'; }
+    }
+
+    const saved = localStorage.getItem('currentUser');
+    if (saved) {
+        try {
+            currentUser = JSON.parse(saved);
+            let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
+            activeRole = rolesArray[0] || 'teacher';
+            showDashboard();
+        } catch(e) { console.warn("Auto-login failed:", e); }
+    }
+});
+</script>
 </body>
 </html>
