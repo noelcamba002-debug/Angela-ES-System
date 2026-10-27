@@ -1126,7 +1126,67 @@
         }
 
         function saveSystemSettings() { localStorage.setItem('SCRIPT_URL', document.getElementById('setting-script-url').value); alert("Saved!"); }
-        function openSignatureModal() { alert("Signature upload modal can be added here."); }
+                // --- E-SIGNATURE LOGIC ---
+        function openSignatureModal() {
+            document.getElementById('signature-modal').classList.remove('hidden');
+            const savedSig = localStorage.getItem('sig_teacher'); // Default sa teacher muna
+            const preview = document.getElementById('signature-preview');
+            const placeholder = document.getElementById('signature-placeholder');
+            
+            if (savedSig) {
+                preview.src = savedSig;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+            } else {
+                preview.style.display = 'none';
+                placeholder.style.display = 'block';
+            }
+        }
+
+        function previewSignature(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('signature-preview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                document.getElementById('signature-placeholder').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveSignature() {
+            const img = document.getElementById('signature-preview');
+            if (img.style.display === 'none' || !img.src) {
+                alert("Please upload a signature first.");
+                return;
+            }
+            
+            // Awtomatikong i-resize ang signature para maliit lang sa localStorage
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 300; 
+            const MAX_HEIGHT = 150;
+            let width = img.naturalWidth; let height = img.naturalHeight;
+            
+            if (width > height) {
+                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+            } else {
+                if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // I-save sa localStorage (sig_teacher, sig_coord, o sig_head)
+            const finalBase64 = canvas.toDataURL('image/png');
+            localStorage.setItem('sig_teacher', finalBase64); 
+            
+            alert("Signature saved successfully! Lalabas na ito sa iyong printed reports.");
+            document.getElementById('signature-modal').classList.add('hidden');
+        }
         function openAddUserModal() { alert("Add user modal can be added here."); }
 
         async function refreshARALMasterlist() {
