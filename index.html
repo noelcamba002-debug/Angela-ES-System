@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AES Unified Reporting System</title>
+    <title>AES Unified Reporting System v5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
@@ -136,7 +136,8 @@
     <div class="user-info" id="user-info-display">
         <strong id="ui-name">Loading...</strong><span id="ui-details"></span><span id="ui-role" class="role-badge"></span>
         <div id="role-switcher" class="hidden" style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2);">
-            <select id="active-role-select" onchange="switchActiveRole(this.value)" style="width:100%; padding:5px; font-size:12px;"></select>
+            <label style="font-size:10px; color:#88b4e7;">SWITCH ROLE:</label>
+            <select id="active-role-select" onchange="switchActiveRole(this.value)" style="width:100%; padding:5px; font-size:12px; margin-top:2px;"></select>
         </div>
     </div>
 
@@ -552,7 +553,6 @@ async function login() {
     
     let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
     
-    // I-load ang huling active role kung meron, kung wala, default sa teacher
     const savedRole = localStorage.getItem('activeRole');
     if (savedRole && rolesArray.includes(savedRole)) {
         activeRole = savedRole;
@@ -563,7 +563,6 @@ async function login() {
     errBox.style.display = 'none';
     document.getElementById('login-screen').classList.add('hidden');
     
-    // Fetch logos bago magpakita ng dashboard para sigurado
     await fetchLogos();
     showDashboard();
 }
@@ -679,7 +678,7 @@ function showDashboard() {
 
 function switchActiveRole(newRole) {
     activeRole = newRole;
-    localStorage.setItem('activeRole', activeRole); // I-save para hindi mawala
+    localStorage.setItem('activeRole', activeRole);
     showDashboard();
 }
 
