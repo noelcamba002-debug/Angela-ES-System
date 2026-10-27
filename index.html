@@ -419,6 +419,7 @@ let currentEditingReportId = null;
 let indRowCount = 0, crlaRowCount = 0, rmaRowCount = 0;
 window.cachedApprovedForPrint = [];
 window.tempLogoData = {};
+let globalLogos = { depedLogo: "", schoolLogo: "" };
 
 /* ============================================================
    API HELPERS
@@ -447,6 +448,15 @@ async function fetchUsers() {
         const data = await r.json();
         return Array.isArray(data) ? data : [];
     } catch(e) { console.error("fetchUsers error:", e); return []; }
+}
+
+async function fetchLogos() {
+    try {
+        const r = await fetch(SCRIPT_URL + '?action=getLogos', { cache: 'no-store' });
+        const data = await r.json();
+        globalLogos = data;
+        return data;
+    } catch(e) { console.error("fetchLogos error:", e); return { depedLogo: "", schoolLogo: "" }; }
 }
 
 async function apiPost(payload) {
@@ -541,35 +551,43 @@ async function login() {
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     
     let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
-    activeRole = rolesArray[0] || 'teacher'; 
+    
+    // I-load ang huling active role kung meron, kung wala, default sa teacher
+    const savedRole = localStorage.getItem('activeRole');
+    if (savedRole && rolesArray.includes(savedRole)) {
+        activeRole = savedRole;
+    } else {
+        activeRole = rolesArray[0] || 'teacher';
+    }
 
     errBox.style.display = 'none';
     document.getElementById('login-screen').classList.add('hidden');
+    
+    // Fetch logos bago magpakita ng dashboard para sigurado
+    await fetchLogos();
     showDashboard();
 }
 
 function logout() { 
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('activeRole');
     sessionStorage.clear();
     location.reload(); 
 }
 
 /* ============================================================
-   DASHBOARD
+   DASHBOARD & ROLE SWITCHING
 ============================================================ */
 function showDashboard() {
     if (!currentUser) return;
 
-    // Itago lahat ng entry screens
     const rs = document.getElementById('role-select-screen');
     if (rs) rs.style.display = 'none';
     document.getElementById('login-screen').classList.add('hidden');
 
-    // Ipakita ang main layout
     document.getElementById('sidebar').style.display = 'flex';
     document.getElementById('main-content').style.display = 'flex';
 
-    // I-setup ang user info sa sidebar
     const name = String(currentUser['Full Name'] || 'User').trim();
     const grade = String(currentUser.Grade || '').trim();
     const section = String(currentUser.Section || '').trim();
@@ -578,7 +596,6 @@ function showDashboard() {
     document.getElementById('ui-name').innerText = name;
     document.getElementById('ui-details').innerText = grade && grade !== '-' ? `Grade ${grade} - ${section}` : '';
 
-    // Setup role switcher dropdown
     const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r);
     if (roles.length === 0) roles.push('teacher');
 
@@ -600,11 +617,11 @@ function showDashboard() {
         if (menu) menu.classList.add('hidden');
     });
 
-    // Ipakita ang tamang menu at panel base sa activeRole
     const submitBtn = document.getElementById('btn-submit');
     const sigBtn = document.getElementById('btn-signature');
 
-    if (activeRole === 'teacher' || activeRole === 'philiri_teacher') {
+    // LOGIC BASE SA ACTIVE ROLE
+    if (activeRole === 'teacher') {
         document.getElementById('menu-teacher').classList.remove('hidden');
         
         document.getElementById('teacher-grade').value = grade;
@@ -622,8 +639,7 @@ function showDashboard() {
         updateCRLALogic();
         updateRMALogic();
 
-    } else if (activeRole.includes('coord')) {
-        // Kahit anong uri ng coordinator (philiri_coord, crla_coord, rma_coord)
+    } else if (activeRole.includes('coord')) { // philiri_coord, crla_coord, rma_coord, coordinator
         document.getElementById('menu-coordinator').classList.remove('hidden');
         
         if (submitBtn) submitBtn.style.display = 'none';
@@ -663,9 +679,10 @@ function showDashboard() {
 
 function switchActiveRole(newRole) {
     activeRole = newRole;
-    localStorage.setItem('activeRole', activeRole);
+    localStorage.setItem('activeRole', activeRole); // I-save para hindi mawala
     showDashboard();
 }
+
 /* ============================================================
    PANEL SWITCHER
 ============================================================ */
@@ -681,7 +698,7 @@ function switchPanel(panelId, btnElement) {
     const submitBtn = document.getElementById('btn-submit');
     if (submitBtn) {
         if (panelId === 'module-narrative') submitBtn.style.display = 'none';
-        else if (currentUser && activeRole.includes('teacher')) submitBtn.style.display = 'inline-flex';
+        else if (currentUser && activeRole === 'teacher') submitBtn.style.display = 'inline-flex';
     }
 
     if (panelId === 'report-consolidated') refreshFinalReport();
@@ -1110,7 +1127,7 @@ async function submitNarrativeReport() {
 }
 
 /* ============================================================
-   SIGNATURE
+   SIGNATURE & LOGOS
 ============================================================ */
 function openSignatureModal() {
     document.getElementById('signature-modal').classList.remove('hidden');
@@ -1149,9 +1166,6 @@ function saveSignature() {
     document.getElementById('signature-modal').classList.add('hidden');
 }
 
-/* ============================================================
-   LOGOS & SETTINGS
-============================================================ */
 function handleLogoUpload(event, type) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1191,15 +1205,14 @@ async function saveLogos() {
     
     alert("Logos saved successfully sa Google Drive!");
     window.tempLogoData = {};
+    await fetchLogos(); // I-refresh ang global logos
     loadSystemSettings(); 
 }
 
 function loadSystemSettings() {
     document.getElementById('setting-script-url').value = SCRIPT_URL;
-    const dLogo = localStorage.getItem('depedLogo');
-    const sLogo = localStorage.getItem('schoolLogo');
-    if (dLogo) { const p = document.getElementById('preview-deped-logo'); if (p) { p.src = dLogo; p.style.display = 'block'; } }
-    if (sLogo) { const p = document.getElementById('preview-school-logo'); if (p) { p.src = sLogo; p.style.display = 'block'; } }
+    if (globalLogos.depedLogo) { const p = document.getElementById('preview-deped-logo'); if (p) { p.src = globalLogos.depedLogo; p.style.display = 'block'; } }
+    if (globalLogos.schoolLogo) { const p = document.getElementById('preview-school-logo'); if (p) { p.src = globalLogos.schoolLogo; p.style.display = 'block'; } }
 }
 
 function saveSystemSettings() {
@@ -1208,10 +1221,9 @@ function saveSystemSettings() {
 }
 
 function loadLogos() {
-    const sLogo = localStorage.getItem('schoolLogo');
-    if (sLogo) {
+    if (globalLogos.schoolLogo) {
         const roleLogo = document.getElementById('role-school-logo');
-        if (roleLogo) roleLogo.src = sLogo;
+        if (roleLogo) roleLogo.src = globalLogos.schoolLogo;
     }
 }
 
@@ -1298,14 +1310,25 @@ async function refreshCoordinatorList() {
     const c = document.getElementById('coordinator-list');
     c.innerHTML = '<p>Loading...</p>';
     const reports = await fetchReports();
+    
     let pending = reports.filter(r => r.status === 'Pending Coordinator Review');
-    if (activeRole === 'philiri_coord') pending = pending.filter(r => r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst);
-    else if (activeRole === 'rma_coord') pending = pending.filter(r => r.data.rma);
-    else if (activeRole === 'crla_coord') pending = pending.filter(r => r.data.crla);
-    if (!pending.length) { c.innerHTML = '<p><em>Walang pending reports.</em></p>'; return; }
-    let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+    
+    // FILTER BASE SA ROLE
+    if (activeRole === 'philiri_coord') {
+        pending = pending.filter(r => r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst);
+    } else if (activeRole === 'rma_coord') {
+        pending = pending.filter(r => r.data.rma);
+    } else if (activeRole === 'crla_coord') {
+        pending = pending.filter(r => r.data.crla);
+    } else if (activeRole === 'coordinator') {
+        pending = pending.filter(r => !r.data.narrative); // General coord, assessments lang
+    }
+
+    if (!pending.length) { c.innerHTML = '<p><em>Walang pending reports na naka-assign sa iyo.</em></p>'; return; }
+    let html = `<table class="data-table"><thead><tr><th>Teacher</th><th>Type</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
     pending.forEach(r => {
-        html += `<tr><td>${r.teacher}</td><td><span class="bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`;
+        const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
+        html += `<tr><td>${r.teacher}</td><td>${type}</td><td><span class="bg-pending">${r.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="viewCoordinatorReport(${r.id})">👁️ View</button></td></tr>`;
     });
     c.innerHTML = html + `</tbody></table>`;
 }
@@ -1387,29 +1410,39 @@ async function finalApproveAndPrint() {
 }
 
 /* ============================================================
-   VIEW / PRINT REPORT
+   VIEW / PRINT REPORT (DYNAMIC)
 ============================================================ */
 async function viewMyReport(id) {
     const reports = await fetchReports();
     const r = reports.find(x => x.id == id);
     if (!r) return;
-    const users = await fetchUsers();
-    const headName = (users.find(u => String(u.Role || '').toLowerCase().includes('schoolhead')) || {})['Full Name'] || 'SCHOOL HEAD';
-    const coordName = (users.find(u => String(u.Role || '').toLowerCase().includes('coord')) || {})['Full Name'] || 'PROGRAM COORDINATOR';
-    const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
+    
+    let coordRoleToFind = 'coord'; 
+    let isNarrative = false;
 
-        // Kunin ang mga logo URL mula sa Apps Script
-    let depedLogoUrl = "", schoolLogoUrl = "";
-    try {
-        const resp = await fetch(SCRIPT_URL + '?action=getLogos');
-        const logos = await resp.json();
-        depedLogoUrl = logos.depedLogo || "";
-        schoolLogoUrl = logos.schoolLogo || "";
-    } catch(e) { console.warn("Logo fetch failed", e); }
+    if (r.data.narrative) {
+        isNarrative = true;
+    } else if (r.data.gst || r.data.pretest || r.data.mosy || r.data.posttest) {
+        coordRoleToFind = 'philiri_coord';
+    } else if (r.data.rma) {
+        coordRoleToFind = 'rma_coord';
+    } else if (r.data.crla) {
+        coordRoleToFind = 'crla_coord';
+    }
+
+    const users = await fetchUsers();
+    
+    const coordUser = users.find(u => String(u.Role || '').toLowerCase().includes(coordRoleToFind));
+    const coordName = coordUser ? (coordUser['Full Name'] || coordUser.FullName) : 'PROGRAM COORDINATOR';
+
+    const headUser = users.find(u => String(u.Role || '').toLowerCase().includes('schoolhead'));
+    const headName = headUser ? (headUser['Full Name'] || headUser.FullName) : 'SCHOOL HEAD';
+    
+    const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
 
     const headerHTML = `
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 20px;">
-            <img src="${depedLogoUrl}" class="report-logo" style="display:${depedLogoUrl ? 'block' : 'none'};">
+            <img src="${globalLogos.depedLogo || ''}" class="report-logo" style="display:${globalLogos.depedLogo ? 'block' : 'none'};">
             <div style="text-align: center; flex: 1; padding: 0 20px;">
                 <p style="font-size: 12px; margin: 0;">Republic of the Philippines</p>
                 <h1 style="font-size: 16px; font-weight: bold; margin: 0;">Department of Education</h1>
@@ -1418,13 +1451,32 @@ async function viewMyReport(id) {
                 <h2 style="font-size: 20px; font-weight: bold; margin: 8px 0; color: #113a6b;">ANGELA ELEMENTARY SCHOOL</h2>
                 <p style="font-size: 12px; margin: 0;">San Mariano I District</p>
             </div>
-            <img src="${schoolLogoUrl}" class="report-logo" style="display:${schoolLogoUrl ? 'block' : 'none'};">
+            <img src="${globalLogos.schoolLogo || ''}" class="report-logo" style="display:${globalLogos.schoolLogo ? 'block' : 'none'};">
         </div>
         <hr style="border: 2px solid #113a6b; margin-bottom: 10px;">
         <h3 style="text-align:center; font-size: 18px; font-weight: bold; margin-top: 10px; margin-bottom: 20px; text-transform: uppercase;">OFFICIAL REPORT</h3>
     `;
 
-    const signaturesHTML = `
+    let signaturesHTML = '';
+    
+    if (isNarrative) {
+        signaturesHTML = `
+        <div style="display: flex; justify-content: space-around; margin-top: 50px;">
+            <div style="text-align: center; width: 40%;">
+                <p style="margin-bottom: 10px;">Prepared by:</p>
+                <img id="sig-img-teacher" class="signature-img hidden" style="margin-bottom: 5px;">
+                <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${teacherDisplayName.toUpperCase()}</p>
+                <p style="margin: 0; line-height: 1.2;">${r.data.narrative[0].position || 'Class Adviser'}</p>
+            </div>
+            <div style="text-align: center; width: 40%;">
+                <p style="margin-bottom: 10px;">Approved by:</p>
+                <img id="sig-img-head" class="signature-img hidden" style="margin-bottom: 5px;">
+                <p style="font-weight: bold; text-decoration: underline; margin: 0; line-height: 1.2;">${headName.toUpperCase()}</p>
+                <p style="margin: 0; line-height: 1.2;">School Head</p>
+            </div>
+        </div>`;
+    } else {
+        signaturesHTML = `
         <div style="display: flex; justify-content: space-between; margin-top: 50px;">
             <div style="text-align: center; width: 30%;">
                 <p style="margin-bottom: 10px;">Prepared by:</p>
@@ -1445,11 +1497,12 @@ async function viewMyReport(id) {
                 <p style="margin: 0; line-height: 1.2;">School Head</p>
             </div>
         </div>`;
+    }
 
-    if (r.data && r.data.narrative && r.data.narrative.length) {
+    if (isNarrative) {
         const narr = r.data.narrative[0];
         document.getElementById('printable-report-content').innerHTML =
-            `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML.replace('Class Adviser', narr.position || 'Teacher')}`;
+            `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML}`;
     } else {
         document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + signaturesHTML;
     }
@@ -1748,18 +1801,21 @@ function printConsolidatedReport() {
 ============================================================ */
 window.addEventListener('DOMContentLoaded', async () => {
     loadLogos();
-    const savedLogo = localStorage.getItem('schoolLogo');
-    if (savedLogo) {
-        const roleLogo = document.getElementById('role-school-logo');
-        if (roleLogo) { roleLogo.src = savedLogo; roleLogo.style.display = 'block'; }
-    }
-
+    
     const saved = localStorage.getItem('currentUser');
     if (saved) {
         try {
             currentUser = JSON.parse(saved);
             let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
-            activeRole = rolesArray[0] || 'teacher';
+            const savedRole = localStorage.getItem('activeRole');
+            
+            if (savedRole && rolesArray.includes(savedRole)) {
+                activeRole = savedRole;
+            } else {
+                activeRole = rolesArray[0] || 'teacher';
+            }
+            
+            await fetchLogos();
             showDashboard();
         } catch(e) { console.warn("Auto-login failed:", e); }
     }
