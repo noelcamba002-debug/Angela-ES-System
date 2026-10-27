@@ -10,7 +10,8 @@
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
         h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+        body { background: var(--bg); color: var(--text); display: f
+        lex; height: 100vh; overflow: hidden; }
 
         /* ROLE SELECTION */
         #role-select-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #113a6b, #2a5a9b); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; text-align: center; color: white; padding: 20px; overflow-y: auto; }
@@ -481,13 +482,83 @@ async function login() {
     const username = document.getElementById('login-username').value.trim().toLowerCase();
     const password = document.getElementById('login-password').value.trim();
     const errBox = document.getElementById('login-error');
-    errBox.style.display = 'none';
+    
+    // Gawing dilaw muna habang nag-checheck
+    errBox.style.display = 'block';
+    errBox.style.background = '#fff3cd';
+    errBox.style.color = '#856404';
+    errBox.innerText = "Connecting to server...";
 
-    if (!username || !password) {
-        errBox.innerText = "Enter username and password.";
-        errBox.style.display = 'block';
+    let users = [];
+    try {
+        // Kukunin ang users sa Apps Script
+        const resp = await fetch(SCRIPT_URL + '?action=getUsers');
+        const text = await resp.text();
+        
+        // Check kung JSON ba talaga ang sinagot ng server
+        try {
+            users = JSON.parse(text);
+        } catch(e) {
+            errBox.style.background = '#f8d7da';
+            errBox.style.color = '#721c24';
+            errBox.innerText = "❌ Error: Ang server ay hindi nag-return ng tamang data.\n\nSiguraduhin na naka-deploy ang Apps Script sa 'Anyone'.\n\nServer Response: " + text.substring(0, 100);
+            return;
+        }
+        
+        if (!Array.isArray(users)) {
+            errBox.style.background = '#f8d7da';
+            errBox.style.color = '#721c24';
+            errBox.innerText = "❌ Error: Empty o maling format ang data mula sa Google Sheets.";
+            return;
+        }
+
+    } catch (e) {
+        errBox.style.background = '#f8d7da';
+        errBox.style.color = '#721c24';
+        errBox.innerText = "❌ Network Error: Hindi ma-contact ang Apps Script.\n\nCheck ang internet connection o ang URL sa System Settings.";
         return;
     }
+
+    // Hanapin ang username
+    const matchByName = users.find(u => String(u.Username || '').trim().toLowerCase() === username);
+    
+    if (!matchByName) {
+        errBox.style.background = '#f8d7da';
+        errBox.style.color = '#721c24';
+        errBox.innerText = "❌ Username not found.\n\nMGA AVAILABLE USERNAMES:\n" + users.map(u => u.Username).join(', ');
+        return;
+    }
+
+    // Check ang password
+    const dbPassword = String(matchByName.Password || '').trim();
+    if (dbPassword !== password) {
+        errBox.style.background = '#f8d7da';
+        errBox.style.color = '#721c24';
+        errBox.innerText = `❌ Password mismatch!\n\nIyong tinype: "${password}"\nNasa Database: "${dbPassword}"\n\nDapat eksaktong magkapareho (case-sensitive).`;
+        return;
+    }
+
+    // Check ang status
+    const dbStatus = String(matchByName.Status || '').trim().toLowerCase();
+    if (dbStatus !== 'active') {
+        errBox.style.background = '#f8d7da';
+        errBox.style.color = '#721c24';
+        errBox.innerText = `❌ Status is not active.\n\nNasa Database: "${matchByName.Status}"\nDapat nakalagay ay "active" (maliit na letra).`;
+        return;
+    }
+
+    // ===== KUNG NAKARATING DITO, SUCCESSFUL ANG LOGIN! =====
+    matchByName['Full Name'] = matchByName['Full Name'] || matchByName.FullName || matchByName.Name || matchByName.Username;
+    currentUser = matchByName;
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    
+    let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
+    activeRole = rolesArray[0] || 'teacher'; 
+
+    errBox.style.display = 'none';
+    document.getElementById('login-screen').classList.add('hidden');
+    showDashboard();
+}
 
     errBox.innerText = "Loading..."; errBox.style.display = 'block';
 
