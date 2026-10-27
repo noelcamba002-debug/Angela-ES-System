@@ -10,8 +10,7 @@
         :root { --primary: #113a6b; --secondary: #2a5a9b; --bg: #f4f7f6; --text: #333; --success: #28a745; --warning: #ffc107; --danger: #dc3545; --info: #17a2b8; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
         h1, h2, h3, h4, .btn, .role-title { font-family: 'Montserrat', sans-serif; }
-        body { background: var(--bg); color: var(--text); display: f
-        lex; height: 100vh; overflow: hidden; }
+        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
         /* ROLE SELECTION */
         #role-select-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #113a6b, #2a5a9b); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; text-align: center; color: white; padding: 20px; overflow-y: auto; }
@@ -27,7 +26,7 @@
         .login-box label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; }
         .login-box input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
         .login-box .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
-        .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; }
+        .login-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; display: none; text-align: left; white-space: pre-wrap; }
 
         /* LAYOUT */
         .sidebar { width: 280px; background: var(--primary); color: white; height: 100%; flex-direction: column; overflow-y: auto; display: none; flex-shrink: 0; }
@@ -195,7 +194,6 @@
     </div>
 
     <div class="workspace">
-
         <!-- PHIL-IRI -->
         <div id="module-philiri" class="panel">
             <div class="card" style="background: #eef8fb; border: 1px solid var(--info); margin-bottom: 20px;">
@@ -342,7 +340,6 @@
                 <h3>🔧 System Settings</h3>
                 <div class="form-group"><label>Google Apps Script URL</label><input type="text" id="setting-script-url"></div>
                 <button class="btn btn-primary" onclick="saveSystemSettings()" style="margin-top:10px;">💾 Save</button>
-
                 <h3 style="margin-top:30px;">🖼️ School & DepEd Logos</h3>
                 <div class="form-row">
                     <div class="form-group">
@@ -377,11 +374,10 @@
                 <div id="final-philiri-table"></div>
             </div>
         </div>
-
     </div>
 </main>
 
-<!-- OFFICIAL REPORT MODAL -->
+<!-- MODALS -->
 <div id="official-report-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
     <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
         <button class="btn btn-danger" onclick="document.getElementById('official-report-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
@@ -390,7 +386,6 @@
     </div>
 </div>
 
-<!-- ARAL PRINT MODAL -->
 <div id="aral-print-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
     <div style="background: white; max-width: 900px; margin: 0 auto; padding: 60px 50px; position: relative;">
         <button class="btn btn-danger" onclick="document.getElementById('aral-print-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
@@ -399,7 +394,6 @@
     </div>
 </div>
 
-<!-- SIGNATURE MODAL -->
 <div id="signature-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 40px 20px;">
     <div style="background: white; max-width: 500px; margin: 0 auto; padding: 40px; position: relative; border-radius: 8px;">
         <button class="btn btn-danger" onclick="document.getElementById('signature-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px;">Close</button>
@@ -427,7 +421,7 @@ window.cachedApprovedForPrint = [];
 window.tempLogoData = {};
 
 /* ============================================================
-   API HELPERS (defensive)
+   API HELPERS
 ============================================================ */
 async function fetchReports() {
     try {
@@ -446,6 +440,7 @@ async function fetchReports() {
         });
     } catch(e) { console.error("fetchReports:", e); return []; }
 }
+
 async function fetchUsers() {
     try {
         const r = await fetch(SCRIPT_URL + '?action=getUsers', { cache: 'no-store' });
@@ -453,6 +448,7 @@ async function fetchUsers() {
         return Array.isArray(data) ? data : [];
     } catch(e) { console.error("fetchUsers:", e); return []; }
 }
+
 async function apiPost(payload) {
     try {
         const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
@@ -483,7 +479,6 @@ async function login() {
     const password = document.getElementById('login-password').value.trim();
     const errBox = document.getElementById('login-error');
     
-    // Gawing dilaw muna habang nag-checheck
     errBox.style.display = 'block';
     errBox.style.background = '#fff3cd';
     errBox.style.color = '#856404';
@@ -491,63 +486,56 @@ async function login() {
 
     let users = [];
     try {
-        // Kukunin ang users sa Apps Script
         const resp = await fetch(SCRIPT_URL + '?action=getUsers');
         const text = await resp.text();
         
-        // Check kung JSON ba talaga ang sinagot ng server
         try {
             users = JSON.parse(text);
         } catch(e) {
             errBox.style.background = '#f8d7da';
             errBox.style.color = '#721c24';
-            errBox.innerText = "❌ Error: Ang server ay hindi nag-return ng tamang data.\n\nSiguraduhin na naka-deploy ang Apps Script sa 'Anyone'.\n\nServer Response: " + text.substring(0, 100);
+            errBox.innerText = "❌ Error: Server did not return valid JSON.\n\n" + text.substring(0, 100);
             return;
         }
         
         if (!Array.isArray(users)) {
             errBox.style.background = '#f8d7da';
             errBox.style.color = '#721c24';
-            errBox.innerText = "❌ Error: Empty o maling format ang data mula sa Google Sheets.";
+            errBox.innerText = "❌ Error: Invalid data format from Google Sheets.";
             return;
         }
-
     } catch (e) {
         errBox.style.background = '#f8d7da';
         errBox.style.color = '#721c24';
-        errBox.innerText = "❌ Network Error: Hindi ma-contact ang Apps Script.\n\nCheck ang internet connection o ang URL sa System Settings.";
+        errBox.innerText = "❌ Network Error: Cannot connect to Apps Script. Check internet.";
         return;
     }
 
-    // Hanapin ang username
     const matchByName = users.find(u => String(u.Username || '').trim().toLowerCase() === username);
     
     if (!matchByName) {
         errBox.style.background = '#f8d7da';
         errBox.style.color = '#721c24';
-        errBox.innerText = "❌ Username not found.\n\nMGA AVAILABLE USERNAMES:\n" + users.map(u => u.Username).join(', ');
+        errBox.innerText = "❌ Username not found.\n\nAvailable: " + users.map(u => u.Username).join(', ');
         return;
     }
 
-    // Check ang password
     const dbPassword = String(matchByName.Password || '').trim();
     if (dbPassword !== password) {
         errBox.style.background = '#f8d7da';
         errBox.style.color = '#721c24';
-        errBox.innerText = `❌ Password mismatch!\n\nIyong tinype: "${password}"\nNasa Database: "${dbPassword}"\n\nDapat eksaktong magkapareho (case-sensitive).`;
+        errBox.innerText = `❌ Password mismatch!\n\nYou typed: "${password}"\nDatabase has: "${dbPassword}"`;
         return;
     }
 
-    // Check ang status
     const dbStatus = String(matchByName.Status || '').trim().toLowerCase();
     if (dbStatus !== 'active') {
         errBox.style.background = '#f8d7da';
         errBox.style.color = '#721c24';
-        errBox.innerText = `❌ Status is not active.\n\nNasa Database: "${matchByName.Status}"\nDapat nakalagay ay "active" (maliit na letra).`;
+        errBox.innerText = `❌ Status is not active. Current: "${matchByName.Status}"`;
         return;
     }
 
-    // ===== KUNG NAKARATING DITO, SUCCESSFUL ANG LOGIN! =====
     matchByName['Full Name'] = matchByName['Full Name'] || matchByName.FullName || matchByName.Name || matchByName.Username;
     currentUser = matchByName;
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -560,40 +548,10 @@ async function login() {
     showDashboard();
 }
 
-    errBox.innerText = "Loading..."; errBox.style.display = 'block';
-
-    const users = await fetchUsers();
-    if (!users.length) {
-        errBox.innerText = "Cannot reach server. Check internet or System Settings URL.";
-        return;
-    }
-
-    const user = users.find(u => {
-        const uName = String(u.Username || '').trim().toLowerCase();
-        const uPass = String(u.Password || '').trim();
-        const uStatus = String(u.Status || '').trim().toLowerCase();
-        return uName === username && uPass === password && uStatus === 'active';
-    });
-
-    if (!user) {
-        errBox.innerText = "Invalid credentials. Check username, password, and status.";
-        return;
-    }
-
-    user['Full Name'] = user['Full Name'] || user.FullName || user.Name || user.Username;
-    currentUser = user;
-    localStorage.setItem('currentUser', JSON.stringify(user));
-
-    let rolesArray = String(user.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
-    activeRole = rolesArray[0] || 'teacher';
-
-    document.getElementById('login-screen').classList.add('hidden');
-    showDashboard();
-}
-
-function logout() {
+function logout() { 
     localStorage.removeItem('currentUser');
-    location.reload();
+    sessionStorage.clear();
+    location.reload(); 
 }
 
 /* ============================================================
@@ -602,7 +560,6 @@ function logout() {
 function showDashboard() {
     if (!currentUser) return;
 
-    // Hide all entry screens
     const rs = document.getElementById('role-select-screen');
     if (rs) rs.style.display = 'none';
     document.getElementById('login-screen').classList.add('hidden');
@@ -610,13 +567,13 @@ function showDashboard() {
     document.getElementById('sidebar').style.display = 'flex';
     document.getElementById('main-content').style.display = 'flex';
 
-    const name = String(currentUser['Full Name'] || currentUser.FullName || currentUser.Name || 'User').trim();
+    const name = String(currentUser['Full Name'] || 'User').trim();
     const grade = String(currentUser.Grade || '').trim();
     const section = String(currentUser.Section || '').trim();
     const rawRole = String(currentUser.Role || '').trim();
 
     document.getElementById('ui-name').innerText = name;
-    document.getElementById('ui-details').innerText = grade ? `Grade ${grade} - ${section}` : '';
+    document.getElementById('ui-details').innerText = grade && grade !== '-' ? `Grade ${grade} - ${section}` : '';
 
     const roles = rawRole.split(',').map(r => r.trim().toLowerCase()).filter(r => r);
     if (roles.length === 0) roles.push('teacher');
@@ -632,7 +589,6 @@ function showDashboard() {
 
     const roleBadge = document.getElementById('ui-role');
     roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
-    roleBadge.className = 'role-badge ' + activeRole;
 
     ['teacher','coordinator','schoolhead','ict'].forEach(r => {
         const menu = document.getElementById('menu-' + r);
@@ -721,9 +677,6 @@ function switchPanel(panelId, btnElement) {
     if (panelId === 'module-aral') refreshARALMasterlist();
 }
 
-/* ============================================================
-   UTILITIES
-============================================================ */
 function smartSplit(line) {
     if (line.includes('\t')) return line.split('\t').map(s => s.trim());
     if (line.includes(',')) return line.split(',').map(s => s.trim());
@@ -1175,8 +1128,7 @@ function saveSignature() {
     if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } }
     else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
     canvas.width = width; canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, width, height);
+    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
     localStorage.setItem('sig_teacher', canvas.toDataURL('image/png'));
     alert("Signature saved!");
     document.getElementById('signature-modal').classList.add('hidden');
@@ -1248,7 +1200,7 @@ async function refreshUsersList() {
     const c = document.getElementById('users-list');
     c.innerHTML = '<p>Loading...</p>';
     const users = await fetchUsers();
-    if (!users.length) { c.innerHTML = '<p><em>Walang users. Check Apps Script URL or add manually sa sheet.</em></p>'; return; }
+    if (!users.length) { c.innerHTML = '<p><em>Walang users. Check Apps Script URL.</em></p>'; return; }
     let html = `<table class="data-table"><thead><tr><th>Name</th><th>Username</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
     users.forEach(u => {
         html += `<tr><td>${u['Full Name'] || u.FullName || u.Name || ''}</td><td>${u.Username || ''}</td><td>${u.Role || ''}</td><td>${u.Status || ''}</td><td><button class="btn btn-danger btn-sm" onclick="toggleUser('${u.Username || ''}', '${u.Status || ''}')">Toggle</button></td></tr>`;
@@ -1269,7 +1221,7 @@ function openAddUserModal() {
     if (!username) return;
     const password = prompt("Password:");
     if (!password) return;
-    const role = prompt("Role (teacher, coordinator, schoolhead, ict — comma-separated):", "teacher");
+    const role = prompt("Role (teacher, coordinator, schoolhead, ict):", "teacher");
     if (!role) return;
     const grade = prompt("Grade Level (optional):") || "";
     const section = prompt("Section (optional):") || "";
