@@ -920,7 +920,7 @@
         }
 
         // --- ITO ANG MGA TOTOONG FUNCTIONS NA NAWALA ---
-            async function refreshMySubmissions() {
+                 async function refreshMySubmissions() {
             const container = document.getElementById('my-submissions-list'); 
             container.innerHTML = '<p>Loading...</p>';
             
@@ -949,7 +949,7 @@
             });
             container.innerHTML = html + `</tbody></table>`;
         }
-                async function refreshMyApproved() {
+            async function refreshMyApproved() {
             const container = document.getElementById('my-approved-list'); 
             container.innerHTML = '<p>Loading...</p>';
             
@@ -965,6 +965,14 @@
                 container.innerHTML = '<p><em>No approved reports yet.</em></p>'; 
                 return; 
             }
+            
+            let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
+            mine.forEach(r => {
+                const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
+                html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${type}</td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button> <button class="btn btn-success btn-sm" onclick="printMyReport(${r.id})">🖨️ Print</button></td></tr>`;
+            });
+            container.innerHTML = html + `</tbody></table>`;
+        }
             
             let html = `<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
             mine.forEach(r => {
