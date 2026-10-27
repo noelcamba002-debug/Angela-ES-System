@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AES Unified Reporting System v6</title>
+    <title>AES Unified Reporting System v7</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
@@ -141,6 +141,7 @@
         </div>
     </div>
 
+    <!-- Teacher Menu -->
     <div id="menu-teacher" class="hidden">
         <div class="nav-group">Data Entry</div>
         <a class="nav-item" onclick="switchPanel('module-philiri', this)">📝 PHIL-IRI (KS2)</a>
@@ -153,6 +154,7 @@
         <a class="nav-item" onclick="switchPanel('my-approved', this)">📁 My Approved Reports</a>
     </div>
 
+    <!-- Coordinator Menu -->
     <div id="menu-coordinator" class="hidden">
         <div class="nav-group">Review & Approve</div>
         <a class="nav-item" onclick="switchPanel('coordinator-review', this)">📋 Teacher Submissions</a>
@@ -160,6 +162,7 @@
         <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📄 School Consolidated Report</a>
     </div>
 
+    <!-- School Head Menu -->
     <div id="menu-schoolhead" class="hidden">
         <div class="nav-group">Approval</div>
         <a class="nav-item" onclick="switchPanel('head-approval', this)">✅ Forwarded Reports</a>
@@ -169,6 +172,7 @@
         <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📊 Final School Report</a>
     </div>
 
+    <!-- ICT Menu -->
     <div id="menu-ict" class="hidden">
         <div class="nav-group">Management</div>
         <a class="nav-item" onclick="switchPanel('manage-users', this)">👥 Manage Users</a>
