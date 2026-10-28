@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AES Unified Reporting System v10</title>
+    <title>AES Unified Reporting System v11</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
@@ -164,6 +164,7 @@
     <div id="menu-schoolhead" class="hidden">
         <div class="nav-group">Approval</div>
         <a class="nav-item" onclick="switchPanel('head-approval', this)">✅ Forwarded Reports</a>
+        <a class="nav-item" onclick="switchPanel('head-approved', this)">📁 Approved Reports</a>
         <div class="nav-group">Management</div>
         <a class="nav-item" onclick="switchPanel('manage-users', this)">👥 Manage Users</a>
         <div class="nav-group">Monitoring</div>
@@ -176,6 +177,7 @@
         <a class="nav-item" onclick="switchPanel('system-settings', this)">🔧 System Settings</a>
         <div class="nav-group">Approval (Backup)</div>
         <a class="nav-item" onclick="switchPanel('head-approval', this)">✅ Forwarded Reports</a>
+        <a class="nav-item" onclick="switchPanel('head-approved', this)">📁 Approved Reports</a>
         <div class="nav-group">Monitoring</div>
         <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📊 Final School Report</a>
     </div>
@@ -332,6 +334,11 @@
                 <h3>Approving Report</h3><div id="head-view-content"></div>
                 <div class="flex-between" style="margin-top:15px;"><button class="btn btn-warning" onclick="returnToCoordinator()">↩️ Return</button><button class="btn btn-success" onclick="finalApproveAndPrint()">🏁 Approve & Print</button></div>
             </div>
+        </div>
+
+        <!-- HEAD APPROVED ARCHIVE -->
+        <div id="head-approved" class="panel">
+            <div class="card"><h3>📁 Approved Reports Archive</h3><div id="head-approved-list"></div></div>
         </div>
 
         <!-- USERS -->
@@ -717,6 +724,7 @@ function switchPanel(panelId, btnElement) {
     if (panelId === 'manage-users') refreshUsersList();
     if (panelId === 'system-settings') loadSystemSettings();
     if (panelId === 'module-aral') refreshARALMasterlist();
+    if (panelId === 'head-approved') refreshHeadApproved();
 }
 
 function smartSplit(line) {
@@ -1437,6 +1445,20 @@ async function refreshMyApproved() {
     c.innerHTML = html + `</tbody></table>`;
 }
 
+async function refreshHeadApproved() {
+    const c = document.getElementById('head-approved-list');
+    c.innerHTML = '<p>Loading...</p>';
+    const reports = await fetchReports();
+    const mine = reports.filter(r => r.status === 'Approved').sort((a,b) => b.id - a.id);
+    if (!mine.length) { c.innerHTML = '<p><em>Walang approved reports pa.</em></p>'; return; }
+    let html = `<table class="data-table"><thead><tr><th>Date</th><th>Teacher</th><th>Type</th><th>Actions</th></tr></thead><tbody>`;
+    mine.forEach(r => {
+        const type = Object.keys(r.data)[0] ? Object.keys(r.data)[0].toUpperCase() : '—';
+        html += `<tr><td>${new Date(parseInt(r.id)).toLocaleDateString()}</td><td>${r.teacher}</td><td>${type}</td><td><button class="btn btn-primary btn-sm" onclick="viewMyReport(${r.id})">👁️ View</button> <button class="btn btn-success btn-sm" onclick="printMyReport(${r.id})">🖨️ Print</button></td></tr>`;
+    });
+    c.innerHTML = html + `</tbody></table>`;
+}
+
 /* ============================================================
    COORDINATOR
 ============================================================ */
@@ -1564,15 +1586,12 @@ async function viewMyReport(id) {
         coordRoleToFind = 'crla_coord';
     }
 
-    // --- SIMULA NG CACHE LOGIC ---
+    // --- SIMULA NG CACHE LOGIC PARA BUMILIS ---
     let coordName = "PROGRAM COORDINATOR";
     let headName = "SCHOOL HEAD";
-    
-    // Titingnan kung may naka-save nang listahan ng users sa browser
     const cachedUsersStr = localStorage.getItem('cachedUsers');
     
     if (cachedUsersStr) {
-        // Kung meron na, doon na lang kukuha ng pangalan (mabilis)
         const cachedUsers = JSON.parse(cachedUsersStr);
         const coordUser = cachedUsers.find(u => String(u.Role || '').toLowerCase().includes(coordRoleToFind));
         if (coordUser) coordName = coordUser['Full Name'] || coordUser.FullName;
@@ -1580,9 +1599,8 @@ async function viewMyReport(id) {
         const headUser = cachedUsers.find(u => String(u.Role || '').toLowerCase().includes('schoolhead'));
         if (headUser) headName = headUser['Full Name'] || headUser.FullName;
     } else {
-        // Kung wala pang cache (unang click), saka pa lang kukuha sa Google Sheet
         const users = await fetchUsers();
-        localStorage.setItem('cachedUsers', JSON.stringify(users)); // I-save para sa susunod
+        localStorage.setItem('cachedUsers', JSON.stringify(users)); 
         
         const coordUser = users.find(u => String(u.Role || '').toLowerCase().includes(coordRoleToFind));
         if (coordUser) coordName = coordUser['Full Name'] || coordUser.FullName;
@@ -1591,7 +1609,7 @@ async function viewMyReport(id) {
         if (headUser) headName = headUser['Full Name'] || headUser.FullName;
     }
     // --- DULO NG CACHE LOGIC ---
-    
+
     const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
 
     const headerHTML = `
@@ -1664,6 +1682,44 @@ async function viewMyReport(id) {
     }
     document.getElementById('official-report-modal').classList.remove('hidden');
 }
+
+function printMyReport(id) {
+    viewMyReport(id).then(() => setTimeout(() => printReport(), 300));
+}
+
+function printReport() {
+    const modal = document.getElementById('official-report-modal');
+    const content = modal.querySelector('div').innerHTML;
+    const w = window.open('', '_blank');
+    w.document.write(`<html><head><title></title><style>
+        @page { size: A4 landscape; margin: 15mm; }
+        body { font-family: Arial, sans-serif; }
+        .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: left; }
+        .form1b-table th { text-align: center; background: #e0e0e0; font-weight: bold; }
+        .form1b-table td:nth-child(1) { text-align: center; }
+        .form1b-table .auto-calc { text-align: center; }
+        .status-ready { background: #d4edda; }
+        .status-light { background: #fff3cd; }
+        .status-full { background: #f8d7da; }
+        .status-aral { background: #e2d9f3; }
+        .hidden { display: none; }
+        .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }
+        .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }
+    </style></head><body>${content}</body></html>`);
+    w.document.close();
+    w.onload = () => {
+        ['teacher','coord','head'].forEach(role => {
+            const src = localStorage.getItem(`sig_${role}`);
+            if (src) {
+                const i = w.document.getElementById(`sig-img-${role}`);
+                if (i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); }
+            }
+        });
+        setTimeout(() => { w.focus(); w.print(); }, 500);
+    };
+}
+
 /* ============================================================
    RENDER TABLES
 ============================================================ */
@@ -1734,7 +1790,6 @@ function renderDataTables(dataObj, teacherName) {
         html += `</tbody></table>`;
     }
 
-    // Dito dati nakalagay ang summary, inalis na natin para hindi magdoble sa viewMyReport.
     return html;
 }
 
