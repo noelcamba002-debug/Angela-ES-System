@@ -1632,7 +1632,10 @@ async function viewMyReport(id) {
         document.getElementById('printable-report-content').innerHTML =
             `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML}`;
     } else {
-        document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + signaturesHTML;
+               let summaryHTML = r.data.summary ? r.data.summary : "";
+        let summarySection = summaryHTML ? `<div style="margin-top: 30px; page-break-inside: avoid;">${summaryHTML}</div>` : "";
+
+        document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + summarySection + signaturesHTML;
     }
     document.getElementById('official-report-modal').classList.remove('hidden');
 }
