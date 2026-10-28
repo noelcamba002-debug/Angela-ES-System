@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AES Unified Reporting System v9</title>
+    <title>AES Unified Reporting System v10</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
@@ -59,11 +59,12 @@
         .btn-sm { padding: 6px 12px; font-size: 12px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
-        .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; margin-top: 20px; }
-        .form1b-table th, .form1b-table td, .data-table th, .data-table td { border: 1px solid #000; padding: 8px; text-align: left; } .form1b-table th, .data-table th { text-align: center; } /* Para manatiling gitna ang headers */ .form1b-table td:nth-child(1), .data-table td:nth-child(1) { text-align: center; } /* Para gitna ang 'No.' column */
-        .form1b-table th, .data-table th { background: #e0e0e0; font-weight: bold; }
+        .form1b-table, .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; margin-top: 20px; }
+        .form1b-table th, .form1b-table td, .data-table th, .data-table td { border: 1px solid #000; padding: 8px; text-align: left; }
+        .form1b-table th, .data-table th { text-align: center; background: #e0e0e0; font-weight: bold; }
+        .form1b-table td:nth-child(1), .data-table td:nth-child(1) { text-align: center; } /* Gitna ang No. */
         .form1b-table input[type="number"], .form1b-table input[type="text"] { width: 100%; padding: 6px; text-align: center; }
-        .form1b-table .auto-calc { background: #f9f9f9; font-weight: bold; }
+        .form1b-table .auto-calc { background: #f9f9f9; font-weight: bold; text-align: center; }
 
         .status-ready { background-color: #d4edda !important; color: #155724; font-weight: bold; }
         .status-light { background-color: #fff3cd !important; color: #856404; font-weight: bold; }
@@ -468,7 +469,11 @@ async function fetchLogos() {
 
 async function apiPost(payload) {
     try {
-        const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const r = await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload) 
+        });
         return await r.json();
     } catch(e) { console.error("apiPost error:", e); return { result: "error", message: e.toString() }; }
 }
@@ -944,43 +949,43 @@ function generateGSTSummary() {
 
     summaryBox.innerHTML = `
         <h4 style="color: #113a6b; margin-bottom: 15px; font-size: 16px;">📊 Class Performance Summary</h4>
-        <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: center;">
             <thead>
-                <tr style="background: #113a6b; color: white;">
-                    <th style="padding: 10px; border: 1px solid #000;">Category</th>
-                    <th style="padding: 10px; border: 1px solid #000;">Number of Learners</th>
-                    <th style="padding: 10px; border: 1px solid #000;">Percentage</th>
+                <tr style="background: #113a6b;">
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Category</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Number of Learners</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Percentage</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #cce5ff; color: #004085;">Grade Ready (Passers)</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${countGradeReady}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(countGradeReady)}%</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #cce5ff; color: #004085; text-align: center;">Grade Ready (Passers)</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${countGradeReady}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(countGradeReady)}%</td>
                 </tr>
                 <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d;">ARAL Candidates (Total)</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${countAral}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(countAral)}%</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d; text-align: center;">ARAL Candidates (Total)</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${countAral}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(countAral)}%</td>
                 </tr>
                 <tr style="font-size: 12px; background: #f9f9f9;">
-                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000;">- Frustration</td>
-                    <td style="padding: 6px; border: 1px solid #000;">${countAralFrustration}</td>
-                    <td style="padding: 6px; border: 1px solid #000;">${pct(countAralFrustration)}%</td>
+                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000; text-align: center;">- Frustration</td>
+                    <td style="padding: 6px; border: 1px solid #000; text-align: center;">${countAralFrustration}</td>
+                    <td style="padding: 6px; border: 1px solid #000; text-align: center;">${pct(countAralFrustration)}%</td>
                 </tr>
                 <tr style="font-size: 12px; background: #f9f9f9;">
-                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000;">- Instructional</td>
-                    <td style="padding: 6px; border: 1px solid #000;">${countAralInstructional}</td>
-                    <td style="padding: 6px; border: 1px solid #000;">${pct(countAralInstructional)}%</td>
+                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000; text-align: center;">- Instructional</td>
+                    <td style="padding: 6px; border: 1px solid #000; text-align: center;">${countAralInstructional}</td>
+                    <td style="padding: 6px; border: 1px solid #000; text-align: center;">${pct(countAralInstructional)}%</td>
                 </tr>
                 <tr style="font-size: 12px; background: #f9f9f9;">
-                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000;">- Independent</td>
-                    <td style="padding: 6px; border: 1px solid #000;">${countAralIndependent}</td>
-                    <td style="padding: 6px; border: 1px solid #000;">${pct(countAralIndependent)}%</td>
+                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000; text-align: center;">- Independent</td>
+                    <td style="padding: 6px; border: 1px solid #000; text-align: center;">${countAralIndependent}</td>
+                    <td style="padding: 6px; border: 1px solid #000; text-align: center;">${pct(countAralIndependent)}%</td>
                 </tr>
                 <tr style="background: #eee; font-weight: bold;">
-                    <td style="padding: 8px; border: 1px solid #000;">TOTAL LEARNERS</td>
-                    <td style="padding: 8px; border: 1px solid #000;" colspan="2">${totalLearners}</td>
+                    <td style="padding: 8px; border: 1px solid #000; text-align: center;">TOTAL LEARNERS</td>
+                    <td style="padding: 8px; border: 1px solid #000; text-align: center;" colspan="2">${totalLearners}</td>
                 </tr>
             </tbody>
         </table>
@@ -1195,6 +1200,7 @@ async function submitIndividualized() {
     
     if (result.result === "success") { alert(`Submitted!`); showDashboard(); } else alert("Error submitting: " + (result.message || 'unknown'));
 }
+
 async function submitCRLA() {
     const rows = document.querySelectorAll('#crla-table-body tr');
     const data = [];
@@ -1626,13 +1632,20 @@ async function viewMyReport(id) {
             </div>
         </div>`;
     }
+
     if (isNarrative) {
         const narr = r.data.narrative[0];
         document.getElementById('printable-report-content').innerHTML =
             `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML}`;
     } else {
-        document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + signaturesHTML;
+        // Dito natin isasama ang summary nang isang beses lang
+        let summaryHTML = r.data.summary ? r.data.summary : "";
+        let summarySection = summaryHTML ? `<div style="margin-top: 30px; page-break-inside: avoid;">${summaryHTML}</div>` : "";
+        document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + summarySection + signaturesHTML;
     }
+    document.getElementById('official-report-modal').classList.remove('hidden');
+}
+
 function printMyReport(id) {
     viewMyReport(id).then(() => setTimeout(() => printReport(), 300));
 }
@@ -1645,7 +1658,10 @@ function printReport() {
         @page { size: A4 landscape; margin: 15mm; }
         body { font-family: Arial, sans-serif; }
         .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: center; }
+        .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: left; }
+        .form1b-table th { text-align: center; background: #e0e0e0; font-weight: bold; }
+        .form1b-table td:nth-child(1) { text-align: center; }
+        .form1b-table .auto-calc { text-align: center; }
         .status-ready { background: #d4edda; }
         .status-light { background: #fff3cd; }
         .status-full { background: #f8d7da; }
@@ -1736,16 +1752,10 @@ function renderDataTables(dataObj, teacherName) {
         });
         html += `</tbody></table>`;
     }
-        // ... (Yung mga if (gstData.length), if (crla.length) etc. nasa itaas nito) ...
 
-    // IDAGDAG ITO BAGO ANG RETURN:
-    if (dataObj.summary && dataObj.summary.trim() !== "") {
-        html += `<div style="margin-top: 30px; page-break-inside: avoid;">${dataObj.summary}</div>`;
-    }
-
+    // Dito dati nakalagay ang summary, inalis na natin para hindi magdoble sa viewMyReport.
     return html;
 }
-    
 
 /* ============================================================
    EDIT & RESUBMIT
@@ -1829,8 +1839,8 @@ function printARALMasterlist() {
         @page { size: A4 landscape; margin: 15mm; }
         body { font-family: Arial, sans-serif; font-size: 11px; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 4px; text-align: center; }
-        th { background: #e0e0e0; }
+        th, td { border: 1px solid #000; padding: 4px; text-align: left; }
+        th { background: #e0e0e0; text-align: center; }
         .status-aral { background: #e2d9f3; }
     </style></head><body>
         <div style="text-align:center; margin-bottom:20px;">
@@ -1908,8 +1918,8 @@ function printConsolidatedReport() {
         @page { size: A4 landscape; margin: 15mm; }
         body { font-family: Arial, sans-serif; font-size: 11px; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 4px; text-align: center; }
-        th { background: #e0e0e0; }
+        th, td { border: 1px solid #000; padding: 4px; text-align: left; }
+        th { background: #e0e0e0; text-align: center; }
         .status-ready { background: #d4edda; }
         .status-light { background: #fff3cd; }
         .status-full { background: #f8d7da; }
