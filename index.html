@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AES Unified Reporting System v8</title>
+    <title>AES Unified Reporting System v9</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
@@ -141,7 +141,6 @@
         </div>
     </div>
 
-    <!-- Teacher Menu -->
     <div id="menu-teacher" class="hidden">
         <div class="nav-group">Data Entry</div>
         <a class="nav-item" onclick="switchPanel('module-philiri', this)">📝 PHIL-IRI (KS2)</a>
@@ -154,7 +153,6 @@
         <a class="nav-item" onclick="switchPanel('my-approved', this)">📁 My Approved Reports</a>
     </div>
 
-    <!-- Coordinator Menu -->
     <div id="menu-coordinator" class="hidden">
         <div class="nav-group">Review & Approve</div>
         <a class="nav-item" onclick="switchPanel('coordinator-review', this)">📋 Teacher Submissions</a>
@@ -162,7 +160,6 @@
         <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📄 School Consolidated Report</a>
     </div>
 
-    <!-- School Head Menu -->
     <div id="menu-schoolhead" class="hidden">
         <div class="nav-group">Approval</div>
         <a class="nav-item" onclick="switchPanel('head-approval', this)">✅ Forwarded Reports</a>
@@ -172,7 +169,6 @@
         <a class="nav-item" onclick="switchPanel('report-consolidated', this)">📊 Final School Report</a>
     </div>
 
-    <!-- ICT Menu -->
     <div id="menu-ict" class="hidden">
         <div class="nav-group">Management</div>
         <a class="nav-item" onclick="switchPanel('manage-users', this)">👥 Manage Users</a>
@@ -229,6 +225,9 @@
                 <h3 id="result-table-title">GST Result</h3>
                 <div style="overflow-x: auto;"><table class="form1b-table"><thead id="ind-table-head"></thead><tbody id="ind-table-body"></tbody></table></div>
                 <button class="btn btn-primary" onclick="addIndividualizedRow()" style="margin-top:10px;">➕ Add Manual</button>
+                
+                <!-- SUMMARY BOX -->
+                <div id="gst-summary-box" style="margin-top: 30px; display: none; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ccc;"></div>
             </div>
         </div>
 
@@ -732,6 +731,9 @@ function updateIndividualizedLogic() {
     const pasteFormat = document.getElementById('ind-paste-format');
     const textarea = document.getElementById('ind-paste-data');
     const resultTitle = document.getElementById('result-table-title');
+    
+    const summaryBox = document.getElementById('gst-summary-box');
+    if (summaryBox) summaryBox.style.display = 'none'; // Hide summary pag nagpalit ng type
 
     if (resultTitle) resultTitle.innerText = type === 'GST' ? "GST Result" : `${type} Results`;
     tbody.innerHTML = '';
@@ -772,6 +774,7 @@ function parseIndividualizedData() {
         }
     });
     document.getElementById('ind-paste-data').value = '';
+    generateGSTSummary();
 }
 
 function addIndividualizedRow(data = null) {
@@ -784,7 +787,7 @@ function addIndividualizedRow(data = null) {
     if (type === 'GST') {
         tr.innerHTML = `
             <td>${indRowCount}</td>
-            <td><input type="text" id="ind-name-${indRowCount}" value="${data ? data.name : ''}"></td>
+            <td><input type="text" id="ind-name-${indRowCount}" value="${data ? data.name : ''}" oninput="generateGSTSummary()"></td>
             <td><input type="number" id="gst-total-${indRowCount}" value="${data ? data.total : ''}" oninput="calcGST(${indRowCount})"></td>
             <td class="auto-calc" id="ind-profile-${indRowCount}"></td>
             <td class="auto-calc" id="ind-aral-${indRowCount}"></td>
@@ -831,7 +834,9 @@ function calcGST(row) {
         if (total >= 18) profile = "Independent";
         else if (total >= 16) profile = "Instructional";
         else profile = "Frustration";
+        
         displayStr = `Grade Ready (${profile})`;
+        
         if (profile === "Independent") suggestion = "ENRICHMENT: Advanced reading materials, book reports, peer tutoring.";
         else if (profile === "Instructional") suggestion = "ENRICHMENT: Independent reading with minimal guidance, vocabulary expansion.";
         else suggestion = "ENRICHMENT: Easy-to-read books, guided reading to build confidence.";
@@ -843,12 +848,14 @@ function calcGST(row) {
         else { profile = "Independent"; offset = 1; suggestion = "REMEDIATION: Enrichment Activities, Independent Reading Projects"; }
         let readingLevel = targetGrade - offset;
         if (readingLevel < 1) readingLevel = 1;
+        
         displayStr = `${profile} (Gr. ${readingLevel})`;
     }
 
     pc.innerText = displayStr;
     pc.className = "auto-calc";
     pc.style.cssText = "";
+    
     if (displayStr.includes("Grade Ready")) {
         pc.style.setProperty('background-color', '#cce5ff', 'important');
         pc.style.setProperty('color', '#004085', 'important');
@@ -864,6 +871,8 @@ function calcGST(row) {
         intCell.value = suggestion;
         intCell.dataset.auto = "true";
     }
+
+    generateGSTSummary();
 }
 
 function calcIndividualized(row) {
@@ -885,6 +894,97 @@ function calcIndividualized(row) {
     else { pc.classList.add("status-ready"); suggestion = "Enrichment Activities"; }
     pc.innerText = finalLvl;
     if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+}
+
+function generateGSTSummary() {
+    const type = document.getElementById('ind-assessment-type').value;
+    const summaryBox = document.getElementById('gst-summary-box');
+    
+    if (type !== 'GST') {
+        summaryBox.style.display = 'none';
+        return;
+    }
+
+    const rows = document.querySelectorAll('#ind-table-body tr');
+    let totalLearners = 0;
+    
+    let countGradeReady = 0;
+    let countAral = 0;
+    let countAralIndependent = 0;
+    let countAralInstructional = 0;
+    let countAralFrustration = 0;
+
+    rows.forEach(tr => {
+        const rowId = tr.id.replace('ind-row-', '');
+        const nameEl = document.getElementById(`ind-name-${rowId}`);
+        const profileEl = document.getElementById(`ind-profile-${rowId}`);
+        
+        if (nameEl && nameEl.value.trim() !== "") {
+            totalLearners++;
+            const profileText = profileEl.innerText || "";
+            
+            if (profileText.includes("Grade Ready")) {
+                countGradeReady++;
+            } else {
+                countAral++;
+                if (profileText.includes("Independent")) countAralIndependent++;
+                else if (profileText.includes("Instructional")) countAralInstructional++;
+                else if (profileText.includes("Frustration")) countAralFrustration++;
+            }
+        }
+    });
+
+    if (totalLearners === 0) {
+        summaryBox.style.display = 'none';
+        return;
+    }
+
+    summaryBox.style.display = 'block';
+    const pct = (count) => Math.round((count / totalLearners) * 100);
+
+    summaryBox.innerHTML = `
+        <h4 style="color: #113a6b; margin-bottom: 15px; font-size: 16px;">📊 Class Performance Summary</h4>
+        <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+                <tr style="background: #113a6b; color: white;">
+                    <th style="padding: 10px; border: 1px solid #000;">Category</th>
+                    <th style="padding: 10px; border: 1px solid #000;">Number of Learners</th>
+                    <th style="padding: 10px; border: 1px solid #000;">Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #cce5ff; color: #004085;">Grade Ready (Passers)</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${countGradeReady}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(countGradeReady)}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d;">ARAL Candidates (Total)</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${countAral}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(countAral)}%</td>
+                </tr>
+                <tr style="font-size: 12px; background: #f9f9f9;">
+                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000;">- Frustration</td>
+                    <td style="padding: 6px; border: 1px solid #000;">${countAralFrustration}</td>
+                    <td style="padding: 6px; border: 1px solid #000;">${pct(countAralFrustration)}%</td>
+                </tr>
+                <tr style="font-size: 12px; background: #f9f9f9;">
+                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000;">- Instructional</td>
+                    <td style="padding: 6px; border: 1px solid #000;">${countAralInstructional}</td>
+                    <td style="padding: 6px; border: 1px solid #000;">${pct(countAralInstructional)}%</td>
+                </tr>
+                <tr style="font-size: 12px; background: #f9f9f9;">
+                    <td style="padding: 6px 6px 6px 20px; border: 1px solid #000;">- Independent</td>
+                    <td style="padding: 6px; border: 1px solid #000;">${countAralIndependent}</td>
+                    <td style="padding: 6px; border: 1px solid #000;">${pct(countAralIndependent)}%</td>
+                </tr>
+                <tr style="background: #eee; font-weight: bold;">
+                    <td style="padding: 8px; border: 1px solid #000;">TOTAL LEARNERS</td>
+                    <td style="padding: 8px; border: 1px solid #000;" colspan="2">${totalLearners}</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
 }
 
 /* ============================================================
@@ -1068,7 +1168,12 @@ async function submitIndividualized() {
     });
     if (!data.length) { alert("Walang data."); return; }
     const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('teacher-grade').value} (${document.getElementById('teacher-section').value})`;
-    const key = type.toLowerCase().replace('-','');
+    
+    let key = "gst";
+    if (type === 'Pre-test') key = "pretest";
+    else if (type === 'MOSY') key = "mosy";
+    else if (type === 'Post-test') key = "posttest";
+
     const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ [key]: data }), comments: "[]" });
     if (result.result === "success") { alert(`Submitted!`); showDashboard(); } else alert("Error submitting: " + (result.message || 'unknown'));
 }
