@@ -1140,6 +1140,7 @@ async function submitIndividualized() {
     const type = document.getElementById('ind-assessment-type').value;
     const rows = document.querySelectorAll('#ind-table-body tr');
     const data = [];
+    
     rows.forEach(tr => {
         const rowId = tr.id.replace('ind-row-', '');
         const nameEl = document.getElementById(`ind-name-${rowId}`);
@@ -1167,6 +1168,7 @@ async function submitIndividualized() {
         }
     });
     if (!data.length) { alert("Walang data."); return; }
+    
     const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('teacher-grade').value} (${document.getElementById('teacher-section').value})`;
     
     let key = "gst";
@@ -1174,10 +1176,25 @@ async function submitIndividualized() {
     else if (type === 'MOSY') key = "mosy";
     else if (type === 'Post-test') key = "posttest";
 
-    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ [key]: data }), comments: "[]" });
+    // KUNIN ANG SUMMARY KUNG GST LANG
+    let summaryHTML = "";
+    if (type === 'GST') {
+        const sBox = document.getElementById('gst-summary-box');
+        if (sBox && sBox.style.display !== 'none') summaryHTML = sBox.innerHTML;
+    }
+
+    // ISAMA ANG SUMMARY SA DATA
+    const result = await apiPost({ 
+        action: "submit", 
+        id: Date.now(), 
+        teacher: teacherName, 
+        status: 'Pending Coordinator Review', 
+        data: JSON.stringify({ [key]: data, summary: summaryHTML }), 
+        comments: "[]" 
+    });
+    
     if (result.result === "success") { alert(`Submitted!`); showDashboard(); } else alert("Error submitting: " + (result.message || 'unknown'));
 }
-
 async function submitCRLA() {
     const rows = document.querySelectorAll('#crla-table-body tr');
     const data = [];
@@ -1723,9 +1740,16 @@ function renderDataTables(dataObj, teacherName) {
         });
         html += `</tbody></table>`;
     }
+        // ... (Yung mga if (gstData.length), if (crla.length) etc. nasa itaas nito) ...
+
+    // IDAGDAG ITO BAGO ANG RETURN:
+    if (dataObj.summary && dataObj.summary.trim() !== "") {
+        html += `<div style="margin-top: 30px; page-break-inside: avoid;">${dataObj.summary}</div>`;
+    }
 
     return html;
 }
+    
 
 /* ============================================================
    EDIT & RESUBMIT
