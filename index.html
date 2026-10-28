@@ -1564,13 +1564,33 @@ async function viewMyReport(id) {
         coordRoleToFind = 'crla_coord';
     }
 
-    const users = await fetchUsers();
+    // --- SIMULA NG CACHE LOGIC ---
+    let coordName = "PROGRAM COORDINATOR";
+    let headName = "SCHOOL HEAD";
     
-    const coordUser = users.find(u => String(u.Role || '').toLowerCase().includes(coordRoleToFind));
-    const coordName = coordUser ? (coordUser['Full Name'] || coordUser.FullName) : 'PROGRAM COORDINATOR';
-
-    const headUser = users.find(u => String(u.Role || '').toLowerCase().includes('schoolhead'));
-    const headName = headUser ? (headUser['Full Name'] || headUser.FullName) : 'SCHOOL HEAD';
+    // Titingnan kung may naka-save nang listahan ng users sa browser
+    const cachedUsersStr = localStorage.getItem('cachedUsers');
+    
+    if (cachedUsersStr) {
+        // Kung meron na, doon na lang kukuha ng pangalan (mabilis)
+        const cachedUsers = JSON.parse(cachedUsersStr);
+        const coordUser = cachedUsers.find(u => String(u.Role || '').toLowerCase().includes(coordRoleToFind));
+        if (coordUser) coordName = coordUser['Full Name'] || coordUser.FullName;
+        
+        const headUser = cachedUsers.find(u => String(u.Role || '').toLowerCase().includes('schoolhead'));
+        if (headUser) headName = headUser['Full Name'] || headUser.FullName;
+    } else {
+        // Kung wala pang cache (unang click), saka pa lang kukuha sa Google Sheet
+        const users = await fetchUsers();
+        localStorage.setItem('cachedUsers', JSON.stringify(users)); // I-save para sa susunod
+        
+        const coordUser = users.find(u => String(u.Role || '').toLowerCase().includes(coordRoleToFind));
+        if (coordUser) coordName = coordUser['Full Name'] || coordUser.FullName;
+        
+        const headUser = users.find(u => String(u.Role || '').toLowerCase().includes('schoolhead'));
+        if (headUser) headName = headUser['Full Name'] || headUser.FullName;
+    }
+    // --- DULO NG CACHE LOGIC ---
     
     const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
 
@@ -1638,51 +1658,12 @@ async function viewMyReport(id) {
         document.getElementById('printable-report-content').innerHTML =
             `${headerHTML}<div style="text-align:center; margin-bottom:30px;"><h3 style="font-size: 20px; text-transform:uppercase;">${narr.reportType}</h3><p style="font-size: 14px; font-weight: bold;">${narr.subject} - ${narr.title}</p></div><div style="font-size: 13px; white-space: pre-wrap; text-align: justify;">${narr.content}</div>${signaturesHTML}`;
     } else {
-        // Dito natin isasama ang summary nang isang beses lang
         let summaryHTML = r.data.summary ? r.data.summary : "";
         let summarySection = summaryHTML ? `<div style="margin-top: 30px; page-break-inside: avoid;">${summaryHTML}</div>` : "";
         document.getElementById('printable-report-content').innerHTML = headerHTML + renderDataTables(r.data, r.teacher) + summarySection + signaturesHTML;
     }
     document.getElementById('official-report-modal').classList.remove('hidden');
 }
-
-function printMyReport(id) {
-    viewMyReport(id).then(() => setTimeout(() => printReport(), 300));
-}
-
-function printReport() {
-    const modal = document.getElementById('official-report-modal');
-    const content = modal.querySelector('div').innerHTML;
-    const w = window.open('', '_blank');
-    w.document.write(`<html><head><title></title><style>
-        @page { size: A4 landscape; margin: 15mm; }
-        body { font-family: Arial, sans-serif; }
-        .form1b-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        .form1b-table th, .form1b-table td { border: 1px solid #000; padding: 5px; text-align: left; }
-        .form1b-table th { text-align: center; background: #e0e0e0; font-weight: bold; }
-        .form1b-table td:nth-child(1) { text-align: center; }
-        .form1b-table .auto-calc { text-align: center; }
-        .status-ready { background: #d4edda; }
-        .status-light { background: #fff3cd; }
-        .status-full { background: #f8d7da; }
-        .status-aral { background: #e2d9f3; }
-        .hidden { display: none; }
-        .signature-img { height: 50px; display: block; margin: 0 auto 5px auto; object-fit: contain; }
-        .report-logo { height: 60px !important; width: auto !important; max-width: 90px !important; object-fit: contain !important; }
-    </style></head><body>${content}</body></html>`);
-    w.document.close();
-    w.onload = () => {
-        ['teacher','coord','head'].forEach(role => {
-            const src = localStorage.getItem(`sig_${role}`);
-            if (src) {
-                const i = w.document.getElementById(`sig-img-${role}`);
-                if (i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); }
-            }
-        });
-        setTimeout(() => { w.focus(); w.print(); }, 500);
-    };
-}
-
 /* ============================================================
    RENDER TABLES
 ============================================================ */
