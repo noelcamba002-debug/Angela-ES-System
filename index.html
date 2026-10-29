@@ -1659,7 +1659,11 @@ async function viewCoordinatorReport(id) {
     const reports = await fetchReports();
     const r = reports.find(x => x.id == id);
     if (!r) return;
-    document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher);
+    
+    let summaryHTML = r.data.summary ? r.data.summary : "";
+    let summarySection = summaryHTML ? `<div style="margin-top: 30px; page-break-inside: avoid;">${summaryHTML}</div>` : "";
+
+    document.getElementById('coordinator-view-content').innerHTML = renderDataTables(r.data, r.teacher) + summarySection;
     document.getElementById('coordinator-view').classList.remove('hidden');
 }
 
@@ -1707,7 +1711,11 @@ async function viewHeadReport(id) {
     const reports = await fetchReports();
     const r = reports.find(x => x.id == id);
     if (!r) return;
-    document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher);
+    
+    let summaryHTML = r.data.summary ? r.data.summary : "";
+    let summarySection = summaryHTML ? `<div style="margin-top: 30px; page-break-inside: avoid;">${summaryHTML}</div>` : "";
+
+    document.getElementById('head-view-content').innerHTML = renderDataTables(r.data, r.teacher) + summarySection;
     document.getElementById('head-view').classList.remove('hidden');
 }
 
