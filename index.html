@@ -2151,19 +2151,11 @@ function printConsolidatedReport() {
    BOOT
 ============================================================ */
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Subukang kunin ang logo nang hindi hinihintay (para hindi mag-hang ang login)
-    fetchLogos().then(logos => {
-        if (logos && logos.schoolLogo) {
-            const roleLogo = document.getElementById('role-school-logo');
-            if (roleLogo) {
-                // Nilagyan natin ng timestamp para hindi ma-cache ng browser ang lumang image
-                roleLogo.src = logos.schoolLogo + "?t=" + new Date().getTime(); 
-                roleLogo.style.display = 'block';
-            }
-        }
-    }).catch(e => console.warn("Logo fetch failed on boot", e));
+    // 1. LINISIN ANG LUMANG CACHE NG LOGO (Para hindi mag-error)
+    const roleLogo = document.getElementById('role-school-logo');
+    if (roleLogo) roleLogo.src = "https://via.placeholder.com/120"; 
 
-    // 2. Auto-login check
+    // 2. AUTO-LOGIN CHECK MUNA (Para pumasok agad kung may naka-save)
     const saved = localStorage.getItem('currentUser');
     if (saved) {
         try {
@@ -2177,11 +2169,26 @@ window.addEventListener('DOMContentLoaded', async () => {
                 activeRole = rolesArray[0] || 'teacher';
             }
             
+            // Pumasok agad sa dashboard
+            await fetchLogos();
             showDashboard();
-        } catch(e) { console.warn("Auto-login failed:", e); }
+            return; // Tigil na dito, huwag nang ituloy sa baba
+        } catch(e) { 
+            console.warn("Auto-login failed, forcing manual login.", e); 
+            localStorage.removeItem('currentUser'); // Buhayin ang login screen kung sira ang save
+        }
     }
-});
-    
+
+    // 3. KUNG WALANG NAKA-SAVE, KUNIN ANG LOGO PARA SA LANDING PAGE
+    try {
+        const logos = await fetchLogos();
+        if (logos && logos.schoolLogo && roleLogo) {
+            roleLogo.src = logos.schoolLogo + "?t=" + new Date().getTime(); 
+        }
+    } catch (err) {
+        console.warn("Logo fetch failed on landing page.");
+    }
+});    
    
     const saved = localStorage.getItem('currentUser');
     if (saved) {
