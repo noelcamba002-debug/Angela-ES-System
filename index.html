@@ -2152,19 +2152,21 @@ function printConsolidatedReport() {
 ============================================================ */
 window.addEventListener('DOMContentLoaded', async () => {
     loadLogos();
-    await fetchLogos(); // <--- IDAGDAG ITO para makuha agad ang logo URL
-    
-    // I-set ang logo sa Role Selection Screen kung meron
-    if (globalLogos.schoolLogo) {
-        const roleLogo = document.getElementById('role-school-logo');
-        if (roleLogo) {
-            roleLogo.src = globalLogos.schoolLogo;
-            roleLogo.style.display = 'block';
+       // Subukang kunin ang logo, pero kung mag-fail, tuloy pa rin ang system
+    try {
+        await fetchLogos(); 
+        if (globalLogos.schoolLogo) {
+            const roleLogo = document.getElementById('role-school-logo');
+            if (roleLogo) {
+                roleLogo.src = globalLogos.schoolLogo;
+                roleLogo.style.display = 'block';
+            }
         }
+    } catch (err) {
+        console.warn("Logo fetch failed, proceeding to login screen.", err);
     }
     
-    const saved = localStorage.getItem('currentUser');
-    
+   
     const saved = localStorage.getItem('currentUser');
     if (saved) {
         try {
