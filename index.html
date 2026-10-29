@@ -370,6 +370,9 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="saveLogos()" style="margin-top:10px;">💾 Save Logos</button>
+                        <h3 style="margin-top:40px; color: var(--danger); border-bottom: 1px solid var(--danger); padding-bottom: 5px;">⚠️ Danger Zone</h3>
+                <p style="font-size: 13px; color: #666; margin-bottom: 10px;">Ang pag-click sa button na ito ay permanenteng magbubura ng lahat ng reports sa Google Sheet.</p>
+                <button class="btn btn-danger" onclick="deleteAllRecords()" style="margin-top:10px;">🗑️ Delete All Records</button>
             </div>
         </div>
 
@@ -2168,6 +2171,28 @@ window.addEventListener('DOMContentLoaded', async () => {
         } catch(e) { console.warn("Auto-login failed:", e); }
     }
 });
+function deleteAllRecords() {
+    const confirm1 = confirm("⚠️ BABALA: Mabubura ang LAHAT ng reports sa Google Sheet. Sigurado ka ba?");
+    if (!confirm1) return;
+    
+    const confirm2 = prompt("I-type ang 'DELETE' (all caps) para kumpirmahin:");
+    if (confirm2 !== 'DELETE') {
+        alert("Hindi natuloy ang pagbura.");
+        return;
+    }
+
+    alert("Binubura ang lahat ng records... Mangyaring maghintay.");
+
+    apiPost({ action: "deleteAllReports" }).then(res => {
+        if (res.result === "success") {
+            alert("✅ Matagumpay na nabura ang lahat ng records!");
+            localStorage.removeItem('cachedUsers');
+            location.reload(); 
+        } else {
+            alert("❌ Error sa pagbura: " + (res.message || 'unknown error'));
+        }
+    });
+}
 </script>
 </body>
 </html>
