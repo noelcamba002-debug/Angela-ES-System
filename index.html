@@ -2151,20 +2151,36 @@ function printConsolidatedReport() {
    BOOT
 ============================================================ */
 window.addEventListener('DOMContentLoaded', async () => {
-    loadLogos();
-       // Subukang kunin ang logo, pero kung mag-fail, tuloy pa rin ang system
-    try {
-        await fetchLogos(); 
-        if (globalLogos.schoolLogo) {
+    // 1. Subukang kunin ang logo nang hindi hinihintay (para hindi mag-hang ang login)
+    fetchLogos().then(logos => {
+        if (logos && logos.schoolLogo) {
             const roleLogo = document.getElementById('role-school-logo');
             if (roleLogo) {
-                roleLogo.src = globalLogos.schoolLogo;
+                // Nilagyan natin ng timestamp para hindi ma-cache ng browser ang lumang image
+                roleLogo.src = logos.schoolLogo + "?t=" + new Date().getTime(); 
                 roleLogo.style.display = 'block';
             }
         }
-    } catch (err) {
-        console.warn("Logo fetch failed, proceeding to login screen.", err);
+    }).catch(e => console.warn("Logo fetch failed on boot", e));
+
+    // 2. Auto-login check
+    const saved = localStorage.getItem('currentUser');
+    if (saved) {
+        try {
+            currentUser = JSON.parse(saved);
+            let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
+            const savedRole = localStorage.getItem('activeRole');
+            
+            if (savedRole && rolesArray.includes(savedRole)) {
+                activeRole = savedRole;
+            } else {
+                activeRole = rolesArray[0] || 'teacher';
+            }
+            
+            showDashboard();
+        } catch(e) { console.warn("Auto-login failed:", e); }
     }
+});
     
    
     const saved = localStorage.getItem('currentUser');
