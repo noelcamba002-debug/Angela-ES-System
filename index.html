@@ -2150,9 +2150,10 @@ function printConsolidatedReport() {
 /* ============================================================
    BOOT
 ============================================================ */
-window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Check kung may naka-login na
+window.addEventListener('DOMContentLoaded', () => {
+    // 1. Check kung may naka-save na user
     const saved = localStorage.getItem('currentUser');
+    
     if (saved) {
         try {
             currentUser = JSON.parse(saved);
@@ -2165,15 +2166,20 @@ window.addEventListener('DOMContentLoaded', async () => {
                 activeRole = rolesArray[0] || 'teacher';
             }
             
-            // Kunin ang logos para sa report, tapos pumasok sa dashboard
-            await fetchLogos();
+            // Pumasok agad sa Dashboard nang hindi hinihintay ang logo
             showDashboard();
+            
+            // Kunin ang logos sa background (hindi nakaka-hang)
+            fetchLogos().catch(e => console.log("Logo error:", e));
+            
         } catch(e) { 
             console.warn("Auto-login failed:", e); 
-            localStorage.removeItem('currentUser'); // Buhayin ang login screen kung may sira
+            localStorage.removeItem('currentUser'); 
+            location.reload(); // I-refresh kung sira ang naka-save
         }
     }
-});function deleteAllRecords() {
+});
+    function deleteAllRecords() {
     const confirm1 = confirm("⚠️ BABALA: Mabubura ang LAHAT ng reports sa Google Sheet. Sigurado ka ba?");
     if (!confirm1) return;
     
