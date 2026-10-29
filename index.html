@@ -2151,11 +2151,7 @@ function printConsolidatedReport() {
    BOOT
 ============================================================ */
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. LINISIN ANG LUMANG CACHE NG LOGO (Para hindi mag-error)
-    const roleLogo = document.getElementById('role-school-logo');
-    if (roleLogo) roleLogo.src = "https://via.placeholder.com/120"; 
-
-    // 2. AUTO-LOGIN CHECK MUNA (Para pumasok agad kung may naka-save)
+    // 1. Check kung may naka-login na
     const saved = localStorage.getItem('currentUser');
     if (saved) {
         try {
@@ -2169,46 +2165,15 @@ window.addEventListener('DOMContentLoaded', async () => {
                 activeRole = rolesArray[0] || 'teacher';
             }
             
-            // Pumasok agad sa dashboard
+            // Kunin ang logos para sa report, tapos pumasok sa dashboard
             await fetchLogos();
             showDashboard();
-            return; // Tigil na dito, huwag nang ituloy sa baba
         } catch(e) { 
-            console.warn("Auto-login failed, forcing manual login.", e); 
-            localStorage.removeItem('currentUser'); // Buhayin ang login screen kung sira ang save
+            console.warn("Auto-login failed:", e); 
+            localStorage.removeItem('currentUser'); // Buhayin ang login screen kung may sira
         }
     }
-
-    // 3. KUNG WALANG NAKA-SAVE, KUNIN ANG LOGO PARA SA LANDING PAGE
-    try {
-        const logos = await fetchLogos();
-        if (logos && logos.schoolLogo && roleLogo) {
-            roleLogo.src = logos.schoolLogo + "?t=" + new Date().getTime(); 
-        }
-    } catch (err) {
-        console.warn("Logo fetch failed on landing page.");
-    }
-});    
-   
-    const saved = localStorage.getItem('currentUser');
-    if (saved) {
-        try {
-            currentUser = JSON.parse(saved);
-            let rolesArray = String(currentUser.Role || 'teacher').split(',').map(r => r.trim().toLowerCase()).filter(r => r);
-            const savedRole = localStorage.getItem('activeRole');
-            
-            if (savedRole && rolesArray.includes(savedRole)) {
-                activeRole = savedRole;
-            } else {
-                activeRole = rolesArray[0] || 'teacher';
-            }
-            
-            await fetchLogos();
-            showDashboard();
-        } catch(e) { console.warn("Auto-login failed:", e); }
-    }
-});
-function deleteAllRecords() {
+});function deleteAllRecords() {
     const confirm1 = confirm("⚠️ BABALA: Mabubura ang LAHAT ng reports sa Google Sheet. Sigurado ka ba?");
     if (!confirm1) return;
     
