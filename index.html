@@ -253,6 +253,7 @@
                 <h3>CRLA Results</h3>
                 <div style="overflow-x: auto;"><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Language</th><th>Score</th><th>CRLA Category</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody id="crla-table-body"></tbody></table></div>
                 <button class="btn btn-primary" onclick="addCRLARow()" style="margin-top:10px;">➕ Add Manual</button>
+                <div id="crla-summary-box" style="margin-top: 30px; display: none; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ccc;"></div>
             </div>
         </div>
 
@@ -277,6 +278,7 @@
                 <div style="overflow-x: auto;"><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Score</th><th>Percentage</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody id="rma-table-body"></tbody></table></div>
                 <button class="btn btn-primary" onclick="addRMARow()" style="margin-top:10px;">➕ Add Manual</button>
             </div>
+                <div id="rma-summary-box" style="margin-top: 30px; display: none; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ccc;"></div>
         </div>
 
         <!-- NARRATIVE -->
@@ -1008,6 +1010,7 @@ function updateCRLALogic() {
     if (!tbody) return;
     tbody.innerHTML = '';
     crlaRowCount = 0;
+    document.getElementById('crla-summary-box').style.display = 'none'; // <--- IDAGDAG ITO
     addCRLARow();
 }
 
@@ -1067,6 +1070,8 @@ function calcCRLA(row) {
     else if (category === 'Transitioning') suggestion = "Differentiated Instruction";
     else if (category === 'Grade Ready') suggestion = "Sustained Silent Reading";
     if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+    if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+    generateCRLASummary(); // <--- IDAGDAG ITO
 }
 
 /* ============================================================
@@ -1077,6 +1082,7 @@ function updateRMALogic() {
     if (!tbody) return;
     tbody.innerHTML = '';
     rmaRowCount = 0;
+    document.getElementById('rma-summary-box').style.display = 'none'; // <--- IDAGDAG ITO
     addRMARow();
 }
 
@@ -1135,7 +1141,10 @@ function calcRMA(row) {
     else { level = "Non Proficient"; levelCell.classList.add("status-full"); aralCell.innerText = "ARAL Math Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive Numeracy Remediation"; }
     levelCell.innerText = level;
     if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+    if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
+    generateRMASummary(); // <--- IDAGDAG ITO
 }
+
 
 /* ============================================================
    SUBMISSIONS
@@ -1997,6 +2006,151 @@ window.addEventListener('DOMContentLoaded', async () => {
         } catch(e) { console.warn("Auto-login failed:", e); }
     }
 });
+/* === SUMMARY PARA SA CRLA === */
+function generateCRLASummary() {
+    const summaryBox = document.getElementById('crla-summary-box');
+    const rows = document.querySelectorAll('#crla-table-body tr');
+    
+    let total = 0;
+    let counts = { 'Grade Ready': 0, 'Transitioning': 0, 'Developing': 0, 'High Emerging': 0, 'Low Emerging': 0, 'ARAL': 0 };
+
+    rows.forEach(tr => {
+        const rowId = tr.id.replace('crla-row-', '');
+        const nameEl = document.getElementById(`crla-name-${rowId}`);
+        if (nameEl && nameEl.value.trim() !== "") {
+            total++;
+            const cat = document.getElementById(`crla-category-${rowId}`).value;
+            counts[cat]++;
+            if (document.getElementById(`crla-aral-${rowId}`).innerText.includes("ARAL")) counts['ARAL']++;
+        }
+    });
+
+    if (total === 0) { summaryBox.style.display = 'none'; return; }
+    summaryBox.style.display = 'block';
+    const pct = (c) => Math.round((c / total) * 100);
+
+    summaryBox.innerHTML = `
+        <h4 style="color: #113a6b; margin-bottom: 15px; font-size: 16px;">📊 CRLA Performance Summary</h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: center;">
+            <thead>
+                <tr style="background: #113a6b;">
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Category</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Number of Learners</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724;">Grade Ready</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Grade Ready']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Grade Ready'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #cce5ff; color: #004085;">Transitioning</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Transitioning']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Transitioning'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #fff3cd; color: #856404;">Developing</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Developing']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Developing'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24;">High Emerging</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['High Emerging']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['High Emerging'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24;">Low Emerging</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Low Emerging']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Low Emerging'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d;">ARAL Candidates</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['ARAL']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['ARAL'])}%</td>
+                </tr>
+                <tr style="background: #eee; font-weight: bold;">
+                    <td style="padding: 8px; border: 1px solid #000;">TOTAL LEARNERS</td>
+                    <td style="padding: 8px; border: 1px solid #000;" colspan="2">${total}</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+}
+
+/* === SUMMARY PARA SA RMA === */
+function generateRMASummary() {
+    const summaryBox = document.getElementById('rma-summary-box');
+    const rows = document.querySelectorAll('#rma-table-body tr');
+    
+    let total = 0;
+    let counts = { 'Highly Proficient': 0, 'Proficient': 0, 'Developing': 0, 'Low Proficient': 0, 'Non Proficient': 0, 'ARAL': 0 };
+
+    rows.forEach(tr => {
+        const rowId = tr.id.replace('rma-row-', '');
+        const nameEl = document.getElementById(`rma-name-${rowId}`);
+        if (nameEl && nameEl.value.trim() !== "") {
+            total++;
+            const lvl = document.getElementById(`rma-level-${rowId}`).innerText.trim();
+            if (counts[lvl] !== undefined) counts[lvl]++;
+            if (document.getElementById(`rma-aral-${rowId}`).innerText.includes("ARAL")) counts['ARAL']++;
+        }
+    });
+
+    if (total === 0) { summaryBox.style.display = 'none'; return; }
+    summaryBox.style.display = 'block';
+    const pct = (c) => Math.round((c / total) * 100);
+
+    summaryBox.innerHTML = `
+        <h4 style="color: #113a6b; margin-bottom: 15px; font-size: 16px;">📊 RMA Performance Summary</h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: center;">
+            <thead>
+                <tr style="background: #113a6b;">
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Level</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Number of Learners</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724;">Highly Proficient</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Highly Proficient']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Highly Proficient'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724;">Proficient</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Proficient']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Proficient'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #fff3cd; color: #856404;">Developing</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Developing']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Developing'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24;">Low Proficient</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Low Proficient']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Low Proficient'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24;">Non Proficient</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Non Proficient']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Non Proficient'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d;">ARAL Candidates</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['ARAL']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['ARAL'])}%</td>
+                </tr>
+                <tr style="background: #eee; font-weight: bold;">
+                    <td style="padding: 8px; border: 1px solid #000;">TOTAL LEARNERS</td>
+                    <td style="padding: 8px; border: 1px solid #000;" colspan="2">${total}</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+}
 </script>
 </body>
 </html>
