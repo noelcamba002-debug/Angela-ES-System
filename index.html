@@ -2152,6 +2152,18 @@ function printConsolidatedReport() {
 ============================================================ */
 window.addEventListener('DOMContentLoaded', async () => {
     loadLogos();
+    await fetchLogos(); // <--- IDAGDAG ITO para makuha agad ang logo URL
+    
+    // I-set ang logo sa Role Selection Screen kung meron
+    if (globalLogos.schoolLogo) {
+        const roleLogo = document.getElementById('role-school-logo');
+        if (roleLogo) {
+            roleLogo.src = globalLogos.schoolLogo;
+            roleLogo.style.display = 'block';
+        }
+    }
+    
+    const saved = localStorage.getItem('currentUser');
     
     const saved = localStorage.getItem('currentUser');
     if (saved) {
