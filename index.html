@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AES Unified Reporting System v11</title>
+    <title>AES Unified Reporting System v12</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
@@ -229,7 +229,6 @@
                 <div style="overflow-x: auto;"><table class="form1b-table"><thead id="ind-table-head"></thead><tbody id="ind-table-body"></tbody></table></div>
                 <button class="btn btn-primary" onclick="addIndividualizedRow()" style="margin-top:10px;">➕ Add Manual</button>
                 
-                <!-- SUMMARY BOX -->
                 <div id="gst-summary-box" style="margin-top: 30px; display: none; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ccc;"></div>
             </div>
         </div>
@@ -277,8 +276,8 @@
                 <h3>RMA Results</h3>
                 <div style="overflow-x: auto;"><table class="form1b-table"><thead><tr><th>No.</th><th>Name</th><th>Score</th><th>Percentage</th><th>Level</th><th>ARAL Tag</th><th>Intervention</th></tr></thead><tbody id="rma-table-body"></tbody></table></div>
                 <button class="btn btn-primary" onclick="addRMARow()" style="margin-top:10px;">➕ Add Manual</button>
-            </div>
                 <div id="rma-summary-box" style="margin-top: 30px; display: none; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ccc;"></div>
+            </div>
         </div>
 
         <!-- NARRATIVE -->
@@ -630,7 +629,6 @@ function showDashboard() {
     const roleBadge = document.getElementById('ui-role');
     roleBadge.innerText = activeRole.replace(/_/g,' ').toUpperCase();
 
-    // Itago lahat ng menus
     ['teacher','coordinator','schoolhead','ict'].forEach(r => {
         const menu = document.getElementById('menu-' + r);
         if (menu) menu.classList.add('hidden');
@@ -639,7 +637,6 @@ function showDashboard() {
     const submitBtn = document.getElementById('btn-submit');
     const sigBtn = document.getElementById('btn-signature');
 
-    // LOGIC BASE SA ACTIVE ROLE
     if (activeRole === 'teacher') {
         document.getElementById('menu-teacher').classList.remove('hidden');
         
@@ -748,7 +745,7 @@ function updateIndividualizedLogic() {
     const resultTitle = document.getElementById('result-table-title');
     
     const summaryBox = document.getElementById('gst-summary-box');
-    if (summaryBox) summaryBox.style.display = 'none'; // Hide summary pag nagpalit ng type
+    if (summaryBox) summaryBox.style.display = 'none';
 
     if (resultTitle) resultTitle.innerText = type === 'GST' ? "GST Result" : `${type} Results`;
     tbody.innerHTML = '';
@@ -1010,7 +1007,8 @@ function updateCRLALogic() {
     if (!tbody) return;
     tbody.innerHTML = '';
     crlaRowCount = 0;
-    document.getElementById('crla-summary-box').style.display = 'none'; // <--- IDAGDAG ITO
+    const sBox = document.getElementById('crla-summary-box');
+    if (sBox) sBox.style.display = 'none';
     addCRLARow();
 }
 
@@ -1027,6 +1025,7 @@ function parseCRLAData() {
         addCRLARow({ name: cols[0], language: cols[1] || "Filipino", score: parseInt(cols[2]) || 0, category: cols[3] || "Low Emerging" });
     });
     document.getElementById('crla-paste-data').value = '';
+    generateCRLASummary();
 }
 
 function addCRLARow(data = null) {
@@ -1035,7 +1034,7 @@ function addCRLARow(data = null) {
     tr.id = `crla-row-${crlaRowCount}`;
     tr.innerHTML = `
         <td>${crlaRowCount}</td>
-        <td><input type="text" id="crla-name-${crlaRowCount}" value="${data ? data.name : ''}"></td>
+        <td><input type="text" id="crla-name-${crlaRowCount}" value="${data ? data.name : ''}" oninput="generateCRLASummary()"></td>
         <td><select id="crla-lang-${crlaRowCount}">
             <option value="Filipino" ${data && data.language === 'Filipino' ? 'selected' : ''}>Filipino</option>
             <option value="English" ${data && data.language === 'English' ? 'selected' : ''}>English</option>
@@ -1070,8 +1069,81 @@ function calcCRLA(row) {
     else if (category === 'Transitioning') suggestion = "Differentiated Instruction";
     else if (category === 'Grade Ready') suggestion = "Sustained Silent Reading";
     if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
-    if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
-    generateCRLASummary(); // <--- IDAGDAG ITO
+    
+    generateCRLASummary();
+}
+
+function generateCRLASummary() {
+    const summaryBox = document.getElementById('crla-summary-box');
+    const rows = document.querySelectorAll('#crla-table-body tr');
+    
+    let total = 0;
+    let counts = { 'Grade Ready': 0, 'Transitioning': 0, 'Developing': 0, 'High Emerging': 0, 'Low Emerging': 0, 'ARAL': 0 };
+
+    rows.forEach(tr => {
+        const rowId = tr.id.replace('crla-row-', '');
+        const nameEl = document.getElementById(`crla-name-${rowId}`);
+        if (nameEl && nameEl.value.trim() !== "") {
+            total++;
+            const catEl = document.getElementById(`crla-category-${rowId}`);
+            const aralEl = document.getElementById(`crla-aral-${rowId}`);
+            if (catEl) counts[catEl.value] = (counts[catEl.value] || 0) + 1;
+            if (aralEl && aralEl.innerText.includes("ARAL")) counts['ARAL']++;
+        }
+    });
+
+    if (total === 0) { if(summaryBox) summaryBox.style.display = 'none'; return; }
+    if(summaryBox) summaryBox.style.display = 'block';
+    const pct = (c) => Math.round((c / total) * 100);
+
+    if(summaryBox) summaryBox.innerHTML = `
+        <h4 style="color: #113a6b; margin-bottom: 15px; font-size: 16px;">📊 CRLA Performance Summary</h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: center;">
+            <thead>
+                <tr style="background: #113a6b;">
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Category</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Number of Learners</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724; text-align: center;">Grade Ready</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Grade Ready']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Grade Ready'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #cce5ff; color: #004085; text-align: center;">Transitioning</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Transitioning']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Transitioning'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #fff3cd; color: #856404; text-align: center;">Developing</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Developing']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Developing'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24; text-align: center;">High Emerging</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['High Emerging']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['High Emerging'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24; text-align: center;">Low Emerging</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Low Emerging']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Low Emerging'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d; text-align: center;">ARAL Candidates</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['ARAL']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['ARAL'])}%</td>
+                </tr>
+                <tr style="background: #eee; font-weight: bold;">
+                    <td style="padding: 8px; border: 1px solid #000; text-align: center;">TOTAL LEARNERS</td>
+                    <td style="padding: 8px; border: 1px solid #000; text-align: center;" colspan="2">${total}</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
 }
 
 /* ============================================================
@@ -1082,7 +1154,8 @@ function updateRMALogic() {
     if (!tbody) return;
     tbody.innerHTML = '';
     rmaRowCount = 0;
-    document.getElementById('rma-summary-box').style.display = 'none'; // <--- IDAGDAG ITO
+    const sBox = document.getElementById('rma-summary-box');
+    if (sBox) sBox.style.display = 'none';
     addRMARow();
 }
 
@@ -1099,6 +1172,7 @@ function parseRMAData() {
         addRMARow({ name: cols[0], score: parseInt(cols[1]) || 0 });
     });
     document.getElementById('rma-paste-data').value = '';
+    generateRMASummary();
 }
 
 function addRMARow(data = null) {
@@ -1107,7 +1181,7 @@ function addRMARow(data = null) {
     tr.id = `rma-row-${rmaRowCount}`;
     tr.innerHTML = `
         <td>${rmaRowCount}</td>
-        <td><input type="text" id="rma-name-${rmaRowCount}" value="${data ? data.name : ''}"></td>
+        <td><input type="text" id="rma-name-${rmaRowCount}" value="${data ? data.name : ''}" oninput="generateRMASummary()"></td>
         <td><input type="number" id="rma-score-${rmaRowCount}" value="${data ? data.score : ''}" oninput="calcRMA(${rmaRowCount})"></td>
         <td class="auto-calc" id="rma-percent-${rmaRowCount}"></td>
         <td class="auto-calc" id="rma-level-${rmaRowCount}"></td>
@@ -1141,10 +1215,85 @@ function calcRMA(row) {
     else { level = "Non Proficient"; levelCell.classList.add("status-full"); aralCell.innerText = "ARAL Math Candidate"; aralCell.classList.add("status-aral"); suggestion = "Intensive Numeracy Remediation"; }
     levelCell.innerText = level;
     if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
-    if (intCell && (intCell.value === "" || intCell.dataset.auto === "true")) { intCell.value = suggestion; intCell.dataset.auto = "true"; }
-    generateRMASummary(); // <--- IDAGDAG ITO
+    
+    generateRMASummary();
 }
 
+function generateRMASummary() {
+    const summaryBox = document.getElementById('rma-summary-box');
+    const rows = document.querySelectorAll('#rma-table-body tr');
+    
+    let total = 0;
+    let counts = { 'Highly Proficient': 0, 'Proficient': 0, 'Developing': 0, 'Low Proficient': 0, 'Non Proficient': 0, 'ARAL': 0 };
+
+    rows.forEach(tr => {
+        const rowId = tr.id.replace('rma-row-', '');
+        const nameEl = document.getElementById(`rma-name-${rowId}`);
+        if (nameEl && nameEl.value.trim() !== "") {
+            total++;
+            const lvlEl = document.getElementById(`rma-level-${rowId}`);
+            const aralEl = document.getElementById(`rma-aral-${rowId}`);
+            if (lvlEl) {
+                const lvl = lvlEl.innerText.trim();
+                if (counts[lvl] !== undefined) counts[lvl]++;
+            }
+            if (aralEl && aralEl.innerText.includes("ARAL")) counts['ARAL']++;
+        }
+    });
+
+    if (total === 0) { if(summaryBox) summaryBox.style.display = 'none'; return; }
+    if(summaryBox) summaryBox.style.display = 'block';
+    const pct = (c) => Math.round((c / total) * 100);
+
+    if(summaryBox) summaryBox.innerHTML = `
+        <h4 style="color: #113a6b; margin-bottom: 15px; font-size: 16px;">📊 RMA Performance Summary</h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: center;">
+            <thead>
+                <tr style="background: #113a6b;">
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Level</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Number of Learners</th>
+                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important; text-align: center;">Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724; text-align: center;">Highly Proficient</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Highly Proficient']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Highly Proficient'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724; text-align: center;">Proficient</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Proficient']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Proficient'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #fff3cd; color: #856404; text-align: center;">Developing</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Developing']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Developing'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24; text-align: center;">Low Proficient</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Low Proficient']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Low Proficient'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24; text-align: center;">Non Proficient</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['Non Proficient']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['Non Proficient'])}%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d; text-align: center;">ARAL Candidates</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${counts['ARAL']}</td>
+                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; text-align: center;">${pct(counts['ARAL'])}%</td>
+                </tr>
+                <tr style="background: #eee; font-weight: bold;">
+                    <td style="padding: 8px; border: 1px solid #000; text-align: center;">TOTAL LEARNERS</td>
+                    <td style="padding: 8px; border: 1px solid #000; text-align: center;" colspan="2">${total}</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+}
 
 /* ============================================================
    SUBMISSIONS
@@ -1198,14 +1347,12 @@ async function submitIndividualized() {
     else if (type === 'MOSY') key = "mosy";
     else if (type === 'Post-test') key = "posttest";
 
-    // KUNIN ANG SUMMARY KUNG GST LANG
     let summaryHTML = "";
     if (type === 'GST') {
         const sBox = document.getElementById('gst-summary-box');
         if (sBox && sBox.style.display !== 'none') summaryHTML = sBox.innerHTML;
     }
 
-    // ISAMA ANG SUMMARY SA DATA
     const result = await apiPost({ 
         action: "submit", 
         id: Date.now(), 
@@ -1237,8 +1384,13 @@ async function submitCRLA() {
         });
     });
     if (!data.length) { alert("Walang data."); return; }
+    
+    let summaryHTML = "";
+    const sBox = document.getElementById('crla-summary-box');
+    if (sBox && sBox.style.display !== 'none') summaryHTML = sBox.innerHTML;
+    
     const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('crla-grade').value} (${document.getElementById('crla-section').value})`;
-    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ crla: data }), comments: "[]" });
+    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ crla: data, summary: summaryHTML }), comments: "[]" });
     if (result.result === "success") { alert(`CRLA submitted!`); showDashboard(); } else alert("Error submitting.");
 }
 
@@ -1261,8 +1413,13 @@ async function submitRMA() {
         });
     });
     if (!data.length) { alert("Walang data."); return; }
+    
+    let summaryHTML = "";
+    const sBox = document.getElementById('rma-summary-box');
+    if (sBox && sBox.style.display !== 'none') summaryHTML = sBox.innerHTML;
+    
     const teacherName = `${currentUser['Full Name']} - Grade ${document.getElementById('rma-grade').value} (${document.getElementById('rma-section').value})`;
-    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ rma: data }), comments: "[]" });
+    const result = await apiPost({ action: "submit", id: Date.now(), teacher: teacherName, status: 'Pending Coordinator Review', data: JSON.stringify({ rma: data, summary: summaryHTML }), comments: "[]" });
     if (result.result === "success") { alert(`RMA submitted!`); showDashboard(); } else alert("Error submitting.");
 }
 
@@ -1356,7 +1513,7 @@ async function saveLogos() {
     
     alert("Logos saved successfully sa Google Drive!");
     window.tempLogoData = {};
-    await fetchLogos(); // I-refresh ang global logos
+    await fetchLogos();
     loadSystemSettings(); 
 }
 
@@ -1414,7 +1571,7 @@ function openAddUserModal() {
         action: "addUser", fullName: name, username, password,
         role, grade, section, status: 'active'
     }).then(res => {
-        if (res.result === "success") { alert("User added!"); refreshUsersList(); }
+        if (result.result === "success") { alert("User added!"); refreshUsersList(); }
         else alert("Error adding user.");
     });
 }
@@ -1478,7 +1635,6 @@ async function refreshCoordinatorList() {
     
     let pending = reports.filter(r => r.status === 'Pending Coordinator Review');
     
-    // FILTER BASE SA ROLE
     if (activeRole === 'philiri_coord') {
         pending = pending.filter(r => r.data.pretest || r.data.mosy || r.data.posttest || r.data.gst);
     } else if (activeRole === 'rma_coord') {
@@ -1486,7 +1642,7 @@ async function refreshCoordinatorList() {
     } else if (activeRole === 'crla_coord') {
         pending = pending.filter(r => r.data.crla);
     } else if (activeRole === 'coordinator') {
-        pending = pending.filter(r => !r.data.narrative); // General coord, assessments lang
+        pending = pending.filter(r => !r.data.narrative); 
     }
 
     if (!pending.length) { c.innerHTML = '<p><em>Walang pending reports na naka-assign sa iyo.</em></p>'; return; }
@@ -1595,7 +1751,6 @@ async function viewMyReport(id) {
         coordRoleToFind = 'crla_coord';
     }
 
-    // --- SIMULA NG CACHE LOGIC PARA BUMILIS ---
     let coordName = "PROGRAM COORDINATOR";
     let headName = "SCHOOL HEAD";
     const cachedUsersStr = localStorage.getItem('cachedUsers');
@@ -1617,7 +1772,6 @@ async function viewMyReport(id) {
         const headUser = users.find(u => String(u.Role || '').toLowerCase().includes('schoolhead'));
         if (headUser) headName = headUser['Full Name'] || headUser.FullName;
     }
-    // --- DULO NG CACHE LOGIC ---
 
     const teacherDisplayName = (r.teacher || '').split(' - ')[0] || 'Teacher';
 
@@ -2006,151 +2160,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         } catch(e) { console.warn("Auto-login failed:", e); }
     }
 });
-/* === SUMMARY PARA SA CRLA === */
-function generateCRLASummary() {
-    const summaryBox = document.getElementById('crla-summary-box');
-    const rows = document.querySelectorAll('#crla-table-body tr');
-    
-    let total = 0;
-    let counts = { 'Grade Ready': 0, 'Transitioning': 0, 'Developing': 0, 'High Emerging': 0, 'Low Emerging': 0, 'ARAL': 0 };
-
-    rows.forEach(tr => {
-        const rowId = tr.id.replace('crla-row-', '');
-        const nameEl = document.getElementById(`crla-name-${rowId}`);
-        if (nameEl && nameEl.value.trim() !== "") {
-            total++;
-            const cat = document.getElementById(`crla-category-${rowId}`).value;
-            counts[cat]++;
-            if (document.getElementById(`crla-aral-${rowId}`).innerText.includes("ARAL")) counts['ARAL']++;
-        }
-    });
-
-    if (total === 0) { summaryBox.style.display = 'none'; return; }
-    summaryBox.style.display = 'block';
-    const pct = (c) => Math.round((c / total) * 100);
-
-    summaryBox.innerHTML = `
-        <h4 style="color: #113a6b; margin-bottom: 15px; font-size: 16px;">📊 CRLA Performance Summary</h4>
-        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: center;">
-            <thead>
-                <tr style="background: #113a6b;">
-                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Category</th>
-                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Number of Learners</th>
-                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Percentage</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724;">Grade Ready</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Grade Ready']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Grade Ready'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #cce5ff; color: #004085;">Transitioning</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Transitioning']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Transitioning'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #fff3cd; color: #856404;">Developing</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Developing']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Developing'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24;">High Emerging</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['High Emerging']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['High Emerging'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24;">Low Emerging</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Low Emerging']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Low Emerging'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d;">ARAL Candidates</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['ARAL']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['ARAL'])}%</td>
-                </tr>
-                <tr style="background: #eee; font-weight: bold;">
-                    <td style="padding: 8px; border: 1px solid #000;">TOTAL LEARNERS</td>
-                    <td style="padding: 8px; border: 1px solid #000;" colspan="2">${total}</td>
-                </tr>
-            </tbody>
-        </table>
-    `;
-}
-
-/* === SUMMARY PARA SA RMA === */
-function generateRMASummary() {
-    const summaryBox = document.getElementById('rma-summary-box');
-    const rows = document.querySelectorAll('#rma-table-body tr');
-    
-    let total = 0;
-    let counts = { 'Highly Proficient': 0, 'Proficient': 0, 'Developing': 0, 'Low Proficient': 0, 'Non Proficient': 0, 'ARAL': 0 };
-
-    rows.forEach(tr => {
-        const rowId = tr.id.replace('rma-row-', '');
-        const nameEl = document.getElementById(`rma-name-${rowId}`);
-        if (nameEl && nameEl.value.trim() !== "") {
-            total++;
-            const lvl = document.getElementById(`rma-level-${rowId}`).innerText.trim();
-            if (counts[lvl] !== undefined) counts[lvl]++;
-            if (document.getElementById(`rma-aral-${rowId}`).innerText.includes("ARAL")) counts['ARAL']++;
-        }
-    });
-
-    if (total === 0) { summaryBox.style.display = 'none'; return; }
-    summaryBox.style.display = 'block';
-    const pct = (c) => Math.round((c / total) * 100);
-
-    summaryBox.innerHTML = `
-        <h4 style="color: #113a6b; margin-bottom: 15px; font-size: 16px;">📊 RMA Performance Summary</h4>
-        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: center;">
-            <thead>
-                <tr style="background: #113a6b;">
-                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Level</th>
-                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Number of Learners</th>
-                    <th style="padding: 10px; border: 1px solid #000; color: #ffffff !important;">Percentage</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724;">Highly Proficient</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Highly Proficient']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Highly Proficient'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #d4edda; color: #155724;">Proficient</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Proficient']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Proficient'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #fff3cd; color: #856404;">Developing</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Developing']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Developing'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24;">Low Proficient</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Low Proficient']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Low Proficient'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #f8d7da; color: #721c24;">Non Proficient</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['Non Proficient']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['Non Proficient'])}%</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold; background: #e2d9f3; color: #5e239d;">ARAL Candidates</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${counts['ARAL']}</td>
-                    <td style="padding: 8px; border: 1px solid #000; font-weight: bold;">${pct(counts['ARAL'])}%</td>
-                </tr>
-                <tr style="background: #eee; font-weight: bold;">
-                    <td style="padding: 8px; border: 1px solid #000;">TOTAL LEARNERS</td>
-                    <td style="padding: 8px; border: 1px solid #000;" colspan="2">${total}</td>
-                </tr>
-            </tbody>
-        </table>
-    `;
-}
 </script>
 </body>
 </html>
