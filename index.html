@@ -1772,8 +1772,9 @@ function printMyReport(id) {
 
 function printReport() {
     const modal = document.getElementById('official-report-modal');
-    const content = modal.querySelector('div').innerHTML;
+    const content = document.getElementById('printable-report-content').innerHTML;
     const w = window.open('', '_blank');
+    
     w.document.write(`<html><head><title></title><style>
         @page { size: A4 landscape; margin: 15mm; }
         body { font-family: Arial, sans-serif; }
@@ -1794,12 +1795,7 @@ function printReport() {
     w.document.close();
     
     w.onload = () => {
-        const printDLogo = w.document.querySelector('img[src*="17A8e6bivBRXQRkyEAe58GWpGJx2b3Y6M"]');
-        const printSLogo = w.document.querySelector('img[src*="15IfIJgcIEn0JU5-ZJFTxzLIaxzq0UUed"]');
-        
-        if (printDLogo) printDLogo.src = "https://drive.google.com/uc?export=view&id=17A8e6bivBRXQRkyEAe58GWpGJx2b3Y6M";
-        if (printSLogo) printSLogo.src = "https://drive.google.com/uc?export=view&id=15IfIJgcIEn0JU5-ZJFTxzLIaxzq0UUed";
-
+        // 1. I-set ang mga pirma
         ['teacher','coord','head'].forEach(role => {
             const src = localStorage.getItem(`sig_${role}`);
             if (src) {
@@ -1807,10 +1803,32 @@ function printReport() {
                 if (i) { i.src = src; i.style.height = '45px'; i.classList.remove('hidden'); }
             }
         });
-        setTimeout(() => { w.focus(); w.print(); }, 2500);
+
+        // 2. Hintayin na mag-load LAHAT ng images bago i-print
+        const images = w.document.querySelectorAll('img');
+        let loaded = 0;
+
+        const tryPrint = () => {
+            loaded++;
+            if (loaded >= images.length) {
+                setTimeout(() => { w.focus(); w.print(); }, 300);
+            }
+        };
+
+        if (images.length === 0) {
+            setTimeout(() => { w.focus(); w.print(); }, 500);
+        } else {
+            images.forEach(img => {
+                if (img.complete) {
+                    tryPrint();
+                } else {
+                    img.addEventListener('load', tryPrint);
+                    img.addEventListener('error', tryPrint);
+                }
+            });
+        }
     };
 }
-
 /* ============================================================
    RENDER TABLES
 ============================================================ */
